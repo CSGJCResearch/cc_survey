@@ -17,18 +17,22 @@ for(p in requiredPackages){
   library(p,character.only = TRUE)
 }
 
-# set custom working directory
+# get working directory depending on login
 getwd <- function(){
   thisLogin <- Sys.info()['login']
   # if(thisLogin=="amund") {
   #   base <- '/home'
-  #   csgjcF <- 'working directory'
+  #   canyF <- 'directory'
   # }
-  if(thisLogin=="mari"){
+  if(thisLogin=="mr4909"){
     base <- '/Users'
-    csgjcF <- 'csgjc/cc_survey'
+    canyF <- 'csgjc/cc_survey/data'
   }
-  wd <- paste(base,thisLogin,csgjcF,sep="/")
+  if(thisLogin=="mari") {
+    base <- '/Users'
+    canyF <- 'csgjc/cc_survey/data'
+  }
+  wd <- paste(base,thisLogin,canyF,sep="/")
   return(wd)
 }
 
