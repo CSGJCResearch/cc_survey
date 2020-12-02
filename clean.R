@@ -22,17 +22,17 @@ getwd <- function(){
   thisLogin <- Sys.info()['login']
   # if(thisLogin=="amund") {
   #   base <- '/home'
-  #   canyF <- 'directory'
+  #   csgF <- 'directory'
   # }
   if(thisLogin=="mr4909"){
     base <- '/Users'
-    canyF <- 'csgjc/cc_survey/data'
+    csgF <- 'csgjc/cc_survey/data'
   }
   if(thisLogin=="mari") {
     base <- '/Users'
-    canyF <- 'csgjc/cc_survey/data'
+    csgF <- 'csgjc/cc_survey/data'
   }
-  wd <- paste(base,thisLogin,canyF,sep="/")
+  wd <- paste(base,thisLogin,csgF,sep="/")
   return(wd)
 }
 
@@ -43,4 +43,8 @@ setwd(wd)
 ##########
 # Import data
 ##########
+
+# import survey responses
+survey_data <- read_excel("50-State Revocation Survey_October 27, 2020_12.25.xlsx")
+
 
