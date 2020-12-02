@@ -48,3 +48,6 @@ setwd(wd)
 survey_data <- read_excel("50-State Revocation Survey_October 27, 2020_12.25.xlsx")
 
 
+aslka;skda'sda
+'
+
