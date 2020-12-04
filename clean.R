@@ -1,7 +1,7 @@
 #######################################
 # Confined and Costly Survey
 # Imports/cleans CC Survey
-# by Mari Roberts and Amund Talleksen
+# by Mari Roberts
 # 12/1/2020
 #######################################
 
@@ -10,7 +10,11 @@
 
 # load necessary packages
 requiredPackages = c('dplyr',
-                     'openxlsx')
+                     'openxlsx',
+                     'readr',
+                     'reshape',
+                     'ggplot2',
+                     'dplyr')
 # only downloads packages if needed
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) install.packages(p)
@@ -47,7 +51,12 @@ setwd(wd)
 # import survey responses
 survey_data <- read_excel("50-State Revocation Survey_October 27, 2020_12.25.xlsx")
 
+# import violation
+violation <- read_excel("violation.xlsx")
 
-aslka;skda'sda
-'
+# change state to factor variable
+violation$state <- factor(violation$state)
 
+# import population
+population <- read_excel("population.xlsx")
+population <- population[-c(51:54),] # remove excess rows
