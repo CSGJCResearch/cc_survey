@@ -30,11 +30,11 @@ getwd <- function(){
   # }
   if(thisLogin=="mr4909"){
     base <- '/Users'
-    csgF <- 'csgjc/cc_survey/data'
+    csgF <- 'csgjc/cc_survey'
   }
   if(thisLogin=="mari") {
     base <- '/Users'
-    csgF <- 'csgjc/cc_survey/data'
+    csgF <- 'csgjc/cc_survey'
   }
   wd <- paste(base,thisLogin,csgF,sep="/")
   return(wd)
@@ -49,14 +49,19 @@ setwd(wd)
 ##########
 
 # import survey responses
-survey_data <- read_excel("50-State Revocation Survey_October 27, 2020_12.25.xlsx")
+survey_data <- read_excel("data/50-State Revocation Survey_October 27, 2020_12.25.xlsx")
 
-# import violation
-violation <- read_excel("violation.xlsx")
+# import population data
+population <- read.xlsx("data/population.xlsx")
+population <- population[-c(51,52),]
 
-# change state to factor variable
-violation$state <- factor(violation$state)
+# import population/admissions data
+df <- read.xlsx("data/population_admissions.xlsx")
 
-# import population
-population <- read_excel("population.xlsx")
-population <- population[-c(51:54),] # remove excess rows
+# convert to factor levels
+df$state_abb <- factor(df$state_abb)
+df$state <- factor(df$state)
+df$type <- factor(df$type)
+df$region <- factor(df$region)
+df$year <- factor(df$year)
+                            
