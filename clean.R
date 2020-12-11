@@ -31,11 +31,11 @@ getwd <- function(){
   # }
   if(thisLogin=="mr4909"){
     base <- '/Users'
-    csgF <- 'csgjc/cc_survey'
+    csgF <- 'csgjc/cc_survey/data'
   }
   if(thisLogin=="mari") {
     base <- '/Users'
-    csgF <- 'csgjc/cc_survey'
+    csgF <- 'csgjc/cc_survey/data'
   }
   wd <- paste(base,thisLogin,csgF,sep="/")
   return(wd)
@@ -64,6 +64,9 @@ population_2018 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Populat
 population_2019 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Population 2019")
 population_2020 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Population 2020")
 
+# read in regions data
+regions <- read.csv("regions.csv")
+
 # remove excess rows and columns
 admissions_2017 <- admissions_2017[-c(51,52),] # remove excess rows
 admissions_2018 <- admissions_2018[-c(51:54),] # remove excess rows
@@ -80,7 +83,7 @@ population_2018 <- population_2018[-c(51:54),] # remove excess rows
 population_2019 <- population_2019[-c(51:54),] # remove excess rows
 # 2020 - removed months reported for now
 population_2020 <- population_2020[-c(51:54),] # remove excess rows
-population_2020 <- population_2020[,-c(14:17)] # remove excess columns
+# population_2020 <- population_2020[,-c(14:17)] # remove excess columns
 
 # add year and type
 admissions_2017 <- admissions_2017 %>% mutate(year = "2017",
@@ -140,4 +143,6 @@ df$state.abb <- factor(df$state.abb)
 df$state <- factor(df$state)
 df$type <- factor(df$type)
 df$year <- as.numeric(df$year)
-str(df)
+
+# add region info
+df <- merge(df, regions, by = "state.abb")
