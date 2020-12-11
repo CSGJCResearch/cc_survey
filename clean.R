@@ -49,7 +49,6 @@ setwd(wd)
 # Import data
 ##########
 
-<<<<<<< HEAD
 # import survey responses / sanction info
 survey_data <- read_excel("50-State Revocation Survey_October 27, 2020_12.25.xlsx")
 
@@ -134,23 +133,11 @@ population_df <- population_df %>% select(state.abb = "State Abbrev",
                                           new.offense.prob = "New offense probation violation population")
 
 # add population and admissions dfs together
-final_df <- rbind(admissions_df, population_df)
-=======
-# import survey responses
-survey_data <- read_excel("data/50-State Revocation Survey_October 27, 2020_12.25.xlsx")
+df <- rbind(admissions_df, population_df)
 
-# import population data
-population <- read.xlsx("data/population.xlsx")
-population <- population[-c(51,52),]
-
-# import population/admissions data
-df <- read.xlsx("data/population_admissions.xlsx")
-
-# convert to factor levels
-df$state_abb <- factor(df$state_abb)
+# convert data types
+df$state.abb <- factor(df$state.abb)
 df$state <- factor(df$state)
 df$type <- factor(df$type)
-df$region <- factor(df$region)
-df$year <- factor(df$year)
-                            
->>>>>>> 444766de3278a6b2140687b2da3d9f308671b9c2
+df$year <- as.numeric(df$year)
+str(df)
