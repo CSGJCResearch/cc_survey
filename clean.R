@@ -31,11 +31,11 @@ getwd <- function(){
   # }
   if(thisLogin=="mr4909"){
     base <- '/Users'
-    csgF <- 'csgjc/cc_survey/data'
+    csgF <- 'csgjc/cc_survey'
   }
   if(thisLogin=="mari") {
     base <- '/Users'
-    csgF <- 'csgjc/cc_survey/data'
+    csgF <- 'csgjc/cc_survey'
   }
   wd <- paste(base,thisLogin,csgF,sep="/")
   return(wd)
@@ -50,22 +50,22 @@ setwd(wd)
 ##########
 
 # import survey responses / sanction info
-survey_data <- read_excel("50-State Revocation Survey_October 27, 2020_12.25.xlsx")
+survey_data <- read_excel("data/50-State Revocation Survey_October 27, 2020_12.25.xlsx")
 
 # read admissions sheets
-admissions_2017 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Admissions 2017")
-admissions_2018 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Admissions 2018")
-admissions_2019 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Admissions 2019")
-admissions_2020 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Admissions 2020")
+admissions_2017 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2017")
+admissions_2018 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2018")
+admissions_2019 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2019")
+admissions_2020 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2020")
 
 # read population sheets
-population_2017 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Population 2017")
-population_2018 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Population 2018")
-population_2019 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Population 2019")
-population_2020 <- read_excel("Data for web team 2020 v6.xlsx", sheet = "Population 2020")
+population_2017 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Population 2017")
+population_2018 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Population 2018")
+population_2019 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Population 2019")
+population_2020 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Population 2020")
 
 # read in regions data
-regions <- read.csv("regions.csv")
+regions <- read.csv("data/regions.csv")
 
 # remove excess rows and columns
 admissions_2017 <- admissions_2017[-c(51,52),] # remove excess rows
