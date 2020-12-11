@@ -142,7 +142,7 @@ df <- rbind(admissions_df, population_df)
 df$state.abb <- factor(df$state.abb)
 df$state <- factor(df$state)
 df$type <- factor(df$type)
-df$year <- as.numeric(df$year)
+df$year <- factor(df$year)
 
 # add region info
 df <- merge(df, regions, by = "state.abb")
