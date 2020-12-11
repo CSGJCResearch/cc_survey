@@ -44,7 +44,7 @@ p2 = ggplot(df.m, aes(x=state, y=var2, fill=value)) +
                               label=state, angle=ang, hjust=hjust), size=3) +
   scale_fill_gradient(low = "white", high = "#FF8300") + # color of gradient
   ylim(c(0, max(df.m$var2) + 1.5)) +
-  #scale_y_discrete(breaks=y_breaks, labels=y_labels) +
+  # scale_y_discrete(breaks=y_breaks, labels=y_labels) +
   coord_polar(theta="x") +
   theme(panel.background=element_blank(),
         axis.title=element_blank(),
