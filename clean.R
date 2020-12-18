@@ -51,6 +51,9 @@ setwd(wd)
 # import survey responses / sanction info
 survey_data <- read_excel("data/50-State Revocation Survey_October 27, 2020_12.25.xlsx")
 
+# import costs
+cost_data <- read_excel("data/Cost Per Day For Calculation.xlsx")
+
 # read admissions sheets
 admissions_2017 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2017")
 admissions_2018 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2018")
@@ -65,6 +68,14 @@ population_2020 <- read_excel("data/Data for web team 2020 v6.xlsx", sheet = "Po
 
 # read in regions data
 regions <- read.csv("data/regions.csv")
+
+##########
+# Clean data
+##########
+
+# clean cost data
+cost_data <- cost_data %>% select(state.abb = `State Abbrev`, 
+                                  costperday = `State Reported CostPerDay`)
 
 # remove excess rows and columns
 admissions_2017 <- admissions_2017[-c(51,52),] # remove excess rows
@@ -145,3 +156,7 @@ df$year <- factor(df$year)
 
 # add region info
 df <- merge(df, regions, by = "state.abb")
+
+# add cost info
+df <- merge(df, cost_data, by = "state.abb")
+

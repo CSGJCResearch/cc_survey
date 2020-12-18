@@ -5,9 +5,6 @@
 # 12/1/2020
 #######################################
 
-# read clean code
-source("clean.R")
-
 # needed for bbc style
 install.packages('devtools')
 devtools::install_github('bbc/bbplot')
@@ -55,11 +52,32 @@ south <- south %>% filter(state.abb != "TN" &
                           state.abb != "MS" &  
                           state.abb != "GA")
 
+######################
 #Make plot
-g2 <- ggplot(south, aes(x = reorder(state.abb, violations), y = violations)) +
+# Southern = Orange
+# Northeast = Blues
+# Midwest = Reds
+# West = Greens
+
+######################
+# Prison Admissions
+######################
+
+admissions <- df %>% filter(type == "admissions")
+south <- admissions %>% filter(region == "South")
+midwest <- admissions %>% filter(region == "Midwest")
+northeast <- admissions %>% filter(region == "Northeast")
+west <- admissions %>% filter(region == "West")
+
+# sort data
+south <- with(south, south[order(year, type, region),])
+
+# south violations in 2019
+g2 <- ggplot(subset(south, year == "2019" & state.abb != "VA"), aes(x = reorder(state.abb, violations), y = violations)) +
   geom_bar(stat="identity", 
            position="identity", 
-           fill="#44B4C4") +
+           fill="#7CACE4",
+           width = 0.75) +
   geom_hline(yintercept = 0, size = 0.4, colour="grey20") +
   bbc_style() +
   labs(title="Violation Populations by Year",
@@ -80,4 +98,70 @@ g2 +
         plot.title=element_text(size=20, hjust=0.5, face="bold", colour="grey20", vjust=-1,family="Helvetica"),
         plot.subtitle=element_text(size=14, hjust=0.5, face="italic", color="grey20",family="Helvetica")  
         )
-  
+
+# SOUTH grouped plot 
+g_south <- ggplot(subset(south, year != "2020"), aes(x = reorder(state.abb, -violations), 
+                                                     y=violations, fill=as.factor(year))) + 
+  geom_bar(stat="identity", position = "dodge",width = 0.75) +
+  scale_fill_brewer(palette = "Oranges") +
+  xlab("") + 
+  ylab("") +
+  scale_y_continuous(breaks=seq(0, 30000, 5000))+
+  theme_bw()
+g_south + theme_csgjc
+
+# West grouped plot
+g_west <- ggplot(subset(west, year != "2020"), aes(x = reorder(state.abb, -violations), 
+                                                   y=violations, fill=as.factor(year))) + 
+  geom_bar(stat="identity", position = "dodge",width = 0.75) +
+  scale_fill_brewer(palette = "Greens") +
+  xlab("") + 
+  ylab("") +
+  #scale_y_continuous(breaks=seq(0, 30000, 2500))+
+  theme_bw()
+g_west + theme_csgjc
+
+# Midwest grouped plot 
+g_midwest <- ggplot(subset(midwest, year != "2020"), aes(x = reorder(state.abb, -violations), 
+                                                         y=violations, fill=as.factor(year))) + 
+  geom_bar(stat="identity", position = "dodge",width = 0.75) +
+  scale_fill_brewer(palette = "Reds") +
+  xlab("") + 
+  ylab("") +
+  scale_y_continuous(breaks=seq(0, 15000, 2500))+
+  theme_bw()
+g_midwest + theme_csgjc
+
+# Northeast grouped plot 
+g_northeast <- ggplot(subset(northeast, year != "2020" & state.abb != "DE"), aes(x = reorder(state.abb, -violations), 
+                                                             y=violations, fill=as.factor(year))) + 
+  geom_bar(stat="identity", position = "dodge",width = 0.75) +
+  scale_fill_brewer(palette = "Blues") +
+  xlab("") + 
+  ylab("") +
+  scale_y_continuous(breaks=seq(0, 12000, 1000))+
+  theme_bw()
+g_northeast + theme_csgjc
+
+######################
+# Costs
+######################
+
+# south violations in 2019
+g2 <- ggplot(cost_data, aes(x = reorder(state.abb, -costperday), y = costperday)) +
+  geom_bar(stat="identity", 
+           position="identity", 
+           width = 0.75) + theme_bw()
+
+g2 + theme_csgjc
+
+
+
+
+
+
+
+
+
+
+
