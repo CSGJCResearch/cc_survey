@@ -270,3 +270,74 @@ g_top_20 + geom_label(data = top_20_pct,
   geom_point(x = 4.65, y = 1800000000, shape = 22, size = 8, color = "darkgreen", fill = "white") +
   annotate("text", x = 7.4, y = 1800000000, label= "Percent of Costs Used for Technical Revocations", size = 3) 
 
+#########
+# more admissions than pop graph
+######### 
+
+ggplot(admin_pop_100, aes(x=Population, xend=Admissions, y=`State Abb`, group=`State Abb`)) + 
+  geom_dumbbell(color="darkgray", 
+                size=0.5, 
+                colour_x="#31a354",
+                colour_xend="#253494",
+                size_x=2.5,
+                size_xend=2.5,) + 
+  scale_x_continuous(labels = comma,breaks=seq(0,50000,5000)) +
+  
+  geom_text(aes(label = Population, hjust = 1, vjust = 2), size = 3) +
+  geom_text(aes(label = Admissions, hjust = -3, vjust = 2), size = 3) +
+  
+  theme(#axis.line = element_line(colour = "grey20", size =.2),
+    axis.ticks = element_blank(),
+    axis.text.x = element_text(vjust = 9,margin = margin(t = 6)),
+    #axis.title.y = element_text(color = "black", vjust = 2, size = 10),
+    panel.border = element_blank(), 
+    #panel.grid.major.x = element_blank(), 
+    panel.grid.minor.x = element_blank(), 
+    panel.grid.major.y = element_blank(), 
+    panel.grid.minor.y = element_blank(),
+    legend.position="top",
+    legend.title = element_blank(),
+    plot.margin = margin(0, 0, 0, 0, "cm")
+  ) 
+
+# grouped barchart for admissions vs population
+
+# get pct
+pct <- admin_pop_100 %>% select(state.abb = `State Abb`, 
+                                pct.100)
+admin_pop_100_v2 <- merge(admin_pop_100_v2, pct, by = "state.abb")
+
+ggplot(admin_pop_100_v2,
+       aes(x = reorder(state,value), y = value, 
+           fill = variable,
+           label = value)) +
+  geom_col(position = "dodge") +
+  # add values
+  geom_text(aes(label = scales::comma(value)),
+            position = position_dodge(width = 0.9),
+            hjust = -0.1, size = 3) +
+  
+  scale_fill_manual(values = c("#2b8cbe","#bdc9e1"),
+                    labels = c("Admissions", "Population")) +
+  coord_flip() + 
+  # add percent difference
+  geom_label(data = admin_pop_100_v2,
+             vjust = 0.5,
+             mapping = aes(label = ifelse(pct.100>0,paste0("", round(pct.100,1),"%"),
+                                          paste0(pct.100,"%")),y = 0),
+             color = "#2b8cbe", fill = "white", size = 3) +
+  theme(#axis.line = element_line(colour = "grey20", size =.2),
+    axis.ticks = element_blank(),
+    #axis.text.x = element_text(vjust = 9,margin = margin(t = 6)),
+    #axis.title.y = element_text(color = "black", vjust = 2, size = 10),
+    panel.border = element_blank(), 
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.x = element_blank(), 
+    panel.grid.major.y = element_blank(), 
+    panel.grid.minor.y = element_blank(),
+    legend.position="top",
+    legend.title = element_blank(),
+    plot.margin = margin(0, 0, 0, 0, "cm")
+  ) 
+
+
