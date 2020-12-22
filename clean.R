@@ -74,8 +74,17 @@ regions <- read.csv("data/regions.csv")
 ##########
 
 # clean cost data
-cost_data <- cost_data %>% select(state.abb = `State Abbrev`, 
-                                  costperday = `State Reported CostPerDay`)
+cost_data <- Cost_Per_Day_For_Calculation %>% select(state.abb = `State Abbrev`, 
+                                                     cost.per.day = `State Reported CostPerDay`,
+                                                     cost.per.year = `State Reported CostPerDay Total Supv Cost`, 
+                                                     cost.per.year.tech = `State Reported Cost Per Day Tech Supv Cost`)
+# create pct variables
+cost_data <- cost_data %>% mutate(pct.tech = cost.per.year.tech/cost.per.year)
+cost_data <- cost_data %>% mutate(pct.supervision = 1-pct.tech)
+cost_data$state.abb <- factor(cost_data$state.abb)
+
+# remove Nas
+cost_data <- cost_data[cost_data$cost.per.year != 0,]
 
 # remove excess rows and columns
 admissions_2017 <- admissions_2017[-c(51,52),] # remove excess rows

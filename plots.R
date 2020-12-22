@@ -5,15 +5,8 @@
 # 12/1/2020
 #######################################
 
-# needed for bbc style
-install.packages('devtools')
-devtools::install_github('bbc/bbplot')
-if(!require(pacman))install.packages("pacman")
-pacman::p_load('dplyr', 'tidyr', 'gapminder',
-               'ggplot2',  'ggalt',
-               'forcats', 'R.utils', 'png', 
-               'grid', 'ggpubr', 'scales',
-               'bbplot')
+# libraries
+require(scales)
 
 ##########################
 # grouped bar charts
@@ -147,21 +140,69 @@ g_northeast + theme_csgjc
 # Costs
 ######################
 
-# south violations in 2019
-g2 <- ggplot(cost_data, aes(x = reorder(state.abb, -costperday), y = costperday)) +
+#Make plot
+# Southern = Orange
+# Northeast = Blues
+# Midwest = Reds
+# West = Greens
+
+# subset to population data in south
+population <- df %>% filter(type == "population", year == "2019")
+cost_per_year <- population %>% select(state.abb,
+                                       cost.per.year,
+                                       cost.per.year.tech)
+cost_melt <- melt(cost_per_year, id.vars="state.abb")
+cost_melt <-merge(regions, cost_melt, by = "state.abb")
+
+# get pct tech
+pct_tech <- population %>% select(state.abb, pct.tech)
+
+# costs
+g2 <- ggplot(cost_data, aes(x = reorder(state.abb, -cost.per.day), y = cost.per.day)) +
   geom_bar(stat="identity", 
            position="identity", 
-           width = 0.75) + theme_bw()
+           width = 0.75) + 
+  theme_bw()
 
 g2 + theme_csgjc
 
+#########
+# south
+#########
+
+south_cost <- cost_melt %>% filter(region == "South")
+
+# stacked barchart of technical vs nontechnical costs
+g_south <- ggplot(data = south_cost, aes(x = reorder(state.abb, -value), y = value, fill = variable)) + 
+      geom_bar(stat="identity", position="stack") + 
+      scale_fill_manual(values = c("#fdbe85","#e6550d"),
+                        labels = c("Total Cost Per Year", "Technical Cost Per Year")) +
+      scale_y_continuous(#labels = comma,
+                         labels = dollar_format(),
+                         breaks=seq(0,800000000,100000000)) +
+      theme_csgjc 
+g_south                            
+                            
+#########
+# west
+#########
+
+west_cost <- cost_melt %>% filter(region == "West")
+
+# stacked barchart of technical vs nontechnical costs
+g_west <- ggplot(data = west_cost, aes(x = reorder(state.abb, -value), y = value, fill = variable)) + 
+  geom_bar(stat="identity", position="stack") + 
+  scale_fill_manual(values = c("#bae4b3","#31a354"),
+                    labels = c("Total Cost Per Year", "Technical Cost Per Year")) +
+  scale_y_continuous(#labels = comma,
+    labels = dollar_format(),
+    breaks=seq(0,3000000000,500000000)
+    ) +
+  theme_csgjc 
+g_west 
 
 
-
-
-
-
-
-
-
-
+                            
+                            
+                            
+                            
