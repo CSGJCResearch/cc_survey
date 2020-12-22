@@ -168,4 +168,3 @@ df <- merge(df, regions, by = "state.abb")
 
 # add cost info
 df <- merge(df, cost_data, by = "state.abb")
-

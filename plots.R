@@ -8,15 +8,20 @@
 # libraries
 require(scales)
 
-##########################
-# grouped bar charts
-##########################
-
 # sort data
 df <- with(df, df[order(year, type, region),])
 
 # subset to population data in south
 population <- df %>% filter(type == "population")
+
+# pct tech supervision
+pct_tech <- population %>% select(state.abb, pct.tech)
+pct_tech <- pct_tech %>% mutate(pct.tech.100 = pct.tech*100)
+
+##########################
+# grouped bar charts
+##########################
+
 south <- population %>% filter(region == "South")
 
 # arrange population in decreasing order
@@ -191,7 +196,7 @@ west_cost <- cost_melt %>% filter(region == "West")
 
 # stacked barchart of technical vs nontechnical costs
 g_west <- ggplot(data = west_cost, aes(x = reorder(state.abb, -value), y = value, fill = variable)) + 
-  geom_bar(stat="identity", position="stack") + 
+  geom_bar(stat="identity", position="stack",0.75) + 
   scale_fill_manual(values = c("#bae4b3","#31a354"),
                     labels = c("Total Cost Per Year", "Technical Cost Per Year")) +
   scale_y_continuous(#labels = comma,
@@ -199,10 +204,69 @@ g_west <- ggplot(data = west_cost, aes(x = reorder(state.abb, -value), y = value
     breaks=seq(0,3000000000,500000000)
     ) +
   theme_csgjc 
-g_west 
 
+#########
+# west with pct labels
+#########
 
-                            
-                            
-                            
-                            
+# add pct supervsion to data
+west_cost1 <- merge(west_cost, pct_tech, by = "state.abb")
+g_west + geom_label(data = west_cost1, 
+                    vjust = 1.2,
+         mapping = aes(label = ifelse(pct.tech.100>0,paste0("", round(pct.tech.100,1),"%"),
+                                      paste0(pct.tech.100,"%")),y = 0), color = "darkgreen", fill = "white", size = 3) + 
+  geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "darkgreen", fill = "white") +
+  annotate("text", x = 7.4, y = 3099900000, label= "Percent of Costs Used for Technical Revocations", size = 3) +theme_csgjc 
+
+#########
+# top 20 with pct labels
+#########                            
+
+top_20 <- cost_melt %>% filter(variable=="cost.per.year") %>% group_by(state.abb) %>% arrange(desc(value)) %>% head(20) %>% select(state.abb)                 
+top_20 <- merge(top_20, cost_melt, by = "state.abb")
+top_20 <- merge(top_20, pct_tech, by = "state.abb")
+
+g_top_20 <- ggplot(data = top_20, aes(x = reorder(state.abb, -value), y = value, fill = variable)) + 
+  geom_bar(stat="identity", position="stack", width = 0.75) + 
+  scale_fill_manual(values = c("#bae4b3","#31a354"),
+                    labels = c("Total Cost Per Year", "Technical Cost Per Year")) +
+  scale_y_continuous(#labels = comma,
+    labels = dollar_format(),
+    breaks=seq(0,3000000000,500000000)
+  ) + 
+  theme_csgjc
+
+g_top_20 + geom_label(data = top_20, 
+                      vjust = 1.2,
+                      mapping = aes(label = ifelse(pct.tech.100>0,paste0("", round(pct.tech.100,1),"%"),
+                                                   paste0(pct.tech.100,"%")),y = 0), 
+                                    color = "darkgreen", fill = "white", size = 3) + 
+  geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "darkgreen", fill = "white") +
+  annotate("text", x = 7.4, y = 3099900000, label= "Percent of Costs Used for Technical Revocations", size = 3) 
+  
+#########
+# top 20 pct with pct labels
+######### 
+
+top_20_pct <- pct_tech %>% group_by(state.abb) %>% arrange(desc(pct.tech)) %>% head(20) %>% select(state.abb)               
+top_20_pct <- merge(top_20_pct, cost_melt, by = "state.abb")
+top_20_pct <- merge(top_20_pct, pct_tech, by = "state.abb")
+
+g_top_20 <- ggplot(data = top_20_pct, aes(x = reorder(state.abb, -value), y = value, fill = variable)) + 
+  geom_bar(stat="identity", position="stack", width = 0.75) + 
+  scale_fill_manual(values = c("#bae4b3","#31a354"),
+                    labels = c("Total Cost Per Year", "Technical Cost Per Year")) +
+  scale_y_continuous(#labels = comma,
+    labels = dollar_format(),
+    breaks=seq(0,1500000000,250000000)
+  ) + 
+  theme_csgjc
+
+g_top_20 + geom_label(data = top_20_pct, 
+                      vjust = 1.2,
+                      mapping = aes(label = ifelse(pct.tech.100>0,paste0("", round(pct.tech.100,1),"%"),
+                                                   paste0(pct.tech.100,"%")),y = 0), 
+                      color = "darkgreen", fill = "white", size = 3) + 
+  geom_point(x = 4.65, y = 1800000000, shape = 22, size = 8, color = "darkgreen", fill = "white") +
+  annotate("text", x = 7.4, y = 1800000000, label= "Percent of Costs Used for Technical Revocations", size = 3) 
+

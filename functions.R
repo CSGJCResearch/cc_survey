@@ -9,7 +9,8 @@
 theme_csgjc <- 
             theme(#axis.line = element_line(colour = "grey20", size =.2),
               axis.ticks = element_blank(),
-              axis.text.x = element_text(vjust = 5),
+              axis.text.x = element_text(vjust = 1.5,
+                                         margin = margin(t = 6)),
               #axis.title.y = element_text(color = "black", vjust = 2, size = 10),
               panel.border = element_blank(), 
               panel.grid.major.x = element_blank(), 
@@ -17,5 +18,7 @@ theme_csgjc <-
               #panel.grid.major.y = element_blank(), 
               panel.grid.minor.y = element_blank(),
               legend.position="top",
-              legend.title = element_blank())
+              legend.title = element_blank(),
+              plot.margin = margin(0, 0, 0, 0, "cm")
+              )
 
