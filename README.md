@@ -5,9 +5,9 @@ In 2018, The Council of State Governments (CSG) Justice Center conducted a surve
 ## Repository Structure
 
     |-- code    
-      |-- clean.R                                                  # imports/cleans survey data (mari)  
-      |-- plots.R                                                  # plots (mari)
-      |-- functions.R                                              # custom functions (mari)
+      |-- clean.R                                                  # imports/cleans survey data 
+      |-- plots.R                                                  # plots 
+      |-- functions.R                                              # custom functions 
     |-- data 
       |-- 50-State Revocation Survey_October 27, 2020_12.25.xlsx   # raw survey responses   
       |-- Cost Per Day For Calculation.xlsx                        # costs by state  
