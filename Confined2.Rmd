@@ -1,0 +1,286 @@
+---
+output: pdf_document
+geometry: "left=1cm,right=1cm,top=1.5cm,bottom=1.5cm"
+
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(lubridate)
+library(readxl)
+
+library(wesanderson)
+
+no_grid <- theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+
+```
+
+
+```{r, include = FALSE}
+
+population17 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Population 2017", .name_repair = "universal")
+population18 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Population 2018", .name_repair = "universal")
+population19 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
+
+# Include fake 2020 data (copy of 2019)
+population20 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
+
+population17 <- population17 %>%
+  select(-Population.Year)
+
+population17$year <- "2017"
+population18$year <- "2018"
+population19$year <- "2019"
+population20$year <- "2020"
+
+
+population <- rbind(population17, population18, population19, population20)
+population <- filter(population, State.Abbrev != "NA")
+population <- population %>% select(-State.Abbrev)
+
+
+adm17 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Admissions 2017-R", .name_repair = "universal")
+adm18 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
+adm19 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+
+# Include fake 2020 data (copy of 2019)
+adm20 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+
+
+adm17 <- adm17 %>%
+  select(-c(Change.in.Revised.Data, No.Revised.Data.Provided, ...11, State.Abbrev))
+
+adm18 <- adm18 %>%
+  select(-c(Publicly.Available.Data, ...11, State.Abbrev))
+
+adm19 <- adm19 %>%
+  select(-c(Publicly.Available.Data, ...11, State.Abbrev))
+
+adm20 <- adm20 %>%
+  select(-c(Publicly.Available.Data, ...11, State.Abbrev))
+
+adm17$year <- "2017"
+adm18$year <- "2018"
+adm19$year <- "2019"
+adm20$year <- "2020"
+
+adm <- rbind(adm17, adm18, adm19, adm20)
+adm <- filter(adm, States != "NA")
+
+adm <- filter(adm, States != "Total")
+adm <- filter(adm, States != "Count")
+
+```
+
+
+```{r}
+
+
+adm <- adm %>%
+  mutate(New.commitments = Total.admissions - Total.violation.admissions)
+
+population <- population %>%
+  mutate(New.commitments = Total.population - Total.violation.population)
+
+
+```
+
+
+
+
+```{r}
+
+adm_long <- adm %>%
+  pivot_longer(cols = -c(States,year), names_to = "category", values_to = "count")
+
+pop_long <- population %>%
+  pivot_longer(cols = -c(States,year), names_to = "category", values_to = "count")
+
+```
+
+
+
+
+
+```{r}
+
+adm_long <- adm_long %>%
+  mutate(Totals = case_when(category == "New.commitments" ~ "New Commitments",
+                          category == "Total.probation.violation.admissions" ~ "Probation",
+                          category == "Total.parole.violation.admissions" ~ "Parole")) %>%
+  mutate(Probation = case_when(category == "New.offense.probation.violation.admissions" ~ "Non-Technical",
+                          category == "Technical.probation.violation.admissions" ~ "Technical")) %>%
+  mutate(Parole = case_when(category == "New.offense.parole.violation.admissions" ~ "Non-Technical",
+                          category == "Technical.parole.violation.admissions" ~ "Technical"))
+
+pop_long <- pop_long %>%
+  mutate(Totals = case_when(category == "New.commitments" ~ "New Commitments",
+                          category == "Total.probation.violation.population" ~ "Probation",
+                          category == "Total.parole.violation.population" ~ "Parole")) %>%
+  mutate(Probation = case_when(category == "New.offense.probation.violation.population" ~ "Non-Technical",
+                          category == "Technical.probation.violation.population" ~ "Technical")) %>%
+  mutate(Parole = case_when(category == "New.offense.parole.violation.population" ~ "Non-Technical",
+                          category == "Technical.parole.violation.population" ~ "Technical"))
+
+```
+
+
+```{r}
+
+adm_long$Totals <- as.factor(adm_long$Totals)
+pop_long$Totals <- as.factor(pop_long$Totals)
+
+adm_long$Totals <- factor(adm_long$Totals, levels = c("New Commitments","Probation","Parole"))
+pop_long$Totals <- factor(pop_long$Totals, levels = c("New Commitments","Probation","Parole"))
+
+```
+
+
+
+```{r}
+
+adm_change <- subset(adm, select = c(States, year, Total.admissions, New.offense.probation.violation.admissions,
+                                     Technical.probation.violation.admissions)) %>%
+  arrange(desc(States))
+
+pop_change <- subset(population, select = c(States, year, Total.population, New.offense.probation.violation.population,
+                                     Technical.probation.violation.population, New.offense.parole.violation.population,
+                                     Technical.parole.violation.population)) %>%
+  arrange(desc(States))
+
+pop_change <- pop_change %>% 
+  mutate(Supervision.violations = New.offense.probation.violation.population + New.offense.parole.violation.population) %>%
+  mutate(Technical.violations = Technical.probation.violation.population + Technical.parole.violation.population) %>%
+  select(-c(New.offense.probation.violation.population, New.offense.parole.violation.population, 
+            Technical.probation.violation.population, Technical.parole.violation.population)) %>%
+  mutate(Overall.population = (Total.population / lag(Total.population) -1)*100) %>%
+  mutate(Population.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
+  mutate(Population.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
+  filter(year != "2017")
+
+```
+
+
+```{r}
+
+# kable(subset(pop_change, States == "Alaska"))
+
+
+
+```
+
+```{r}
+
+
+
+
+
+```
+
+
+```{r, figures-side, fig.show="hold", out.width="50%"}
+
+par(mar = c(2, 1, 2, 1))
+
+ggplot(subset(adm_long, States == "Alaska" & Totals != "NA"), aes(x = year, y = count, fill = Totals)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.85) +
+  scale_fill_manual(values = wes_palette("GrandBudapest1", n = 3)) +
+  labs(title = "Admissions", subtitle = "Prison Admissions by Year") +
+  geom_text(aes(label = count, x = year),
+            position = position_dodge(width = 0.85), color="black", size = 3.5, vjust = -0.8) +
+  theme_bw() +
+  no_grid + theme(legend.title = element_blank(),
+                  legend.position = "bottom",
+                  plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
+                  plot.subtitle = element_text(hjust = 0.5, size = 15),
+                  axis.text.x = element_text(size = 12, face = "bold"))
+
+ggplot(subset(pop_long, States == "Alaska" & Totals != "NA"), aes(x = year, y = count, fill = Totals)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.85) +
+  scale_fill_manual(values = wes_palette("GrandBudapest1", n = 3)) +
+  labs(title = "Population", subtitle = "Prison Population by Year") +
+  geom_text(aes(label = count, x = year),
+            position = position_dodge(width = 0.85), color="black", size = 3.5, vjust = -0.8) +
+  theme_bw() +
+  no_grid + theme(legend.title = element_blank(),
+                  legend.position = "bottom",
+                  plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
+                  plot.subtitle = element_text(hjust = 0.5, size = 15),
+                  axis.text.x = element_text(size = 12, face = "bold"))
+
+```
+
+```{r, fig.height = 4, fig.show="hold", out.width="50%"}
+
+ggplot(subset(adm_long, States == "Alaska" & Probation != "NA"), aes(x = year, y = count, fill = Probation)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.65) +
+  scale_fill_manual(values = wes_palette("Royal2", n = 2)) +
+  labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
+  geom_text(aes(label = count, x = year),
+            position = position_dodge(width = 0.65), color="black", size = 3.5, vjust = -0.8) +
+  theme_bw() +
+  no_grid + theme(legend.title = element_blank(),
+                  legend.position = "bottom",
+                  plot.subtitle = element_text(hjust = 0.5, size = 15),
+                  axis.text.x = element_text(size = 12, face = "bold"))
+
+
+
+ggplot(subset(pop_long, States == "Alaska" & Probation != "NA"), aes(x = year, y = count, fill = Probation)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.65) +
+  scale_fill_manual(values = wes_palette("Royal2", n = 2)) +
+  labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
+  geom_text(aes(label = count, x = year),
+            position = position_dodge(width = 0.65), color="black", size = 3.5, vjust = -0.8) +
+  theme_bw() +
+  no_grid + theme(legend.title = element_blank(),
+                  legend.position = "bottom",
+                  plot.subtitle = element_text(hjust = 0.5, size = 15),
+                  axis.text.x = element_text(size = 12, face = "bold"))
+
+  
+```
+
+
+
+```{r, fig.height = 4, fig.show="hold", out.width="50%"}
+
+ggplot(subset(adm_long, States == "Alaska" & Parole != "NA"), aes(x = year, y = count, fill = Parole)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.65) +
+  scale_fill_manual(values = wes_palette("Royal1", n = 2)) +
+  labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
+  geom_text(aes(label = count, x = year),
+            position = position_dodge(width = 0.65), color="black", size = 3.5, vjust = -0.8) +
+  theme_bw() +
+  no_grid + theme(legend.title = element_blank(),
+                  legend.position = "bottom",
+                  plot.subtitle = element_text(hjust = 0.5, size = 15),
+                  axis.text.x = element_text(size = 12, face = "bold"))
+
+
+
+ggplot(subset(pop_long, States == "Alaska" & Parole != "NA"), aes(x = year, y = count, fill = Parole)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.65) +
+  scale_fill_manual(values = wes_palette("Royal1", n = 2)) +
+  labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
+  geom_text(aes(label = count, x = year),
+            position = position_dodge(width = 0.65), color="black", size = 3.5, vjust = -0.8) +
+  theme_bw() +
+  no_grid + theme(legend.title = element_blank(),
+                  legend.position = "bottom",
+                  plot.subtitle = element_text(hjust = 0.5, size = 15),
+                  axis.text.x = element_text(size = 12, face = "bold"))
+
+  
+```
+
+
+
