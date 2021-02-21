@@ -22,65 +22,110 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
                      panel.grid.minor.x = element_blank(), 
                      #panel.grid.major.y = element_blank(), 
                      #panel.grid.minor.y = element_blank(),
-                     legend.position = "none",
-                     plot.title = 
-                       element_text(hjust = 0.5),
+                     legend.title = element_blank(),
+                     legend.position = "top",
+                     plot.title = element_text(hjust = 0.5,size = 12, face = "bold"),
+                     plot.subtitle = element_text(hjust = 0.5, size = 15),
                      plot.margin = margin(0, 0, 0, 0, "cm"))
+
+
+
+adm_long_1 <- adm_long %>% filter(States=="Alaska"|States=="Alabama"|States=="Delaware"|States=="Hawaii"|States=="New York"|States== "Wyoming")
+
+pop_long_1 <- pop_long %>% filter(States=="Alaska"|States=="Alabama"|States=="Delaware"|States=="Hawaii"|States=="New York"|States== "Wyoming")
+
 
 ##################
 # admissions by year (prob, parole, new commits)
 ##################
 
 # subset data
-adm_by_year <- adm_long %>% filter(category=="Total.probation.violation.admissions"|
+adm_by_year <- adm_long_1 %>% filter(category=="Total.probation.violation.admissions"|
                                    category=="Total.parole.violation.admissions"| 
                                    category=="New.commitments") %>% select(-Totals,-Probation,-Parole)
-adm_by_year <- adm_by_year %>% filter(States=="Alaska"|States=="Alabama"|States=="Delaware"|States=="Hawaii"|States=="New York"|States== "Wyoming")
+adm_by_year <- adm_by_year %>%
+  mutate(category = case_when(category == "New.commitments" ~ "New Commitments",
+                              category == "Total.parole.violation.admissions" ~ "Parole",
+                              category == "Total.probation.violation.admissions" ~ "Probation"))
 
 # custom plot function
 adm_by_year_plot <- function(df, myvar) {      
-  ggplot(data = df %>% filter(States == myvar), 
+   ggplot(data = df %>% filter(States == myvar), 
          aes(x = year, y = count, fill=category)) +
          geom_bar(stat = "identity", position = "stack", width = 0.65) +
          scale_y_continuous(labels = scales::comma) +
-         xlab("Year") + 
+         #xlab("Year") + 
          #ylab("Count") +
+         labs(subtitle = "Prison Admissions by Year") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values=c("#08519c", "#3182bd", "#6baed6")) +
-    theme_bw() +
+    scale_fill_manual(values = c("#6baed6", "#3182bd", "#08519c")) + 
+    theme_bw() + no_grid + 
     theme_csgjc
 }
-
-# test
-# adm_by_year_plot(adm_by_year, 'Alaska')
 
 # loop through states var, create plots & store them in a list
 adm_by_year_plot_list <- unique(adm_by_year$States) %>% 
   purrr::set_names() %>% 
   purrr::map( ~ adm_by_year_plot(adm_by_year, .x))
 
-# str(adm_by_year_plot_list, max.level = 1) # view list
-
 # save all plots to PNG files
 purrr::iwalk(adm_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_by_year_", .y, ".png"),
-                      type = 'cairo', width = 6, height = 6, dpi = 150)
+                      type = 'cairo', width = 6, height = 4, dpi = 150)
 )
 
 ##################
 # admissions for probation violations (tech vs nontech)
 ##################
 
+# Probation Violations Resulting in DOC Incarceration
+
+# subset data
+adm_prob <- adm_long_1 %>% filter(category=="New.offense.probation.violation.admissions"|
+                                  category=="Technical.probation.violation.admissions") %>% 
+                           select(-Totals,-Probation,-Parole)
+adm_prob <- adm_prob %>%
+  mutate(category = case_when(category == "New.offense.probation.violation.admissions" ~ "Non-Technical",
+                              category == "Technical.probation.violation.admissions" ~ "Technical"))
+
+# custom plot function
+adm_prob_plot <- function(df, myvar) {      
+  ggplot(data = df %>% filter(States == myvar), 
+         aes(x = year, y = count, fill=category)) +
+    geom_bar(stat = "identity", position = "stack", width = 0.65) +
+    scale_y_continuous(labels = scales::comma) +
+    #xlab("Year") + 
+    #ylab("Count") +
+    labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
+    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
+    scale_fill_manual(values = c("#8856a7", "#8c96c6")) + 
+    theme_bw() + no_grid + 
+    theme_csgjc
+}
+
+# loop through states var, create plots & store them in a list
+adm_prob_plot_list <- unique(adm_prob$States) %>% 
+  purrr::set_names() %>% 
+  purrr::map( ~ adm_prob_plot(adm_prob, .x))
+
+# save all plots to PNG files
+purrr::iwalk(adm_prob_plot_list,
+             ~ ggsave(plot = .x,
+                      path="plots",
+                      filename = paste0("adm_prob_", .y, ".png"),
+                      type = 'cairo', width = 6, height = 4, dpi = 150)
+)
+
 ##################
 # admissions for parole violations (tech vs nontech)
 ##################
 
+# Parole Violations Resulting in DOC Incarceration
 
 
-
-
+# New.offense.parole.violation.admissions, Technical.parole.violation.admissions
 
 
 ##################
@@ -88,10 +133,14 @@ purrr::iwalk(adm_by_year_plot_list,
 ##################
 
 # subset data
-pop_by_year <- pop_long %>% filter(category=="Total.probation.violation.population"|
+pop_by_year <- pop_long_1 %>% filter(category=="Total.probation.violation.population"|
                                      category=="Total.parole.violation.population"| 
                                      category=="New.commitments") %>% select(-Totals,-Probation,-Parole)
-pop_by_year <- pop_by_year %>% filter(States=="Alaska"|States=="Alabama"|States=="Delaware"|States=="Hawaii"|States=="New York"|States== "Wyoming")
+pop_by_year <- pop_by_year %>%
+  mutate(category = case_when(category == "New.commitments" ~ "New Commitments",
+                              category == "Total.parole.violation.population" ~ "Parole",
+                              category == "Total.probation.violation.population" ~ "Probation"))
+
 
 # custom plot function
 pop_by_year_plot <- function(df, myvar) {      
@@ -99,36 +148,72 @@ pop_by_year_plot <- function(df, myvar) {
          aes(x = year, y = count, fill=category)) +
     geom_bar(stat = "identity", position = "stack", width = 0.65) +
     scale_y_continuous(labels = scales::comma) +
-    xlab("Year") + 
+    #xlab("Year") + 
     #ylab("Count") +
+    labs(subtitle = "Prison Population by Year") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values=c("#08519c", "#3182bd", "#6baed6")) +
-    theme_bw() +
+    scale_fill_manual(values = c("#6baed6", "#3182bd", "#08519c")) + 
+    theme_bw() + no_grid + 
     theme_csgjc
 }
-
-# test
-# pop_by_year_plot(pop_by_year, 'Alaska')
 
 # loop through states var, create plots & store them in a list
 pop_by_year_plot_list <- unique(pop_by_year$States) %>% 
   purrr::set_names() %>% 
-  purrr::map( ~ adm_by_year_plot(pop_by_year, .x))
-
-# str(pop_by_year_plot_list, max.level = 1) # view list
+  purrr::map( ~ pop_by_year_plot(pop_by_year, .x))
 
 # save all plots to PNG files
 purrr::iwalk(pop_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_by_year_", .y, ".png"),
-                      type = 'cairo', width = 6, height = 6, dpi = 150)
+                      type = 'cairo', width = 6, height = 4, dpi = 150)
 )
 
 ##################
 # pop for probation violations (tech vs nontech)
 ##################
 
+# Probation Violations Resulting in DOC Incarceration
+
+# subset data
+pop_prob <- pop_long_1 %>% filter(category=="New.offense.probation.violation.population"|
+                                    category=="Technical.probation.violation.population") %>% 
+  select(-Totals,-Probation,-Parole)
+pop_prob <- pop_prob %>%
+  mutate(category = case_when(category == "New.offense.probation.violation.population" ~ "Non-Technical",
+                              category == "Technical.probation.violation.population" ~ "Technical"))
+
+# custom plot function
+pop_prob_plot <- function(df, myvar) {      
+  ggplot(data = df %>% filter(States == myvar), 
+         aes(x = year, y = count, fill=category)) +
+    geom_bar(stat = "identity", position = "stack", width = 0.65) +
+    scale_y_continuous(labels = scales::comma) +
+    #xlab("Year") + 
+    #ylab("Count") +
+    labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
+    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
+    scale_fill_manual(values = c("#8856a7", "#8c96c6")) + 
+    theme_bw() + no_grid + 
+    theme_csgjc
+}
+
+# loop through states var, create plots & store them in a list
+pop_prob_plot_list <- unique(pop_prob$States) %>% 
+  purrr::set_names() %>% 
+  purrr::map( ~ pop_prob_plot(pop_prob, .x))
+
+# save all plots to PNG files
+purrr::iwalk(pop_prob_plot_list,
+             ~ ggsave(plot = .x,
+                      path="plots",
+                      filename = paste0("pop_prob_", .y, ".png"),
+                      type = 'cairo', width = 6, height = 4, dpi = 150)
+)
+
 ##################
 # pop for parole violations (tech vs nontech)
 ##################
+
+# New.offense.parole.violation.population, Technical.parole.violation.population
