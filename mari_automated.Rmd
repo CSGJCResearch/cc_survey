@@ -1,7 +1,7 @@
 ---
-title: "State "
-author: "Mari Roberts and Amund Tallaksen"
-date: "2/18/2021"
+title: "Confined and Costly State Reports"
+author: "CSG Justice Center"
+date: "2/21/2021"
 output: pdf_document
 geometry: "left=1cm,right=1cm,top=1.5cm,bottom=1.5cm"
 ---
@@ -12,11 +12,42 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 # load clean data from automated_clean.R
-source("automated_plots.R")
+#source("automated_plots.R")
+```
+
+# Background
+
+
+
+
+
+# Alaska
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Alaska.png")
+knitr::include_graphics("plots/pop_by_year_Alaska.png")
 ```
 
 
-```{r}
+# Alabama
 
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Alabama.png")
+knitr::include_graphics("plots/pop_by_year_Alabama.png")
 ```
+
+# Delaware
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Delaware.png")
+knitr::include_graphics("plots/pop_by_year_Delaware.png")
+```
+
+# New York
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_New York.png")
+knitr::include_graphics("plots/pop_by_year_New York.png")
+```
+
 

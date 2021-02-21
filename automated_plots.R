@@ -83,13 +83,47 @@ purrr::iwalk(adm_by_year_plot_list,
 
 
 
-
-
-
-
 ##################
 # pop by year (prob, parole, new commits)
 ##################
+
+# subset data
+pop_by_year <- pop_long %>% filter(category=="Total.probation.violation.population"|
+                                     category=="Total.parole.violation.population"| 
+                                     category=="New.commitments") %>% select(-Totals,-Probation,-Parole)
+pop_by_year <- pop_by_year %>% filter(States=="Alaska"|States=="Alabama"|States=="Delaware"|States=="Hawaii"|States=="New York"|States== "Wyoming")
+
+# custom plot function
+pop_by_year_plot <- function(df, myvar) {      
+  ggplot(data = df %>% filter(States == myvar), 
+         aes(x = year, y = count, fill=category)) +
+    geom_bar(stat = "identity", position = "stack", width = 0.65) +
+    scale_y_continuous(labels = scales::comma) +
+    xlab("Year") + 
+    #ylab("Count") +
+    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
+    scale_fill_manual(values=c("#08519c", "#3182bd", "#6baed6")) +
+    theme_bw() +
+    theme_csgjc
+}
+
+# test
+# pop_by_year_plot(pop_by_year, 'Alaska')
+
+# loop through states var, create plots & store them in a list
+pop_by_year_plot_list <- unique(pop_by_year$States) %>% 
+  purrr::set_names() %>% 
+  purrr::map( ~ adm_by_year_plot(pop_by_year, .x))
+
+# str(pop_by_year_plot_list, max.level = 1) # view list
+
+# save all plots to PNG files
+purrr::iwalk(pop_by_year_plot_list,
+             ~ ggsave(plot = .x,
+                      path="plots",
+                      filename = paste0("pop_by_year_", .y, ".png"),
+                      type = 'cairo', width = 6, height = 6, dpi = 150)
+)
 
 ##################
 # pop for probation violations (tech vs nontech)
