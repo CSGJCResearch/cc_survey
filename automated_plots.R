@@ -1,6 +1,6 @@
 #######################################
 # Confined and Costly Survey
-# Imports/cleans CC Survey for Automated Reports
+# Plots for Automated CC Study Reports
 # by Mari Roberts
 # 2/21/2020
 #######################################
@@ -28,12 +28,12 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
                      plot.subtitle = element_text(hjust = 0.5, size = 15),
                      plot.margin = margin(0, 0, 0, 0, "cm"))
 
+# subset to a few states for now ################################################
+adm_long_1 <- adm_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
+                                    States=="Arkansas"|States=="California"|States== "Colorado")
 
-
-adm_long_1 <- adm_long %>% filter(States=="Alaska"|States=="Alabama"|States=="Delaware"|States=="Hawaii"|States=="New York"|States== "Wyoming")
-
-pop_long_1 <- pop_long %>% filter(States=="Alaska"|States=="Alabama"|States=="Delaware"|States=="Hawaii"|States=="New York"|States== "Wyoming")
-
+pop_long_1 <- pop_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
+                                    States=="Arkansas"|States=="California"|States== "Colorado")
 
 ##################
 # admissions by year (prob, parole, new commits)
@@ -124,9 +124,41 @@ purrr::iwalk(adm_prob_plot_list,
 
 # Parole Violations Resulting in DOC Incarceration
 
+# subset data
+adm_parole <- adm_long_1 %>% filter(category=="New.offense.parole.violation.admissions"|
+                                      category=="Technical.parole.violation.admissions") %>% 
+  select(-Totals,-Probation,-Parole)
+adm_parole <- adm_parole %>%
+  mutate(category = case_when(category == "New.offense.parole.violation.admissions" ~ "Non-Technical",
+                              category == "Technical.parole.violation.admissions" ~ "Technical"))
 
-# New.offense.parole.violation.admissions, Technical.parole.violation.admissions
+# custom plot function
+adm_parole_plot <- function(df, myvar) {      
+  ggplot(data = df %>% filter(States == myvar), 
+         aes(x = year, y = count, fill=category)) +
+    geom_bar(stat = "identity", position = "stack", width = 0.65) +
+    scale_y_continuous(labels = scales::comma) +
+    #xlab("Year") + 
+    #ylab("Count") +
+    labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
+    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
+    scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
+    theme_bw() + no_grid + 
+    theme_csgjc
+}
 
+# loop through states var, create plots & store them in a list
+adm_parole_plot_list <- unique(adm_parole$States) %>% 
+  purrr::set_names() %>% 
+  purrr::map( ~ adm_parole_plot(adm_parole, .x))
+
+# save all plots to PNG files
+purrr::iwalk(adm_parole_plot_list,
+             ~ ggsave(plot = .x,
+                      path="plots",
+                      filename = paste0("adm_parole_", .y, ".png"),
+                      type = 'cairo', width = 6, height = 4, dpi = 150)
+)
 
 ##################
 # pop by year (prob, parole, new commits)
@@ -216,4 +248,38 @@ purrr::iwalk(pop_prob_plot_list,
 # pop for parole violations (tech vs nontech)
 ##################
 
-# New.offense.parole.violation.population, Technical.parole.violation.population
+# subset data
+pop_parole <- pop_long_1 %>% filter(category=="New.offense.parole.violation.population"|
+                                      category=="Technical.parole.violation.population") %>% 
+  select(-Totals,-Parole,-Probation)
+pop_parole <- pop_parole %>%
+  mutate(category = case_when(category == "New.offense.parole.violation.population" ~ "Non-Technical",
+                              category == "Technical.parole.violation.population" ~ "Technical"))
+
+# custom plot function
+pop_parole_plot <- function(df, myvar) {      
+  ggplot(data = df %>% filter(States == myvar), 
+         aes(x = year, y = count, fill=category)) +
+    geom_bar(stat = "identity", position = "stack", width = 0.65) +
+    scale_y_continuous(labels = scales::comma) +
+    #xlab("Year") + 
+    #ylab("Count") +
+    labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
+    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
+    scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
+    theme_bw() + no_grid + 
+    theme_csgjc
+}
+
+# loop through states var, create plots & store them in a list
+pop_parole_plot_list <- unique(pop_parole$States) %>% 
+  purrr::set_names() %>% 
+  purrr::map( ~ pop_parole_plot(pop_parole, .x))
+
+# save all plots to PNG files
+purrr::iwalk(pop_parole_plot_list,
+             ~ ggsave(plot = .x,
+                      path="plots",
+                      filename = paste0("pop_parole_", .y, ".png"),
+                      type = 'cairo', width = 6, height = 4, dpi = 150)
+)

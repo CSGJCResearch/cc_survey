@@ -10,11 +10,6 @@ geometry: "left=1cm,right=1cm,top=1.5cm,bottom=1.5cm"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
-# load clean data from automated_clean.R
-#source("automated_plots.R")
-```
-
 # Background
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pharetra diam sit amet nisl suscipit adipiscing. Dictumst quisque sagittis purus sit amet volutpat consequat. Viverra ipsum nunc aliquet bibendum enim facilisis gravida neque convallis. Egestas congue quisque egestas diam. Curabitur vitae nunc sed velit. Nulla aliquet enim tortor at auctor urna nunc. Placerat duis ultricies lacus sed turpis tincidunt. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit. Risus at ultrices mi tempus imperdiet nulla malesuada. Quis blandit turpis cursus in hac habitasse platea dictumst quisque. In massa tempor nec feugiat nisl pretium fusce id. Risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit. Tristique senectus et netus et malesuada fames ac turpis egestas. Aenean sed adipiscing diam donec. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Elementum facilisis leo vel fringilla est ullamcorper eget nulla facilisi.
@@ -32,3 +27,42 @@ knitr::include_graphics("plots/adm_parole_Alabama.png")
 knitr::include_graphics("plots/pop_parole_Alabama.png")
 ```
 
+# Alaska
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Alaska.png")
+knitr::include_graphics("plots/pop_by_year_Alaska.png")
+knitr::include_graphics("plots/adm_prob_Alaska.png")
+knitr::include_graphics("plots/pop_prob_Alaska.png")
+knitr::include_graphics("plots/adm_parole_Alaska.png")
+knitr::include_graphics("plots/pop_parole_Alaska.png")
+```
+
+# Arizona
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Arizona.png")
+knitr::include_graphics("plots/pop_by_year_Arizona.png")
+knitr::include_graphics("plots/adm_prob_Arizona.png")
+knitr::include_graphics("plots/pop_prob_Arizona.png")
+knitr::include_graphics("plots/adm_parole_Arizona.png")
+knitr::include_graphics("plots/pop_parole_Arizona.png")
+```
+
+# Arkansas
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Arkansas.png")
+knitr::include_graphics("plots/pop_by_year_Arkansas.png")
+knitr::include_graphics("plots/adm_prob_Arkansas.png")
+knitr::include_graphics("plots/pop_prob_Arkansas.png")
+knitr::include_graphics("plots/adm_parole_Arkansas.png")
+knitr::include_graphics("plots/pop_parole_Arkansas.png")
+```
+
+# California
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_California.png")
+knitr::include_graphics("plots/pop_by_year_California.png")
+knitr::include_graphics("plots/adm_prob_California.png")
+knitr::include_graphics("plots/pop_prob_California.png")
+knitr::include_graphics("plots/adm_parole_California.png")
+knitr::include_graphics("plots/pop_parole_California.png")
+```
