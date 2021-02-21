@@ -1,0 +1,22 @@
+---
+title: "State "
+author: "Mari Roberts and Amund Tallaksen"
+date: "2/18/2021"
+output: pdf_document
+geometry: "left=1cm,right=1cm,top=1.5cm,bottom=1.5cm"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+# load clean data from automated_clean.R
+source("automated_plots.R")
+```
+
+
+```{r}
+
+```
+

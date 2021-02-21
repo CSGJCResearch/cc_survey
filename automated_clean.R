@@ -2,7 +2,7 @@
 # Confined and Costly Survey
 # Imports/cleans CC Survey for Automated Reports
 # by Mari Roberts
-# 12/1/2020
+# 2/21/2020
 #######################################
 
 # load necessary packages
@@ -11,7 +11,8 @@ requiredPackages = c('dplyr',
                      'readr',
                      'reshape',
                      'ggplot2',
-                     'readxl')
+                     'readxl',
+                     'tidyverse')
 # only downloads packages if needed
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) install.packages(p)
