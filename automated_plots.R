@@ -8,6 +8,9 @@
 # load R file which cleans data
 source("automated_clean.R")
 
+# notes
+# https://stackoverflow.com/questions/41904737/label-na-values-in-geom-line
+
 # create factor variables
 adm_long$year <- factor(adm_long$year)
 pop_long$year <- factor(pop_long$year)
