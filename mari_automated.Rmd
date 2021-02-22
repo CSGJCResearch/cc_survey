@@ -18,10 +18,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 Erat velit scelerisque in dictum non consectetur. Ut consequat semper viverra nam libero justo laoreet. In massa tempor nec feugiat nisl. Justo donec enim diam vulputate ut pharetra sit amet. Commodo odio aenean sed adipiscing diam donec. Non odio euismod lacinia at quis risus sed vulputate. Lorem ipsum dolor sit amet. Aliquam malesuada bibendum arcu vitae elementum. Suspendisse interdum consectetur libero id faucibus nisl. Elit ut aliquam purus sit amet luctus venenatis lectus. Convallis posuere morbi leo urna molestie at elementum eu facilisis.
 
+\newpage
 # Alabama
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Alabama, format = 'markdown', padding=1.5L)
+kable(Alabama, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
@@ -33,10 +34,11 @@ knitr::include_graphics("plots/adm_parole_Alabama.png")
 knitr::include_graphics("plots/pop_parole_Alabama.png")
 ```
 
+\newpage
 # Alaska
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Alaska, format = 'markdown', padding=1.5L)
+kable(Alaska, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
@@ -48,10 +50,11 @@ knitr::include_graphics("plots/adm_parole_Alaska.png")
 knitr::include_graphics("plots/pop_parole_Alaska.png")
 ```
 
+\newpage
 # Arizona
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Arizona, format = 'markdown', padding=1.5L)
+kable(Arizona, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
@@ -63,10 +66,11 @@ knitr::include_graphics("plots/adm_parole_Arizona.png")
 knitr::include_graphics("plots/pop_parole_Arizona.png")
 ```
 
+\newpage
 # Arkansas
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Arkansas, format = 'markdown', padding=1.5L)
+kable(Arkansas, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
@@ -78,10 +82,11 @@ knitr::include_graphics("plots/adm_parole_Arkansas.png")
 knitr::include_graphics("plots/pop_parole_Arkansas.png")
 ```
 
+\newpage
 # California
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(California, format = 'markdown', padding=1.5L)
+kable(California, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}

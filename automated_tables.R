@@ -29,13 +29,17 @@ pop_table <- pop_change %>%
          "Population of supervision violators" = Population.supervision.violators, 
          "Population of technical violators" = Population.technical.violators) %>% arrange(desc(States)) %>% select(-States,-year)
 
+# reformat adm change table
 adm_table <- adm_change %>% 
   select(States, year, Overall.admissions, Admissions.supervision.violators, Admissions.technical.violators) %>%
   dplyr::rename("Overall Admissions" = Overall.admissions, 
                 "Admissions of supervision violators" = Admissions.supervision.violators, 
                 "Admissions of technical violators" = Admissions.technical.violators)  %>% arrange(desc(States)) 
 
+# add adm and pop together
 adm_pop_table <- cbind(adm_table, pop_table)
+
+# reorder variables
 adm_pop_table <- adm_pop_table %>% select(States,
                                           Year = year,
                                           `Overall Admissions`,
@@ -44,6 +48,9 @@ adm_pop_table <- adm_pop_table %>% select(States,
                                           `Overall Population`,
                                           `Population of supervision violators`,
                                           `Population of technical violators`)
+
+# reformat numbers
+
 
 # custom generate pop table function
 generate_table <- function(df, myvar){
@@ -58,6 +65,23 @@ table_list <- unique(adm_pop_table$States) %>%
 
 list2env(table_list, envir = .GlobalEnv)
 
+# remove state names
+Alabama <- Alabama %>% select(-States)
+Alaska <- Alaska %>% select(-States)
+Arizona <- Arizona %>% select(-States)
+Arkansas <- Arkansas %>% select(-States)
+California <- California %>% select(-States)
+
+
+
+
+
+
+
+
+
+
+
 # https://stackoverflow.com/questions/59169631/split-a-list-into-separate-data-frame-in-r
 # save all tables to PNG files - doesn't work
 # purrr::iwalk(pop_table_list,
@@ -71,4 +95,6 @@ list2env(table_list, envir = .GlobalEnv)
 # imap(pop_table_list, ~ set_names(tibble(.x), .y)) %>%
 #   set_names(str_c("pop_table_", 1:50)) %>% 
 #   list2env(.GlobalEnv)
+
+
 
