@@ -166,3 +166,38 @@ pop_change <- pop_change %>%
   mutate(Population.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
   filter(year != "2017")
 
+##################
+# Costs
+##################
+
+costs <- read_excel("data/Cost Per Day For Calculation.xlsx")
+costs <- costs %>% select(`State Abbrev`, States, cost = `State Reported CostPerDay`)
+
+# costs_adm <- adm_long %>% 
+#   filter(category == "Total.violation.admissions"|
+#          category == "Technical.probation.violation.admissions"|
+#          category == "Technical.parole.violation.admissions") %>% select(States, year, category, count)
+
+# creat costs_adm df
+costs_adm <- adm %>% select(States, year, Total.violation.admissions, Technical.probation.violation.admissions, Technical.parole.violation.admissions)
+
+# add technical prob and parole together to get tech number
+costs_adm <- costs_adm %>% mutate(total_admissions = Total.violation.admissions,
+                                  technical_admissions = Technical.probation.violation.admissions + Technical.parole.violation.admissions) %>% 
+                           select(-Technical.probation.violation.admissions,
+                                  -Technical.parole.violation.admissions,
+                                  -Total.violation.admissions)
+
+# merge costs and admissions numbers
+costs_adm_df <- merge(costs_adm, costs, by = "States")
+
+# calc costs
+costs_adm_df <- costs_adm_df %>% mutate(adm_sup_cost = total_admissions*cost*365,
+                                        adm_tech_cost = technical_admissions*cost*365) %>% 
+                                 select(States,Year=year,adm_sup_cost,adm_tech_cost)
+
+
+
+
+
+

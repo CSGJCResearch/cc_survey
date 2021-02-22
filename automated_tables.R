@@ -8,19 +8,9 @@
 # load R file which cleans data
 source("automated_clean.R")
 
-# ADMISSIONS
-
-# Overall Admissions
-# Admissions for supervision violation
-# Admissions for technical violation
-
-# DOC Costs to incarcerate violators
-
-# POPULATION
-
-# Overall population
-# Population of supervision violators
-# Population of technical violator
+##################
+# POP AND ADM
+##################
 
 # reformat pop change table
 pop_table <- pop_change %>% 
@@ -57,6 +47,7 @@ adm_pop_table$`Overall Population` = paste(round(adm_pop_table$`Overall Populati
 adm_pop_table$`Population of supervision violators` = paste(round(adm_pop_table$`Population of supervision violators`,2), "%", sep="")
 adm_pop_table$`Population of technical violators` = paste(round(adm_pop_table$`Population of technical violators`, 2), "%", sep="")
 
+# change NA to "No Data"
 adm_pop_table[adm_pop_table == "NA%"] <- "No Data"  
 
 # custom generate pop table function
@@ -82,13 +73,15 @@ California <- California %>% select(-States)
 
 
 
+##################
+# Costs
+##################
 
 
 
 
 
-
-
+# NOTES
 # https://stackoverflow.com/questions/59169631/split-a-list-into-separate-data-frame-in-r
 # save all tables to PNG files - doesn't work
 # purrr::iwalk(pop_table_list,
