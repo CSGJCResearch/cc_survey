@@ -16,3 +16,4 @@ In 2018, The Council of State Governments (CSG) Justice Center conducted a surve
     |-- survey_info  
       |-- 50 State Revocation Survey - FINAL.pdf                   # pdf of administered survey  
       |-- CSGJC_SurveyUpdate_Nov2020.pptx                          # summary statistics presented  
+    |-- technical_report 
