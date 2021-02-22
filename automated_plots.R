@@ -10,6 +10,7 @@ source("automated_clean.R")
 
 # notes
 # https://stackoverflow.com/questions/41904737/label-na-values-in-geom-line
+# https://stackoverflow.com/questions/26869141/conditionally-hiding-data-labels-in-ggplot2-graph
 
 # create factor variables
 adm_long$year <- factor(adm_long$year)
