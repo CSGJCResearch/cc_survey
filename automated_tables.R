@@ -24,7 +24,7 @@ source("automated_clean.R")
 
 # reformat pop change table
 pop_table <- pop_change %>% 
-  select(States, Overall.population, Population.supervision.violators, Population.technical.violators) %>%
+  select(States, year, Overall.population, Population.supervision.violators, Population.technical.violators) %>%
   dplyr::rename("Overall Population" = Overall.population, 
          "Population of supervision violators" = Population.supervision.violators, 
          "Population of technical violator" = Population.technical.violators)
@@ -33,7 +33,6 @@ pop_table <- pop_change %>%
 generate_pop_table <- function(df, myvar){
   df1 <- df %>% filter(States == myvar)
   # kable(df1)
-  df1
 }
 
 # loop through states var, create plots & store them in a list
@@ -41,13 +40,19 @@ pop_table_list <- unique(pop_table$States) %>%
   purrr::set_names() %>% 
   purrr::map( ~ generate_pop_table(pop_table, .x))
 
-# save all tables to PNG files
+list2env(pop_table_list, envir = .GlobalEnv)
+
+# https://stackoverflow.com/questions/59169631/split-a-list-into-separate-data-frame-in-r
+# save all tables to PNG files - doesn't work
 # purrr::iwalk(pop_table_list,
 #              ~ kableExtra::save_kable(filename = paste0("pop_change_", .y, ".png"))
 # )
 
-# my_list = split(pop_table, f = pop_table$States)
-# my_list_df=lapply(my_list,function(x)as.data.frame(x))
+# # change to list from tibble
+# pop_table_list <- lapply(pop_table_list, as.list)
+# 
+# # create dataframe for each table
+# imap(pop_table_list, ~ set_names(tibble(.x), .y)) %>%
+#   set_names(str_c("pop_table_", 1:50)) %>% 
+#   list2env(.GlobalEnv)
 
-list_a <- purrr::map(pop_table_list, tibble::as_tibble)
-list2env(list_a, envir = .GlobalEnv)

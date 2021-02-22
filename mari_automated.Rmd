@@ -9,6 +9,7 @@ geometry: "left=1cm,right=1cm,top=1.5cm,bottom=1.5cm"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 source("automated_plots.R") # run automated_plots code
+source("automated_tables.R") # run automated_plots code
 ```
 
 # Background
@@ -18,6 +19,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 Erat velit scelerisque in dictum non consectetur. Ut consequat semper viverra nam libero justo laoreet. In massa tempor nec feugiat nisl. Justo donec enim diam vulputate ut pharetra sit amet. Commodo odio aenean sed adipiscing diam donec. Non odio euismod lacinia at quis risus sed vulputate. Lorem ipsum dolor sit amet. Aliquam malesuada bibendum arcu vitae elementum. Suspendisse interdum consectetur libero id faucibus nisl. Elit ut aliquam purus sit amet luctus venenatis lectus. Convallis posuere morbi leo urna molestie at elementum eu facilisis.
 
 # Alabama
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Alabama)
+```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Alabama.png")

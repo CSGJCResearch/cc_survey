@@ -13,8 +13,7 @@ requiredPackages = c('dplyr',
                      'ggplot2',
                      'readxl',
                      'tidyverse',
-                     'knitr',
-                     'kableExtra')
+                     'knitr')
 # only downloads packages if needed
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) install.packages(p)
@@ -137,12 +136,24 @@ pop_long$Totals <- factor(pop_long$Totals, levels = c("New Commitments","Probati
 
 # calculate admission changes
 adm_change <- subset(adm, select = c(States, year, Total.admissions, New.offense.probation.violation.admissions,
-                                     Technical.probation.violation.admissions)) %>% arrange(desc(States))
+                                            Technical.probation.violation.admissions, New.offense.parole.violation.admissions,
+                                            Technical.parole.violation.admissions)) %>% arrange(desc(States))
 
 # calculate pop changes
 pop_change <- subset(population, select = c(States, year, Total.population, New.offense.probation.violation.population,
                                             Technical.probation.violation.population, New.offense.parole.violation.population,
                                             Technical.parole.violation.population)) %>% arrange(desc(States))
+
+# create overarching categories
+adm_change <- adm_change %>% 
+  mutate(Supervision.violations = New.offense.probation.violation.admissions + New.offense.parole.violation.admissions) %>%
+  mutate(Technical.violations = Technical.probation.violation.admissions + Technical.parole.violation.admissions) %>%
+  select(-c(New.offense.probation.violation.admissions, New.offense.parole.violation.admissions, 
+            Technical.probation.violation.admissions, Technical.parole.violation.admissions)) %>%
+  mutate(Overall.admissions = (Total.admissions / lag(Total.admissions) -1)*100) %>%
+  mutate(admissions.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
+  mutate(admissions.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
+  filter(year != "2017")
 
 # create overarching categories
 pop_change <- pop_change %>% 
@@ -154,8 +165,5 @@ pop_change <- pop_change %>%
   mutate(Population.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
   mutate(Population.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
   filter(year != "2017")
-
-
-
 
 
