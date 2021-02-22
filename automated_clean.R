@@ -13,7 +13,8 @@ requiredPackages = c('dplyr',
                      'ggplot2',
                      'readxl',
                      'tidyverse',
-                     'knitr')
+                     'knitr',
+                     'kableExtra')
 # only downloads packages if needed
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) install.packages(p)
