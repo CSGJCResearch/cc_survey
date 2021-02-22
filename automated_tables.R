@@ -27,20 +27,36 @@ pop_table <- pop_change %>%
   select(States, year, Overall.population, Population.supervision.violators, Population.technical.violators) %>%
   dplyr::rename("Overall Population" = Overall.population, 
          "Population of supervision violators" = Population.supervision.violators, 
-         "Population of technical violator" = Population.technical.violators)
+         "Population of technical violators" = Population.technical.violators) %>% arrange(desc(States)) %>% select(-States,-year)
+
+adm_table <- adm_change %>% 
+  select(States, year, Overall.admissions, Admissions.supervision.violators, Admissions.technical.violators) %>%
+  dplyr::rename("Overall Admissions" = Overall.admissions, 
+                "Admissions of supervision violators" = Admissions.supervision.violators, 
+                "Admissions of technical violators" = Admissions.technical.violators)  %>% arrange(desc(States)) 
+
+adm_pop_table <- cbind(adm_table, pop_table)
+adm_pop_table <- adm_pop_table %>% select(States,
+                                          Year = year,
+                                          `Overall Admissions`,
+                                          `Admissions of supervision violators`,
+                                          `Admissions of technical violators`,
+                                          `Overall Population`,
+                                          `Population of supervision violators`,
+                                          `Population of technical violators`)
 
 # custom generate pop table function
-generate_pop_table <- function(df, myvar){
+generate_table <- function(df, myvar){
   df1 <- df %>% filter(States == myvar)
   # kable(df1)
 }
 
 # loop through states var, create plots & store them in a list
-pop_table_list <- unique(pop_table$States) %>% 
+table_list <- unique(adm_pop_table$States) %>% 
   purrr::set_names() %>% 
-  purrr::map( ~ generate_pop_table(pop_table, .x))
+  purrr::map( ~ generate_table(adm_pop_table, .x))
 
-list2env(pop_table_list, envir = .GlobalEnv)
+list2env(table_list, envir = .GlobalEnv)
 
 # https://stackoverflow.com/questions/59169631/split-a-list-into-separate-data-frame-in-r
 # save all tables to PNG files - doesn't work
