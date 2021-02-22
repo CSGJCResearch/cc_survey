@@ -151,8 +151,8 @@ adm_change <- adm_change %>%
   select(-c(New.offense.probation.violation.admissions, New.offense.parole.violation.admissions, 
             Technical.probation.violation.admissions, Technical.parole.violation.admissions)) %>%
   mutate(Overall.admissions = (Total.admissions / lag(Total.admissions) -1)*100) %>%
-  mutate(admissions.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
-  mutate(admissions.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
+  mutate(Admissions.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
+  mutate(Admissions.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
   filter(year != "2017")
 
 # create overarching categories
@@ -165,5 +165,4 @@ pop_change <- pop_change %>%
   mutate(Population.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
   mutate(Population.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
   filter(year != "2017")
-
 
