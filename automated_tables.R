@@ -32,7 +32,8 @@ pop_table <- pop_change %>%
 # custom generate pop table function
 generate_pop_table <- function(df, myvar){
   df1 <- df %>% filter(States == myvar)
-  kable(df1)
+  # kable(df1)
+  df1
 }
 
 # loop through states var, create plots & store them in a list
@@ -41,6 +42,12 @@ pop_table_list <- unique(pop_table$States) %>%
   purrr::map( ~ generate_pop_table(pop_table, .x))
 
 # save all tables to PNG files
-purrr::iwalk(pop_table_list,
-             ~ kableExtra::save_kable(filename = paste0("pop_change_", .y, ".png"))
-)
+# purrr::iwalk(pop_table_list,
+#              ~ kableExtra::save_kable(filename = paste0("pop_change_", .y, ".png"))
+# )
+
+# my_list = split(pop_table, f = pop_table$States)
+# my_list_df=lapply(my_list,function(x)as.data.frame(x))
+
+list_a <- purrr::map(pop_table_list, tibble::as_tibble)
+list2env(list_a, envir = .GlobalEnv)
