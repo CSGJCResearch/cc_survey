@@ -17,6 +17,7 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
                      #axis.text.y = element_blank(),
                      axis.text.x = element_text(vjust = 6.5, margin = margin(t = 6),size=8,face="italic"),
                      axis.title.y = element_blank(),
+                     axis.title.x = element_blank(),
                      panel.border = element_blank(), 
                      panel.grid.major.x = element_blank(), 
                      panel.grid.minor.x = element_blank(), 
@@ -59,7 +60,7 @@ adm_by_year_plot <- function(df, myvar) {
          labs(subtitle = "Prison Admissions by Year") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
     scale_fill_manual(values = c("#6baed6", "#3182bd", "#08519c")) + 
-    theme_bw() + no_grid + 
+    theme_bw() + #no_grid + 
     theme_csgjc
 }
 
@@ -101,7 +102,7 @@ adm_prob_plot <- function(df, myvar) {
     labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
     scale_fill_manual(values = c("#8856a7", "#8c96c6")) + 
-    theme_bw() + no_grid + 
+    theme_bw() + #no_grid + 
     theme_csgjc
 }
 
@@ -143,7 +144,7 @@ adm_parole_plot <- function(df, myvar) {
     labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
     scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
-    theme_bw() + no_grid + 
+    theme_bw() + #no_grid + 
     theme_csgjc
 }
 
@@ -185,7 +186,7 @@ pop_by_year_plot <- function(df, myvar) {
     labs(subtitle = "Prison Population by Year") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
     scale_fill_manual(values = c("#6baed6", "#3182bd", "#08519c")) + 
-    theme_bw() + no_grid + 
+    theme_bw() + #no_grid + 
     theme_csgjc
 }
 
@@ -227,7 +228,7 @@ pop_prob_plot <- function(df, myvar) {
     labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
     scale_fill_manual(values = c("#8856a7", "#8c96c6")) + 
-    theme_bw() + no_grid + 
+    theme_bw() + #no_grid + 
     theme_csgjc
 }
 
@@ -267,7 +268,7 @@ pop_parole_plot <- function(df, myvar) {
     labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
     scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
-    theme_bw() + no_grid + 
+    theme_bw() + #no_grid + 
     theme_csgjc
 }
 
