@@ -12,7 +12,8 @@ requiredPackages = c('dplyr',
                      'reshape',
                      'ggplot2',
                      'readxl',
-                     'tidyverse')
+                     'tidyverse',
+                     'knitr')
 # only downloads packages if needed
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) install.packages(p)
