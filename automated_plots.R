@@ -34,18 +34,18 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
                      plot.margin = margin(0, 0, 0, 0, "cm"))
 
 # subset to a few states for now ################################################
-adm_long_1 <- adm_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
-                                    States=="Arkansas"|States=="California"|States== "Colorado")
-
-pop_long_1 <- pop_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
-                                    States=="Arkansas"|States=="California"|States== "Colorado")
+# adm_long <- adm_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
+#                                     States=="Arkansas"|States=="California"|States== "Colorado")
+# 
+# pop_long <- pop_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
+#                                     States=="Arkansas"|States=="California"|States== "Colorado")
 
 ##################
 # admissions by year (prob, parole, new commits)
 ##################
 
 # subset data
-adm_by_year <- adm_long_1 %>% filter(category=="Total.probation.violation.admissions"|
+adm_by_year <- adm_long %>% filter(category=="Total.probation.violation.admissions"|
                                    category=="Total.parole.violation.admissions"| 
                                    category=="New.commitments") %>% select(-Totals,-Probation,-Parole)
 adm_by_year <- adm_by_year %>%
@@ -78,7 +78,7 @@ purrr::iwalk(adm_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_by_year_", .y, ".png"),
-                      type = 'cairo', width = 6, height = 4, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -88,7 +88,7 @@ purrr::iwalk(adm_by_year_plot_list,
 # Probation Violations Resulting in DOC Incarceration
 
 # subset data
-adm_prob <- adm_long_1 %>% filter(category=="New.offense.probation.violation.admissions"|
+adm_prob <- adm_long %>% filter(category=="New.offense.probation.violation.admissions"|
                                   category=="Technical.probation.violation.admissions") %>% 
                            select(-Totals,-Probation,-Parole)
 adm_prob <- adm_prob %>%
@@ -120,7 +120,7 @@ purrr::iwalk(adm_prob_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_prob_", .y, ".png"),
-                      type = 'cairo', width = 6, height = 4, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -130,7 +130,7 @@ purrr::iwalk(adm_prob_plot_list,
 # Parole Violations Resulting in DOC Incarceration
 
 # subset data
-adm_parole <- adm_long_1 %>% filter(category=="New.offense.parole.violation.admissions"|
+adm_parole <- adm_long %>% filter(category=="New.offense.parole.violation.admissions"|
                                       category=="Technical.parole.violation.admissions") %>% 
   select(-Totals,-Probation,-Parole)
 adm_parole <- adm_parole %>%
@@ -162,7 +162,7 @@ purrr::iwalk(adm_parole_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_parole_", .y, ".png"),
-                      type = 'cairo', width = 6, height = 4, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -170,7 +170,7 @@ purrr::iwalk(adm_parole_plot_list,
 ##################
 
 # subset data
-pop_by_year <- pop_long_1 %>% filter(category=="Total.probation.violation.population"|
+pop_by_year <- pop_long %>% filter(category=="Total.probation.violation.population"|
                                      category=="Total.parole.violation.population"| 
                                      category=="New.commitments") %>% select(-Totals,-Probation,-Parole)
 pop_by_year <- pop_by_year %>%
@@ -204,7 +204,7 @@ purrr::iwalk(pop_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_by_year_", .y, ".png"),
-                      type = 'cairo', width = 6, height = 4, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -214,7 +214,7 @@ purrr::iwalk(pop_by_year_plot_list,
 # Probation Violations Resulting in DOC Incarceration
 
 # subset data
-pop_prob <- pop_long_1 %>% filter(category=="New.offense.probation.violation.population"|
+pop_prob <- pop_long %>% filter(category=="New.offense.probation.violation.population"|
                                     category=="Technical.probation.violation.population") %>% 
   select(-Totals,-Probation,-Parole)
 pop_prob <- pop_prob %>%
@@ -246,7 +246,7 @@ purrr::iwalk(pop_prob_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_prob_", .y, ".png"),
-                      type = 'cairo', width = 6, height = 4, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -254,7 +254,7 @@ purrr::iwalk(pop_prob_plot_list,
 ##################
 
 # subset data
-pop_parole <- pop_long_1 %>% filter(category=="New.offense.parole.violation.population"|
+pop_parole <- pop_long %>% filter(category=="New.offense.parole.violation.population"|
                                       category=="Technical.parole.violation.population") %>% 
   select(-Totals,-Parole,-Probation)
 pop_parole <- pop_parole %>%
@@ -286,5 +286,5 @@ purrr::iwalk(pop_parole_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_parole_", .y, ".png"),
-                      type = 'cairo', width = 6, height = 4, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )

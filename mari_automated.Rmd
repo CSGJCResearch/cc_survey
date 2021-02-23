@@ -97,3 +97,712 @@ knitr::include_graphics("plots/pop_prob_California.png")
 knitr::include_graphics("plots/adm_parole_California.png")
 knitr::include_graphics("plots/pop_parole_California.png")
 ```
+
+\newpage
+# Colorado
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Colorado, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Colorado.png")
+knitr::include_graphics("plots/pop_by_year_Colorado.png")
+knitr::include_graphics("plots/adm_prob_Colorado.png")
+knitr::include_graphics("plots/pop_prob_Colorado.png")
+knitr::include_graphics("plots/adm_parole_Colorado.png")
+knitr::include_graphics("plots/pop_parole_Colorado.png")
+```
+
+\newpage
+# Delaware
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Delaware, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Delaware.png")
+knitr::include_graphics("plots/pop_by_year_Delaware.png")
+knitr::include_graphics("plots/adm_prob_Delaware.png")
+knitr::include_graphics("plots/pop_prob_Delaware.png")
+knitr::include_graphics("plots/adm_parole_Delaware.png")
+knitr::include_graphics("plots/pop_parole_Delaware.png")
+```
+
+\newpage
+# Florida
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Florida, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Florida.png")
+knitr::include_graphics("plots/pop_by_year_Florida.png")
+knitr::include_graphics("plots/adm_prob_Florida.png")
+knitr::include_graphics("plots/pop_prob_Florida.png")
+knitr::include_graphics("plots/adm_parole_Florida.png")
+knitr::include_graphics("plots/pop_parole_Florida.png")
+```
+
+\newpage
+# Georgia
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Georgia, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Georgia.png")
+knitr::include_graphics("plots/pop_by_year_Georgia.png")
+knitr::include_graphics("plots/adm_prob_Georgia.png")
+knitr::include_graphics("plots/pop_prob_Georgia.png")
+knitr::include_graphics("plots/adm_parole_Georgia.png")
+knitr::include_graphics("plots/pop_parole_Georgia.png")
+```
+
+\newpage
+# Hawaii
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Hawaii, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Hawaii.png")
+knitr::include_graphics("plots/pop_by_year_Hawaii.png")
+knitr::include_graphics("plots/adm_prob_Hawaii.png")
+knitr::include_graphics("plots/pop_prob_Hawaii.png")
+knitr::include_graphics("plots/adm_parole_Hawaii.png")
+knitr::include_graphics("plots/pop_parole_Hawaii.png")
+```
+
+\newpage
+# Iowa
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Iowa, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Iowa.png")
+knitr::include_graphics("plots/pop_by_year_Iowa.png")
+knitr::include_graphics("plots/adm_prob_Iowa.png")
+knitr::include_graphics("plots/pop_prob_Iowa.png")
+knitr::include_graphics("plots/adm_parole_Iowa.png")
+knitr::include_graphics("plots/pop_parole_Iowa.png")
+```
+
+\newpage
+# Idaho
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Idaho, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Idaho.png")
+knitr::include_graphics("plots/pop_by_year_Idaho.png")
+knitr::include_graphics("plots/adm_prob_Idaho.png")
+knitr::include_graphics("plots/pop_prob_Idaho.png")
+knitr::include_graphics("plots/adm_parole_Idaho.png")
+knitr::include_graphics("plots/pop_parole_Idaho.png")
+```
+
+\newpage
+# Illinois
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Illinois, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Illinois.png")
+knitr::include_graphics("plots/pop_by_year_Illinois.png")
+knitr::include_graphics("plots/adm_prob_Illinois.png")
+knitr::include_graphics("plots/pop_prob_Illinois.png")
+knitr::include_graphics("plots/adm_parole_Illinois.png")
+knitr::include_graphics("plots/pop_parole_Illinois.png")
+```
+
+\newpage
+# Indiana
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Indiana, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Indiana.png")
+knitr::include_graphics("plots/pop_by_year_Indiana.png")
+knitr::include_graphics("plots/adm_prob_Indiana.png")
+knitr::include_graphics("plots/pop_prob_Indiana.png")
+knitr::include_graphics("plots/adm_parole_Indiana.png")
+knitr::include_graphics("plots/pop_parole_Indiana.png")
+```
+
+\newpage
+# Kansas
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Kansas, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Kansas.png")
+knitr::include_graphics("plots/pop_by_year_Kansas.png")
+knitr::include_graphics("plots/adm_prob_Kansas.png")
+knitr::include_graphics("plots/pop_prob_Kansas.png")
+knitr::include_graphics("plots/adm_parole_Kansas.png")
+knitr::include_graphics("plots/pop_parole_Kansas.png")
+```
+
+\newpage
+# Kentucky
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Kentucky, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Kentucky.png")
+knitr::include_graphics("plots/pop_by_year_Kentucky.png")
+knitr::include_graphics("plots/adm_prob_Kentucky.png")
+knitr::include_graphics("plots/pop_prob_Kentucky.png")
+knitr::include_graphics("plots/adm_parole_Kentucky.png")
+knitr::include_graphics("plots/pop_parole_Kentucky.png")
+```
+
+\newpage
+# Louisiana
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Louisiana, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Louisiana.png")
+knitr::include_graphics("plots/pop_by_year_Louisiana.png")
+knitr::include_graphics("plots/adm_prob_Louisiana.png")
+knitr::include_graphics("plots/pop_prob_Louisiana.png")
+knitr::include_graphics("plots/adm_parole_Louisiana.png")
+knitr::include_graphics("plots/pop_parole_Louisiana.png")
+```
+
+\newpage
+# Massachusetts
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Massachusetts, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Massachusetts.png")
+knitr::include_graphics("plots/pop_by_year_Massachusetts.png")
+knitr::include_graphics("plots/adm_prob_Massachusetts.png")
+knitr::include_graphics("plots/pop_prob_Massachusetts.png")
+knitr::include_graphics("plots/adm_parole_Massachusetts.png")
+knitr::include_graphics("plots/pop_parole_Massachusetts.png")
+```
+
+\newpage
+# Maryland
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Maryland, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Maryland.png")
+knitr::include_graphics("plots/pop_by_year_Maryland.png")
+knitr::include_graphics("plots/adm_prob_Maryland.png")
+knitr::include_graphics("plots/pop_prob_Maryland.png")
+knitr::include_graphics("plots/adm_parole_Maryland.png")
+knitr::include_graphics("plots/pop_parole_Maryland.png")
+```
+
+\newpage
+# Maine
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Maine, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Maine.png")
+knitr::include_graphics("plots/pop_by_year_Maine.png")
+knitr::include_graphics("plots/adm_prob_Maine.png")
+knitr::include_graphics("plots/pop_prob_Maine.png")
+knitr::include_graphics("plots/adm_parole_Maine.png")
+knitr::include_graphics("plots/pop_parole_Maine.png")
+```
+
+\newpage
+# Michigan
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Michigan, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Michigan.png")
+knitr::include_graphics("plots/pop_by_year_Michigan.png")
+knitr::include_graphics("plots/adm_prob_Michigan.png")
+knitr::include_graphics("plots/pop_prob_Michigan.png")
+knitr::include_graphics("plots/adm_parole_Michigan.png")
+knitr::include_graphics("plots/pop_parole_Michigan.png")
+```
+
+\newpage
+# Minnesota
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Minnesota, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Minnesota.png")
+knitr::include_graphics("plots/pop_by_year_Minnesota.png")
+knitr::include_graphics("plots/adm_prob_Minnesota.png")
+knitr::include_graphics("plots/pop_prob_Minnesota.png")
+knitr::include_graphics("plots/adm_parole_Minnesota.png")
+knitr::include_graphics("plots/pop_parole_Minnesota.png")
+```
+
+\newpage
+# Missouri
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Missouri, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Missouri.png")
+knitr::include_graphics("plots/pop_by_year_Missouri.png")
+knitr::include_graphics("plots/adm_prob_Missouri.png")
+knitr::include_graphics("plots/pop_prob_Missouri.png")
+knitr::include_graphics("plots/adm_parole_Missouri.png")
+knitr::include_graphics("plots/pop_parole_Missouri.png")
+```
+
+\newpage
+# Mississippi
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Mississippi, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Mississippi.png")
+knitr::include_graphics("plots/pop_by_year_Mississippi.png")
+knitr::include_graphics("plots/adm_prob_Mississippi.png")
+knitr::include_graphics("plots/pop_prob_Mississippi.png")
+knitr::include_graphics("plots/adm_parole_Mississippi.png")
+knitr::include_graphics("plots/pop_parole_Mississippi.png")
+```
+
+\newpage
+# Montana
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Montana, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Montana.png")
+knitr::include_graphics("plots/pop_by_year_Montana.png")
+knitr::include_graphics("plots/adm_prob_Montana.png")
+knitr::include_graphics("plots/pop_prob_Montana.png")
+knitr::include_graphics("plots/adm_parole_Montana.png")
+knitr::include_graphics("plots/pop_parole_Montana.png")
+```
+
+\newpage
+# Nebraska
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Nebraska, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Nebraska.png")
+knitr::include_graphics("plots/pop_by_year_Nebraska.png")
+knitr::include_graphics("plots/adm_prob_Nebraska.png")
+knitr::include_graphics("plots/pop_prob_Nebraska.png")
+knitr::include_graphics("plots/adm_parole_Nebraska.png")
+knitr::include_graphics("plots/pop_parole_Nebraska.png")
+```
+
+\newpage
+# Nevada
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Nevada, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Nevada.png")
+knitr::include_graphics("plots/pop_by_year_Nevada.png")
+knitr::include_graphics("plots/adm_prob_Nevada.png")
+knitr::include_graphics("plots/pop_prob_Nevada.png")
+knitr::include_graphics("plots/adm_parole_Nevada.png")
+knitr::include_graphics("plots/pop_parole_Nevada.png")
+```
+
+\newpage
+# New Hampshire
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`New Hampshire`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_New Hampshire.png")
+knitr::include_graphics("plots/pop_by_year_New Hampshire.png")
+knitr::include_graphics("plots/adm_prob_New Hampshire.png")
+knitr::include_graphics("plots/pop_prob_New Hampshire.png")
+knitr::include_graphics("plots/adm_parole_New Hampshire.png")
+knitr::include_graphics("plots/pop_parole_New Hampshire.png")
+```
+
+\newpage
+# New Jersey
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`New Jersey`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_New Jersey.png")
+knitr::include_graphics("plots/pop_by_year_New Jersey.png")
+knitr::include_graphics("plots/adm_prob_New Jersey.png")
+knitr::include_graphics("plots/pop_prob_New Jersey.png")
+knitr::include_graphics("plots/adm_parole_New Jersey.png")
+knitr::include_graphics("plots/pop_parole_New Jersey.png")
+```
+
+\newpage
+# New Mexico
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`New Mexico`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_New Mexico.png")
+knitr::include_graphics("plots/pop_by_year_New Mexico.png")
+knitr::include_graphics("plots/adm_prob_New Mexico.png")
+knitr::include_graphics("plots/pop_prob_New Mexico.png")
+knitr::include_graphics("plots/adm_parole_New Mexico.png")
+knitr::include_graphics("plots/pop_parole_New Mexico.png")
+```
+
+\newpage
+# New York
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`New York`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_New York.png")
+knitr::include_graphics("plots/pop_by_year_New York.png")
+knitr::include_graphics("plots/adm_prob_New York.png")
+knitr::include_graphics("plots/pop_prob_New York.png")
+knitr::include_graphics("plots/adm_parole_New York.png")
+knitr::include_graphics("plots/pop_parole_New York.png")
+```
+
+\newpage
+# North Carolina
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`North Carolina`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_North Carolina.png")
+knitr::include_graphics("plots/pop_by_year_North Carolina.png")
+knitr::include_graphics("plots/adm_prob_North Carolina.png")
+knitr::include_graphics("plots/pop_prob_North Carolina.png")
+knitr::include_graphics("plots/adm_parole_North Carolina.png")
+knitr::include_graphics("plots/pop_parole_North Carolina.png")
+```
+
+\newpage
+# North Dakota
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`North Dakota`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_North Dakota.png")
+knitr::include_graphics("plots/pop_by_year_North Dakota.png")
+knitr::include_graphics("plots/adm_prob_North Dakota.png")
+knitr::include_graphics("plots/pop_prob_North Dakota.png")
+knitr::include_graphics("plots/adm_parole_North Dakota.png")
+knitr::include_graphics("plots/pop_parole_North Dakota.png")
+```
+
+\newpage
+# Ohio
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Ohio, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Ohio.png")
+knitr::include_graphics("plots/pop_by_year_Ohio.png")
+knitr::include_graphics("plots/adm_prob_Ohio.png")
+knitr::include_graphics("plots/pop_prob_Ohio.png")
+knitr::include_graphics("plots/adm_parole_Ohio.png")
+knitr::include_graphics("plots/pop_parole_Ohio.png")
+```
+
+\newpage
+# Oklahoma
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Oklahoma, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Oklahoma.png")
+knitr::include_graphics("plots/pop_by_year_Oklahoma.png")
+knitr::include_graphics("plots/adm_prob_Oklahoma.png")
+knitr::include_graphics("plots/pop_prob_Oklahoma.png")
+knitr::include_graphics("plots/adm_parole_Oklahoma.png")
+knitr::include_graphics("plots/pop_parole_Oklahoma.png")
+```
+
+\newpage
+# Oregon
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Oregon, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Oregon.png")
+knitr::include_graphics("plots/pop_by_year_Oregon.png")
+knitr::include_graphics("plots/adm_prob_Oregon.png")
+knitr::include_graphics("plots/pop_prob_Oregon.png")
+knitr::include_graphics("plots/adm_parole_Oregon.png")
+knitr::include_graphics("plots/pop_parole_Oregon.png")
+```
+
+\newpage
+# Pennsylvania
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Pennsylvania, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Pennsylvania.png")
+knitr::include_graphics("plots/pop_by_year_Pennsylvania.png")
+knitr::include_graphics("plots/adm_prob_Pennsylvania.png")
+knitr::include_graphics("plots/pop_prob_Pennsylvania.png")
+knitr::include_graphics("plots/adm_parole_Pennsylvania.png")
+knitr::include_graphics("plots/pop_parole_Pennsylvania.png")
+```
+
+\newpage
+# Rhode Island
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`Rhode Island`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Rhode Island.png")
+knitr::include_graphics("plots/pop_by_year_Rhode Island.png")
+knitr::include_graphics("plots/adm_prob_Rhode Island.png")
+knitr::include_graphics("plots/pop_prob_Rhode Island.png")
+knitr::include_graphics("plots/adm_parole_Rhode Island.png")
+knitr::include_graphics("plots/pop_parole_Rhode Island.png")
+```
+
+\newpage
+# South Carolina
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`South Carolina`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_South Carolina.png")
+knitr::include_graphics("plots/pop_by_year_South Carolina.png")
+knitr::include_graphics("plots/adm_prob_South Carolina.png")
+knitr::include_graphics("plots/pop_prob_South Carolina.png")
+knitr::include_graphics("plots/adm_parole_South Carolina.png")
+knitr::include_graphics("plots/pop_parole_South Carolina.png")
+```
+
+\newpage
+# South Dakota
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`South Dakota`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_South Dakota.png")
+knitr::include_graphics("plots/pop_by_year_South Dakota.png")
+knitr::include_graphics("plots/adm_prob_South Dakota.png")
+knitr::include_graphics("plots/pop_prob_South Dakota.png")
+knitr::include_graphics("plots/adm_parole_South Dakota.png")
+knitr::include_graphics("plots/pop_parole_South Dakota.png")
+```
+
+\newpage
+# Tennessee
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Tennessee, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Tennessee.png")
+knitr::include_graphics("plots/pop_by_year_Tennessee.png")
+knitr::include_graphics("plots/adm_prob_Tennessee.png")
+knitr::include_graphics("plots/pop_prob_Tennessee.png")
+knitr::include_graphics("plots/adm_parole_Tennessee.png")
+knitr::include_graphics("plots/pop_parole_Tennessee.png")
+```
+
+\newpage
+# Texas
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Texas, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Texas.png")
+knitr::include_graphics("plots/pop_by_year_Texas.png")
+knitr::include_graphics("plots/adm_prob_Texas.png")
+knitr::include_graphics("plots/pop_prob_Texas.png")
+knitr::include_graphics("plots/adm_parole_Texas.png")
+knitr::include_graphics("plots/pop_parole_Texas.png")
+```
+
+\newpage
+# Utah
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Utah, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Utah.png")
+knitr::include_graphics("plots/pop_by_year_Utah.png")
+knitr::include_graphics("plots/adm_prob_Utah.png")
+knitr::include_graphics("plots/pop_prob_Utah.png")
+knitr::include_graphics("plots/adm_parole_Utah.png")
+knitr::include_graphics("plots/pop_parole_Utah.png")
+```
+
+\newpage
+# Vermont
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Vermont, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Vermont.png")
+knitr::include_graphics("plots/pop_by_year_Vermont.png")
+knitr::include_graphics("plots/adm_prob_Vermont.png")
+knitr::include_graphics("plots/pop_prob_Vermont.png")
+knitr::include_graphics("plots/adm_parole_Vermont.png")
+knitr::include_graphics("plots/pop_parole_Vermont.png")
+```
+
+\newpage
+# Virginia
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Virginia, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Virginia.png")
+knitr::include_graphics("plots/pop_by_year_Virginia.png")
+knitr::include_graphics("plots/adm_prob_Virginia.png")
+knitr::include_graphics("plots/pop_prob_Virginia.png")
+knitr::include_graphics("plots/adm_parole_Virginia.png")
+knitr::include_graphics("plots/pop_parole_Virginia.png")
+```
+
+\newpage
+# Washington
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Washington, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Washington.png")
+knitr::include_graphics("plots/pop_by_year_Washington.png")
+knitr::include_graphics("plots/adm_prob_Washington.png")
+knitr::include_graphics("plots/pop_prob_Washington.png")
+knitr::include_graphics("plots/adm_parole_Washington.png")
+knitr::include_graphics("plots/pop_parole_Washington.png")
+```
+
+\newpage
+# West Virginia
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(`West Virginia`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_West Virginia.png")
+knitr::include_graphics("plots/pop_by_year_West Virginia.png")
+knitr::include_graphics("plots/adm_prob_West Virginia.png")
+knitr::include_graphics("plots/pop_prob_West Virginia.png")
+knitr::include_graphics("plots/adm_parole_West Virginia.png")
+knitr::include_graphics("plots/pop_parole_West Virginia.png")
+```
+
+\newpage
+# Wisconsin
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Wisconsin, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Wisconsin.png")
+knitr::include_graphics("plots/pop_by_year_Wisconsin.png")
+knitr::include_graphics("plots/adm_prob_Wisconsin.png")
+knitr::include_graphics("plots/pop_prob_Wisconsin.png")
+knitr::include_graphics("plots/adm_parole_Wisconsin.png")
+knitr::include_graphics("plots/pop_parole_Wisconsin.png")
+```
+
+\newpage
+# Wyoming
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Wyoming, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Wyoming.png")
+knitr::include_graphics("plots/pop_by_year_Wyoming.png")
+knitr::include_graphics("plots/adm_prob_Wyoming.png")
+knitr::include_graphics("plots/pop_prob_Wyoming.png")
+knitr::include_graphics("plots/adm_parole_Wyoming.png")
+knitr::include_graphics("plots/pop_parole_Wyoming.png")
+```
+
+
+
+
+
