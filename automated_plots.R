@@ -16,6 +16,10 @@ source("automated_clean.R")
 adm_long$year <- factor(adm_long$year)
 pop_long$year <- factor(pop_long$year)
 
+# remove 2017
+adm_long <- adm_long %>% filter(year != 2017)
+pop_long <- adm_long %>% filter(year != 2017)
+
 # custom theme
 theme_csgjc <- theme(axis.ticks = element_blank(),
                      #axis.text.y = element_blank(),

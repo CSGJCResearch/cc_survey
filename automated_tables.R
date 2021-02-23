@@ -12,47 +12,35 @@ source("automated_clean.R")
 # POP AND ADM
 ##################
 
-# reformat pop change table
-pop_table <- pop_change %>% 
-  select(States, year, Overall.population, Population.supervision.violators, Population.technical.violators) %>%
-  dplyr::rename("Overall Population" = Overall.population, 
-         "Population of supervision violators" = Population.supervision.violators, 
-         "Population of technical violators" = Population.technical.violators) %>% arrange(desc(States)) %>% select(-States,-year)
-
 # reformat adm change table
-adm_table <- adm_change %>% 
-  select(States, year, Overall.admissions, Admissions.supervision.violators, Admissions.technical.violators) %>%
-  dplyr::rename("Overall Admissions" = Overall.admissions, 
-                "Admissions of supervision violators" = Admissions.supervision.violators, 
-                "Admissions of technical violators" = Admissions.technical.violators)  %>% arrange(desc(States)) 
+adm_change$Violation.admissions = paste(round(adm_change$Violation.admissions, 2), "%", sep="")
+adm_table <- adm_change %>%
+  select(States, year, Violation.admissions) %>%
+  dplyr::rename("Admissions for Supervision Violation" = Violation.admissions, 
+                Year = yeary) %>% arrange(desc(States))
+adm_table[adm_table == "NA%"] <- "No Data"  
+
+##################################### ADD IN   select(States, `Change from Previous Year`,`2019`,`2020`)
+
+# reformat pop change table
+pop_change$Violation.population = paste(round(pop_change$Violation.population, 2), "%", sep="")
+pop_table <- pop_change %>%
+  select(States, year, Violation.population) %>%
+  dplyr::rename("Population of Supervision Violators" = Violation.population,
+                Year = year) %>% arrange(desc(States)) 
+pop_table[pop_table == "NA%"] <- "No Data"  
 
 # add adm and pop together
 adm_pop_table <- cbind(adm_table, pop_table)
-
-# reorder variables
-adm_pop_table <- adm_pop_table %>% select(States,
-                                          Year = year,
-                                          `Overall Admissions`,
-                                          `Admissions of supervision violators`,
-                                          `Admissions of technical violators`,
-                                          `Overall Population`,
-                                          `Population of supervision violators`,
-                                          `Population of technical violators`)
-
-# reformat numbers
-adm_pop_table$`Overall Admissions` = paste(round(adm_pop_table$`Overall Admissions`, 2), "%", sep="")
-adm_pop_table$`Admissions of supervision violators` = paste(round(adm_pop_table$`Admissions of supervision violators`, 2), "%", sep="")
-adm_pop_table$`Admissions of technical violators` = paste(round(adm_pop_table$`Admissions of technical violators`, 2), "%", sep="")
-adm_pop_table$`Overall Population` = paste(round(adm_pop_table$`Overall Population`, 2), "%", sep="")
-adm_pop_table$`Population of supervision violators` = paste(round(adm_pop_table$`Population of supervision violators`,2), "%", sep="")
-adm_pop_table$`Population of technical violators` = paste(round(adm_pop_table$`Population of technical violators`, 2), "%", sep="")
-
-# change NA to "No Data"
-adm_pop_table[adm_pop_table == "NA%"] <- "No Data"  
+adm_pop_table <- adm_pop_table[-c(4:5)] # remove columns
 
 # custom generate pop table function
 generate_table <- function(df, myvar){
-  df1 <- df %>% filter(States == myvar)
+  df_myvar <- df %>% filter(States == myvar)
+  df_long <- df_myvar %>% pivot_longer(cols = -c(States,Year), 
+                                       names_to = "category", values_to = "count")
+  df_long <- cast(df_long, States+category~Year)
+  df_long <- df_long %>% select(-`2018`) # remove 2018 year
   # kable(df1)
 }
 
@@ -118,6 +106,57 @@ Wyoming <- Wyoming %>% select(-States)
 ##################
 # Costs
 ##################
+
+
+
+
+
+
+
+
+
+
+
+###################################
+# Old Code
+###################################
+# # reformat pop change table
+# pop_table <- pop_change %>% 
+#   select(States, year, Overall.population, Population.supervision.violators, Population.technical.violators) %>%
+#   dplyr::rename("Overall Population" = Overall.population, 
+#          "Population of supervision violators" = Population.supervision.violators, 
+#          "Population of technical violators" = Population.technical.violators) %>% arrange(desc(States)) %>% select(-States,-year)
+# 
+# # reformat adm change table
+# adm_table <- adm_change %>% 
+#   select(States, year, Overall.admissions, Admissions.supervision.violators, Admissions.technical.violators) %>%
+#   dplyr::rename("Overall Admissions" = Overall.admissions, 
+#                 "Admissions of supervision violators" = Admissions.supervision.violators, 
+#                 "Admissions of technical violators" = Admissions.technical.violators)  %>% arrange(desc(States)) 
+
+# # add adm and pop together
+# adm_pop_table <- cbind(adm_table, pop_table)
+# 
+# # reorder variables
+# adm_pop_table <- adm_pop_table %>% select(States,
+#                                           Year = year,
+#                                           `Overall Admissions`,
+#                                           `Admissions of supervision violators`,
+#                                           `Admissions of technical violators`,
+#                                           `Overall Population`,
+#                                           `Population of supervision violators`,
+#                                           `Population of technical violators`)
+# 
+# # reformat numbers
+# adm_pop_table$`Overall Admissions` = paste(round(adm_pop_table$`Overall Admissions`, 2), "%", sep="")
+# adm_pop_table$`Admissions of supervision violators` = paste(round(adm_pop_table$`Admissions of supervision violators`, 2), "%", sep="")
+# adm_pop_table$`Admissions of technical violators` = paste(round(adm_pop_table$`Admissions of technical violators`, 2), "%", sep="")
+# adm_pop_table$`Overall Population` = paste(round(adm_pop_table$`Overall Population`, 2), "%", sep="")
+# adm_pop_table$`Population of supervision violators` = paste(round(adm_pop_table$`Population of supervision violators`,2), "%", sep="")
+# adm_pop_table$`Population of technical violators` = paste(round(adm_pop_table$`Population of technical violators`, 2), "%", sep="")
+# 
+# # change NA to "No Data"
+# adm_pop_table[adm_pop_table == "NA%"] <- "No Data"  
 
 # NOTES
 # https://stackoverflow.com/questions/59169631/split-a-list-into-separate-data-frame-in-r
