@@ -115,16 +115,9 @@ Washington <- Washington %>% select(-States)
 Wisconsin <- Wisconsin %>% select(-States)
 Wyoming <- Wyoming %>% select(-States)
 
-
-
-
 ##################
 # Costs
 ##################
-
-
-
-
 
 # NOTES
 # https://stackoverflow.com/questions/59169631/split-a-list-into-separate-data-frame-in-r
