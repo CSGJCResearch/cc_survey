@@ -22,10 +22,29 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
 
 
 adm_by_year_17_19 <- adm_by_year %>% filter(year != 2020)
-adm_by_year_17_19$category <- factor(adm_by_year_17_19$category)
-adm_by_year_17_19$year <- as.character(adm_by_year_17_19$year)
+# adm_by_year_17_19$category <- factor(adm_by_year_17_19$category)
+# adm_by_year_17_19$year <- as.character(adm_by_year_17_19$year)
+# adm_by_year_17_19$count <- as.numeric(adm_by_year_17_19$count)
 
-adm_group <- adm_by_year_17_19 %>% group_by(year) %>% summarise(total=sum(count))
+# adm_group <- adm_by_year_17_19 %>% group_by(category, year) %>% summarise(total=sum(count))
+x.2017 <- adm_by_year_17_19 %>% filter(year == "2017")
+x.2017.NewCommits <- x.2017 %>% filter(category == "New Commitments")
+
+
+
+
+
+
+
+write.csv(adm_by_year_17_19, "adm_by_year_17_19.csv")
+test <- read.csv("adm_by_year_17_19.csv")
+test <- test %>% select(-X)
+
+summary.newcommit = adm_by_year_17_19 %>%
+  filter(year) %>%
+  summarise(n=n(), ncases=sum(case), case.rate=mean(case)) 
+
+
 
 
 # Grouped
