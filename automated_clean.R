@@ -40,15 +40,20 @@ getwd <- function(){
 }
 
 # read excel population data for 2017-2019
-population17 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Population 2017", .name_repair = "universal")
-population18 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Population 2018", .name_repair = "universal")
-population19 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
-
-# include fake 2020 data (copy of 2019)
-population20 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
+population17 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2017", .name_repair = "universal")
+population18 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2018-Corrected", .name_repair = "universal")
+population19 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2019-Corrected", .name_repair = "universal")
+population20 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2020-Corrected", .name_repair = "universal")
 
 # remove pop year
 population17 <- population17 %>% select(-Population.Year)
+population20 <- population20 %>% select(-`...11`)
+
+# remove rows
+population17 <- population17[-c(51:52),] 
+population18 <- population18[-c(51:54),] # remove empty rows
+population19 <- population19[-c(51:54),] # remove empty rows
+population20 <- population20[-c(51:55),] # remove empty rows
 
 # add year variable
 population17$year <- "2017"
@@ -62,22 +67,24 @@ population <- filter(population, State.Abbrev != "NA")
 population <- population %>% select(-State.Abbrev)
 
 # read excel admissions data for 2017-2019
-adm17 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2017-R", .name_repair = "universal")
-adm18 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
-adm19 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
-
-# include fake 2020 data (copy of 2019)
-adm20 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+adm17 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2017-R", .name_repair = "universal")
+adm18 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2018-Corrected", .name_repair = "universal")
+adm19 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2019-Corrected", .name_repair = "universal")
+adm20 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2020-Corrected", .name_repair = "universal")
 
 # remove unwanted variables
 adm17 <- adm17 %>%
   select(-c(Change.in.Revised.Data, No.Revised.Data.Provided, ...11, State.Abbrev))
 adm18 <- adm18 %>%
   select(-c(Publicly.Available.Data, ...11, State.Abbrev))
-adm19 <- adm19 %>%
-  select(-c(Publicly.Available.Data, ...11, State.Abbrev))
-adm20 <- adm20 %>%
-  select(-c(Publicly.Available.Data, ...11, State.Abbrev))
+adm19 <- adm19 %>% select(-c(Publicly.Available.Data, ...11, State.Abbrev))
+adm20 <- adm20 %>% select(-Notes, -`...15`, -`...16`, -`...17`,-State.Abbrev,-Admissions.Year,-Reporting.Year,-Months.Reported)
+
+# remove unwanted rows
+adm17 <- adm17[-c(51:54),] 
+adm18 <- adm18[-c(51:54),] 
+adm19 <- adm19[-c(51:54),] 
+adm20 <- adm20[-c(51:54),] 
 
 # add year variable
 adm17$year <- "2017"
