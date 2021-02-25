@@ -8,6 +8,9 @@
 # load R file which cleans data
 source("automated_clean.R")
 
+# notes
+# https://stackoverflow.com/questions/17717323/align-two-data-frames-next-to-each-other-with-knitr
+
 ##################
 # POP AND ADM
 ##################
@@ -19,8 +22,6 @@ adm_table <- adm_change %>%
   dplyr::rename("Admissions for Supervision Violation" = Violation.admissions, 
                 Year = year) %>% arrange(desc(States))
 adm_table[adm_table == "NA%"] <- "No Data"  
-
-##################################### ADD IN   select(States, `Change from Previous Year`,`2019`,`2020`)
 
 # reformat pop change table
 pop_change$Violation.population = paste(round(pop_change$Violation.population, 2), "%", sep="")
@@ -110,7 +111,84 @@ Wyoming <- Wyoming %>% select(-States)
 
 
 
+# custom generate cost table function
+generate_cost_table <- function(df, myvar){
+  df_myvar <- df %>% filter(States == myvar)
+  df_long <- df_myvar %>% pivot_longer(cols = -c(States,Year), 
+                                       names_to = "category", values_to = "count")
+  df_long <- cast(df_long, States+category~Year)
+  df_long$Expenditures <- df_long$category
+  df_long <- df_long %>% select(-category)
+  df_long <- df_long %>% select(States, Expenditures, `2019`, `2020`)
+}
 
+# loop through states var, create plots & store them in a list
+table_list <- unique(expenditures$States) %>% 
+  purrr::set_names() %>% 
+  purrr::map( ~ generate_cost_table(expenditures, .x))
+
+list2env(table_list, envir = .GlobalEnv)
+
+# remove state names
+Alabama_Expenditures <- Alabama_Expenditures %>% select(-States)
+Alaska_Expenditures <- Alaska_Expenditures %>% select(-States)
+Arizona_Expenditures <- Arizona_Expenditures %>% select(-States)
+Arkansas_Expenditures <- Arkansas_Expenditures %>% select(-States)
+California_Expenditures <- California_Expenditures %>% select(-States)
+Colorado_Expenditures <- Colorado_Expenditures %>% select(-States)
+Connecticut_Expenditures <- Connecticut_Expenditures %>% select(-States)
+Delaware_Expenditures <- Delaware_Expenditures %>% select(-States)
+Florida_Expenditures <- Florida_Expenditures %>% select(-States)
+Georgia_Expenditures <- Georgia_Expenditures %>% select(-States)
+Hawaii_Expenditures <- Hawaii_Expenditures %>% select(-States)
+Idaho_Expenditures	 <- Idaho_Expenditures %>% select(-States)
+Illinois_Expenditures <- Illinois_Expenditures %>% select(-States)
+Indiana_Expenditures <- Indiana_Expenditures %>% select(-States)
+Iowa_Expenditures <- Iowa_Expenditures %>% select(-States)
+Kansas_Expenditures <- Kansas_Expenditures %>% select(-States)
+Kentucky_Expenditures <- Kentucky_Expenditures %>% select(-States)
+Louisiana_Expenditures <- Louisiana_Expenditures %>% select(-States)
+Maine_Expenditures <- Maine_Expenditures %>% select(-States)
+Maryland_Expenditures <- Maryland_Expenditures %>% select(-States)
+Massachusetts_Expenditures <- Massachusetts_Expenditures %>% select(-States)
+Michigan_Expenditures <- Michigan_Expenditures %>% select(-States)
+Minnesota_Expenditures <- Minnesota_Expenditures %>% select(-States)
+Mississippi_Expenditures <- Mississippi_Expenditures %>% select(-States)
+Missouri_Expenditures <- Missouri_Expenditures %>% select(-States)
+Montana_Expenditures <- Montana_Expenditures %>% select(-States)
+Nebraska_Expenditures <- Nebraska_Expenditures %>% select(-States)
+Nevada_Expenditures <- Nevada_Expenditures %>% select(-States)
+`New Hampshire_Expenditures` <- `New Hampshire_Expenditures` %>% select(-States)
+`New Jersey_Expenditures` <- `New Jersey_Expenditures` %>% select(-States)
+`New Mexico_Expenditures` <- `New Mexico_Expenditures` %>% select(-States)
+`New York_Expenditures` <- `New York_Expenditures` %>% select(-States)
+`North Carolina_Expenditures` <- `North Carolina_Expenditures` %>% select(-States)
+`North Dakota_Expenditures` <- `North Dakota_Expenditures` %>% select(-States)
+Ohio_Expenditures <- Ohio_Expenditures %>% select(-States)
+Oklahoma_Expenditures <- Oklahoma_Expenditures %>% select(-States)
+Oregon_Expenditures <- Oregon_Expenditures %>% select(-States)
+Pennsylvania_Expenditures <- Pennsylvania_Expenditures %>% select(-States)
+`Rhode Island_Expenditures` <- `Rhode Island_Expenditures` %>% select(-States)
+`South Carolina_Expenditures` <- `South Carolina_Expenditures` %>% select(-States)
+`South Dakota_Expenditures` <- `South Dakota_Expenditures` %>% select(-States)
+Tennessee_Expenditures <- Tennessee_Expenditures %>% select(-States)
+Texas_Expenditures <- Texas_Expenditures %>% select(-States)
+Utah_Expenditures <- Utah_Expenditures %>% select(-States)
+Vermont_Expenditures <- Vermont_Expenditures %>% select(-States)
+Virginia_Expenditures <- Virginia_Expenditures %>% select(-States)
+Washington_Expenditures <- Washington_Expenditures %>% select(-States)
+`West Virginia_Expenditures` <- `West Virginia_Expenditures` %>% select(-States)
+Wisconsin_Expenditures <- Wisconsin_Expenditures %>% select(-States)
+Wyoming_Expenditures <- Wyoming_Expenditures %>% select(-States)
+
+
+###################################
+# Save tables as images
+###################################
+
+# library(kableExtra)
+# t1 <- knitr::kables(list(kable(Alabama) %>% kable_styling(),kable(Alabama_Expenditures) %>% kable_styling())) %>% kable_styling()
+# save_kable(t1, file = "Alabama.png")
 
 
 

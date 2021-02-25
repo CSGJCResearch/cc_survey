@@ -10,6 +10,10 @@ geometry: "left=1cm,right=1cm,top=1.5cm,bottom=1.5cm"
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
+```{r, include=FALSE}
+options(tinytex.verbose = TRUE)
+```
+
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 source("automated_plots.R") # run automated_plots code
 source("automated_tables.R") # run automated_tables code
@@ -24,9 +28,9 @@ Erat velit scelerisque in dictum non consectetur. Ut consequat semper viverra na
 \newpage
 # Alabama
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-# kable(Alabama, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
-# knitr::kable(list(Alabama, Alabama))
+```{r}
+library(kableExtra)
+knitr::kables(list(kable(Alabama) %>% kable_styling(),kable(Alabama_Expenditures) %>% kable_styling())) %>% kable_styling()
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}

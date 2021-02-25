@@ -268,9 +268,9 @@ costs_adm_df$adm_tech_cost <- paste("$", round(costs_adm_df$adm_tech_cost, 1), "
 # add costs and budgets together
 expenditures <- merge(budget, costs_adm_df, by = c("States", "Year"))
 
-# change to numeric
-expenditures$adm_sup_cost <- as.numeric(expenditures$adm_sup_cost)
-expenditures$adm_tech_cost <- as.numeric(expenditures$adm_tech_cost)
+# # change to numeric
+# expenditures$adm_sup_cost <- as.numeric(expenditures$adm_sup_cost)
+# expenditures$adm_tech_cost <- as.numeric(expenditures$adm_tech_cost)
 
 # # add commas
 # expenditures$adm_sup_cost <- prettyNum(expenditures$adm_sup_cost, big.mark = ",", scientific = FALSE)
@@ -279,8 +279,10 @@ expenditures$adm_tech_cost <- as.numeric(expenditures$adm_tech_cost)
 # replace NAs with "No Data"
 expenditures[expenditures == "$NAM"] <- "No Data"  
 
-
-
-
-
+# rename categories
+expenditures$`DOC Budget` <- expenditures$Budget
+expenditures$`DOC Cost to Incarcerate Supervision Violators` <- expenditures$adm_sup_cost
+expenditures$`DOC Cost to Incarcerate Technical Supervision Violators` <- expenditures$adm_tech_cost
+expenditures <- expenditures %>% select(-adm_sup_cost,-adm_tech_cost,-Budget)
+expenditures$States <- paste(expenditures$States, "_Expenditures", sep="")
 

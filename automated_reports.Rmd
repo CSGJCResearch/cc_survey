@@ -21,9 +21,7 @@ Erat velit scelerisque in dictum non consectetur. Ut consequat semper viverra na
 \newpage
 # Alabama
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Alabama, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
-```
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Alabama.png")
