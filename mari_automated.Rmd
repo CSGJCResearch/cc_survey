@@ -10,10 +10,6 @@ geometry: "left=1cm,right=1cm,top=1.5cm,bottom=1.5cm"
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-```{r, include=FALSE}
-options(tinytex.verbose = TRUE)
-```
-
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 source("automated_plots.R") # run automated_plots code
 source("automated_tables.R") # run automated_tables code
@@ -25,13 +21,18 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 Erat velit scelerisque in dictum non consectetur. Ut consequat semper viverra nam libero justo laoreet. In massa tempor nec feugiat nisl. Justo donec enim diam vulputate ut pharetra sit amet. Commodo odio aenean sed adipiscing diam donec. Non odio euismod lacinia at quis risus sed vulputate. Lorem ipsum dolor sit amet. Aliquam malesuada bibendum arcu vitae elementum. Suspendisse interdum consectetur libero id faucibus nisl. Elit ut aliquam purus sit amet luctus venenatis lectus. Convallis posuere morbi leo urna molestie at elementum eu facilisis.
 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pharetra diam sit amet nisl suscipit adipiscing. Dictumst quisque sagittis purus sit amet volutpat consequat. Viverra ipsum nunc aliquet bibendum enim facilisis gravida neque convallis. Egestas congue quisque egestas diam. Curabitur vitae nunc sed velit. Nulla aliquet enim tortor at auctor urna nunc. Placerat duis ultricies lacus sed turpis tincidunt. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit. Risus at ultrices mi tempus imperdiet nulla malesuada. Quis blandit turpis cursus in hac habitasse platea dictumst quisque. In massa tempor nec feugiat nisl pretium fusce id. Risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit. Tristique senectus et netus et malesuada fames ac turpis egestas. Aenean sed adipiscing diam donec. Semper feugiat nibh sed pulvinar proin gravida hendrerit lectus. Elementum facilisis leo vel fringilla est ullamcorper eget nulla facilisi.
+
+Erat velit scelerisque in dictum non consectetur. Ut consequat semper viverra nam libero justo laoreet. In massa tempor nec feugiat nisl. Justo donec enim diam vulputate ut pharetra sit amet. Commodo odio aenean sed adipiscing diam donec. Non odio euismod lacinia at quis risus sed vulputate. Lorem ipsum dolor sit amet. Aliquam malesuada bibendum arcu vitae elementum. Suspendisse interdum consectetur libero id faucibus nisl. Elit ut aliquam purus sit amet luctus venenatis lectus. Convallis posuere morbi leo urna molestie at elementum eu facilisis.
+
 \newpage
 # Alabama
 
-```{r}
-library(kableExtra)
-knitr::kables(list(kable(Alabama) %>% kable_styling(),kable(Alabama_Expenditures) %>% kable_styling())) %>% kable_styling()
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Alabama, format = 'markdown', padding=1.5L)
+kable(Alabama_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Alabama.png")
@@ -46,8 +47,10 @@ knitr::include_graphics("plots/pop_parole_Alabama.png")
 # Alaska
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Alaska, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Alaska, format = 'markdown', padding=1.5L)
+kable(Alaska_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Alaska.png")
@@ -64,8 +67,10 @@ Admissions and population figures include people incarcerated pretrial, as Alask
 # Arizona
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Arizona, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Arizona, format = 'markdown', padding=1.5L)
+kable(Arizona_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Arizona.png")
@@ -80,8 +85,10 @@ knitr::include_graphics("plots/pop_parole_Arizona.png")
 # Colorado
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Colorado, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Colorado, format = 'markdown', padding=1.5L)
+kable(Colorado_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Colorado.png")
@@ -98,8 +105,10 @@ Persons in state funded custody only include revocations, not violations. People
 # Connecticut
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Colorado, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Connecticut, format = 'markdown', padding=1.5L)
+kable(Connecticut_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Connecticut.png")
@@ -116,8 +125,10 @@ Admissions include people incarcerated pretrial, as Connecticut is a unified sta
 # Delaware
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Delaware, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Delaware, format = 'markdown', padding=1.5L)
+kable(Delaware_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Delaware.png")
@@ -134,8 +145,10 @@ Delaware has a unified system, meaning the state has jurisdiction over people in
 # Illinois
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Illinois, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Illinois, format = 'markdown', padding=1.5L)
+kable(Illinois_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Illinois.png")
@@ -152,8 +165,10 @@ Probation terms are not identified in prison data, as probation is run by the Il
 # Indiana
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Indiana, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Indiana, format = 'markdown', padding=1.5L)
+kable(Indiana_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Indiana.png")
@@ -168,8 +183,10 @@ knitr::include_graphics("plots/pop_parole_Indiana.png")
 # Louisiana
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Louisiana, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Louisiana, format = 'markdown', padding=1.5L)
+kable(Louisiana_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Louisiana.png")
@@ -186,8 +203,10 @@ In the snapshot data provided, total violations for new offences and technical v
 # Maine
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Maine, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Maine, format = 'markdown', padding=1.5L)
+kable(Maine_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Maine.png")
@@ -204,8 +223,10 @@ The state abolished parole in 1976 but maintains a very small number of people u
 # Maryland
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Maryland, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Maryland, format = 'markdown', padding=1.5L)
+kable(Maryland_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Maryland.png")
@@ -222,8 +243,10 @@ For the current iteration of the survey, Maryland Department of Public Safety & 
 # Missouri
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Missouri, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Missouri, format = 'markdown', padding=1.5L)
+kable(Missouri_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Missouri.png")
@@ -240,8 +263,10 @@ Missouri incarcerates both probationers and parolees without a revocation of the
 # Nebraska
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Nebraska, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Nebraska, format = 'markdown', padding=1.5L)
+kable(Nebraska_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Nebraska.png")
@@ -258,8 +283,10 @@ While the state did not respond to the survey request for this report, informati
 # North Carolina
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(`North Carolina`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(`North Carolina`, format = 'markdown', padding=1.5L)
+kable(`North Carolina_Expenditures`, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_North Carolina.png")
@@ -276,8 +303,10 @@ Figures used include only Conditional Release Violator (CRV) admissions, which r
 # North Dakota
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(`North Dakota`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(`North Dakota`, format = 'markdown', padding=1.5L)
+kable(`North Dakota_Expenditures`, format = 'markdown', padding=1.5L)
 ```
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_North Dakota.png")
@@ -294,8 +323,10 @@ Technical supervision violations resulting in placement in a contract facility a
 # Oklahoma
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Oklahoma, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Oklahoma, format = 'markdown', padding=1.5L)
+kable(Oklahoma_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Oklahoma.png")
@@ -312,8 +343,10 @@ Supervision violation admissions and population data does not include private pr
 # Rhode Island
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(`Rhode Island`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(`Rhode Island`, format = 'markdown', padding=1.5L)
+kable(`Rhode Island_Expenditures`, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Rhode Island.png")
@@ -330,8 +363,10 @@ Rhode Island is a unified state, where the state has jurisdiction over people in
 # Texas
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Texas, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Texas, format = 'markdown', padding=1.5L)
+kable(Texas_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Texas.png")
@@ -348,8 +383,10 @@ All admissions data include prison, state jail, and Substance Abuse Facility Pro
 # Vermont
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Vermont, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Vermont, format = 'markdown', padding=1.5L)
+kable(Vermont_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Vermont.png")
@@ -366,8 +403,10 @@ Parole admissions and snapshot total includes people returning from both parole 
 # West Virginia
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(`West Virginia`, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(`West Virginia`, format = 'markdown', padding=1.5L)
+kable(`West Virginia_Expenditures`, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_West Virginia.png")
@@ -384,8 +423,10 @@ Additional types of supervision were not included in this analysis, such as Comm
 # Wyoming
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Wyoming, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+kable(Wyoming, format = 'markdown', padding=1.5L)
+kable(Wyoming_Expenditures, format = 'markdown', padding=1.5L)
 ```
+  
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Wyoming.png")

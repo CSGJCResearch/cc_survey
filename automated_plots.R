@@ -86,7 +86,7 @@ purrr::iwalk(adm_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_by_year_", .y, ".png"),
-                      width = 5, height = 2.75, dpi = 150)
+                      width = 6, height = 3.25, dpi = 150)
 )
 
 ##################
@@ -126,7 +126,7 @@ purrr::iwalk(adm_prob_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_prob_", .y, ".png"),
-                      width = 5, height = 2.75, dpi = 150)
+                      width = 6, height = 3.25, dpi = 150)
 )
 
 ##################
@@ -166,7 +166,7 @@ purrr::iwalk(adm_parole_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_parole_", .y, ".png"),
-                      width = 5, height = 2.75, dpi = 150)
+                      width = 6, height = 3.25, dpi = 150)
 )
 
 ##################
@@ -209,7 +209,7 @@ purrr::iwalk(pop_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_by_year_", .y, ".png"),
-                      width = 5, height = 2.75, dpi = 150)
+                      width = 6, height = 3.25, dpi = 150)
 )
 
 ##################
@@ -250,7 +250,7 @@ purrr::iwalk(pop_prob_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_prob_", .y, ".png"),
-                      width = 5, height = 2.75, dpi = 150)
+                      width = 6, height = 3.25, dpi = 150)
 )
 
 ##################
@@ -290,5 +290,5 @@ purrr::iwalk(pop_parole_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_parole_", .y, ".png"),
-                      width = 5, height = 2.75, dpi = 150)
+                      width = 6, height = 3.25, dpi = 150)
 )
