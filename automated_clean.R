@@ -9,11 +9,12 @@
 requiredPackages = c('dplyr',
                      'openxlsx',
                      'readr',
-                     'reshape',
+                     #'reshape',
                      'ggplot2',
-                     'readxl',
-                     'tidyverse',
-                     'knitr')
+                     'readxl'
+                     #'tidyverse',
+                     #'knitr'
+                     )
 # only downloads packages if needed
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) install.packages(p)
@@ -78,6 +79,8 @@ adm17 <- adm17 %>%
 adm18 <- adm18 %>%
   select(-c(Publicly.Available.Data, ...11, State.Abbrev))
 adm19 <- adm19 %>% select(-c(Publicly.Available.Data, ...11, State.Abbrev))
+# adm20_backup <- adm20 %>% select(-Notes, -`...15`, -`...16`, -`...17`,-State.Abbrev,-Admissions.Year,-Reporting.Year)
+# adm20_backup <- adm20_backup %>% filter(Months.Reported == 12) %>% select(-Months.Reported)
 adm20 <- adm20 %>% select(-Notes, -`...15`, -`...16`, -`...17`,-State.Abbrev,-Admissions.Year,-Reporting.Year,-Months.Reported)
 
 # remove unwanted rows
@@ -91,6 +94,7 @@ adm17$year <- "2017"
 adm18$year <- "2018"
 adm19$year <- "2019"
 adm20$year <- "2020"
+# adm20 <- adm20_backup
 
 # combine data and remove unwanted data (NA, etc)
 adm <- rbind(adm17, adm18, adm19, adm20)
