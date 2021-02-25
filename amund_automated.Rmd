@@ -26,12 +26,12 @@ no_grid <- theme(panel.grid.major = element_blank(),
 
 ```{r, include = FALSE}
 
-population17 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Population 2017", .name_repair = "universal")
-population18 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Population 2018", .name_repair = "universal")
-population19 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
+population17 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Population 2017", .name_repair = "universal")
+population18 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Population 2018", .name_repair = "universal")
+population19 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
 
 # Include fake 2020 data (copy of 2019)
-population20 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
+population20 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
 
 population17 <- population17 %>%
   select(-Population.Year)
@@ -47,12 +47,12 @@ population <- filter(population, State.Abbrev != "NA")
 population <- population %>% select(-State.Abbrev)
 
 
-adm17 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Admissions 2017-R", .name_repair = "universal")
-adm18 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
-adm19 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+adm17 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2017-R", .name_repair = "universal")
+adm18 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
+adm19 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
 
 # Include fake 2020 data (copy of 2019)
-adm20 <- read_xlsx("Data for web team 2020 v6.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+adm20 <- read_xlsx("data/Data for web team 2020 v6.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
 
 
 adm17 <- adm17 %>%

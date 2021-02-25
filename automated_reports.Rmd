@@ -115,6 +115,22 @@ knitr::include_graphics("plots/pop_parole_Colorado.png")
 ```
 
 \newpage
+# Connecticut
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+kable(Colorado, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Connecticut.png")
+knitr::include_graphics("plots/pop_by_year_Connecticut.png")
+knitr::include_graphics("plots/adm_prob_Connecticut.png")
+knitr::include_graphics("plots/pop_prob_Connecticut.png")
+knitr::include_graphics("plots/adm_parole_Connecticut.png")
+knitr::include_graphics("plots/pop_parole_Connecticut.png")
+```
+
+\newpage
 # Delaware
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}

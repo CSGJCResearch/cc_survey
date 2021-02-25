@@ -9,11 +9,11 @@
 requiredPackages = c('dplyr',
                      'openxlsx',
                      'readr',
-                     #'reshape',
+                     'reshape',
                      'ggplot2',
-                     'readxl'
-                     #'tidyverse',
-                     #'knitr'
+                     'readxl',
+                     'tidyverse',
+                     'knitr'
                      )
 # only downloads packages if needed
 for(p in requiredPackages){
@@ -64,6 +64,7 @@ population20$year <- "2020"
 
 # combine pop data
 population <- rbind(population17, population18, population19, population20)
+rm(population17, population18, population19, population20) # remove old dfs
 population <- filter(population, State.Abbrev != "NA")
 population <- population %>% select(-State.Abbrev)
 
@@ -94,10 +95,10 @@ adm17$year <- "2017"
 adm18$year <- "2018"
 adm19$year <- "2019"
 adm20$year <- "2020"
-# adm20 <- adm20_backup
 
 # combine data and remove unwanted data (NA, etc)
 adm <- rbind(adm17, adm18, adm19, adm20)
+rm(adm17, adm18, adm19, adm20) # remove old dfs
 adm <- filter(adm, States != "NA")
 adm <- filter(adm, States != "Total")
 adm <- filter(adm, States != "Count")
@@ -179,38 +180,66 @@ pop_change <- pop_change %>%
   mutate(Population.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
   filter(year != "2017")
 
+# create factor variables
+adm_long$year <- factor(adm_long$year)
+pop_long$year <- factor(pop_long$year)
+
+# remove 2017
+adm_long <- adm_long %>% filter(year != 2017)
+pop_long <- pop_long %>% filter(year != 2017)
+
+# subset to a few states for now ################################################
+adm_long <- adm_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
+                                  States=="Colorado"|States=="Connecticut"|States== "Delaware"|
+                                  States=="Illinois"|States=="Indiana"|States== "Louisiana"|  
+                                  States=="Maine"|States=="Maryland"|States== "Missouri"|    
+                                  States=="Nebraska"|States=="North Carolina"|States== "North Dakota"|   
+                                  States=="Oklahoma"|States=="Rhode Island"|States== "Texas"|
+                                  States=="Vermont"|States=="West Virginia"|States== "Wyoming"
+)
+
+pop_long <- pop_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
+                                  States=="Colorado"|States=="Connecticut"|States== "Delaware"|
+                                  States=="Illinois"|States=="Indiana"|States== "Louisiana"|  
+                                  States=="Maine"|States=="Maryland"|States== "Missouri"|    
+                                  States=="Nebraska"|States=="North Carolina"|States== "North Dakota"|   
+                                  States=="Oklahoma"|States=="Rhode Island"|States== "Texas"|
+                                  States=="Vermont"|States=="West Virginia"|States== "Wyoming"
+)
+
+
 ##################
 # Costs
 ##################
 
-costs <- read_excel("data/Cost Per Day For Calculation.xlsx")
-costs <- costs %>% select(`State Abbrev`, States, cost = `State Reported CostPerDay`)
-
-# costs_adm <- adm_long %>% 
-#   filter(category == "Total.violation.admissions"|
-#          category == "Technical.probation.violation.admissions"|
-#          category == "Technical.parole.violation.admissions") %>% select(States, year, category, count)
-
-# creat costs_adm df
-costs_adm <- adm %>% select(States, year, Total.violation.admissions, Technical.probation.violation.admissions, Technical.parole.violation.admissions)
-
-# add technical prob and parole together to get tech number
-costs_adm <- costs_adm %>% mutate(total_admissions = Total.violation.admissions,
-                                  technical_admissions = Technical.probation.violation.admissions + Technical.parole.violation.admissions) %>% 
-                           select(-Technical.probation.violation.admissions,
-                                  -Technical.parole.violation.admissions,
-                                  -Total.violation.admissions)
-
-# merge costs and admissions numbers
-costs_adm_df <- merge(costs_adm, costs, by = "States")
-
-# calc costs
-costs_adm_df <- costs_adm_df %>% mutate(adm_sup_cost = total_admissions*cost*365,
-                                        adm_tech_cost = technical_admissions*cost*365) %>% 
-                                 select(States,Year=year,adm_sup_cost,adm_tech_cost)
-
-# add column for "DOC Costs to incarcerate violators"
-costs_adm_df <- costs_adm_df %>% mutate(text = "Admissions")
+# costs <- read_excel("data/Cost Per Day For Calculation.xlsx")
+# costs <- costs %>% select(`State Abbrev`, States, cost = `State Reported CostPerDay`)
+# 
+# # costs_adm <- adm_long %>% 
+# #   filter(category == "Total.violation.admissions"|
+# #          category == "Technical.probation.violation.admissions"|
+# #          category == "Technical.parole.violation.admissions") %>% select(States, year, category, count)
+# 
+# # creat costs_adm df
+# costs_adm <- adm %>% select(States, year, Total.violation.admissions, Technical.probation.violation.admissions, Technical.parole.violation.admissions)
+# 
+# # add technical prob and parole together to get tech number
+# costs_adm <- costs_adm %>% mutate(total_admissions = Total.violation.admissions,
+#                                   technical_admissions = Technical.probation.violation.admissions + Technical.parole.violation.admissions) %>% 
+#                            select(-Technical.probation.violation.admissions,
+#                                   -Technical.parole.violation.admissions,
+#                                   -Total.violation.admissions)
+# 
+# # merge costs and admissions numbers
+# costs_adm_df <- merge(costs_adm, costs, by = "States")
+# 
+# # calc costs
+# costs_adm_df <- costs_adm_df %>% mutate(adm_sup_cost = total_admissions*cost*365,
+#                                         adm_tech_cost = technical_admissions*cost*365) %>% 
+#                                  select(States,Year=year,adm_sup_cost,adm_tech_cost)
+# 
+# # add column for "DOC Costs to incarcerate violators"
+# costs_adm_df <- costs_adm_df %>% mutate(text = "Admissions")
 
 
 

@@ -12,14 +12,6 @@ source("automated_clean.R")
 # https://stackoverflow.com/questions/41904737/label-na-values-in-geom-line
 # https://stackoverflow.com/questions/26869141/conditionally-hiding-data-labels-in-ggplot2-graph
 
-# create factor variables
-adm_long$year <- factor(adm_long$year)
-pop_long$year <- factor(pop_long$year)
-
-# remove 2017
-adm_long <- adm_long # %>% filter(year != 2017)
-pop_long <- pop_long %>% filter(year != 2017)
-
 # custom theme
 theme_csgjc <- theme(axis.ticks = element_blank(),
                      #axis.text.y = element_blank(),
@@ -37,15 +29,9 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
                      plot.subtitle = element_text(hjust = 0.5, size = 15),
                      plot.margin = margin(0, 0, 0, 0, "cm"))
 
-# subset to a few states for now ################################################
-# adm_long <- adm_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
-#                                     States=="Arkansas"|States=="California"|States== "Colorado")
-# 
-# pop_long <- pop_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
-#                                     States=="Arkansas"|States=="California"|States== "Colorado")
 
 ##################
-# admissions by year (prob, parole, new commits)
+# Prison Admissions by Year
 ##################
 
 # subset data
@@ -86,10 +72,8 @@ purrr::iwalk(adm_by_year_plot_list,
 )
 
 ##################
-# admissions for probation violations (tech vs nontech)
-##################
-
 # Probation Violations Resulting in DOC Incarceration
+##################
 
 # subset data
 adm_prob <- adm_long %>% filter(category=="New.offense.probation.violation.admissions"|
@@ -109,7 +93,7 @@ adm_prob_plot <- function(df, myvar) {
     #ylab("Count") +
     labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values = c("#8856a7", "#8c96c6")) + 
+    scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -128,10 +112,8 @@ purrr::iwalk(adm_prob_plot_list,
 )
 
 ##################
-# admissions for parole violations (tech vs nontech)
-##################
-
 # Parole Violations Resulting in DOC Incarceration
+##################
 
 # subset data
 adm_parole <- adm_long %>% filter(category=="New.offense.parole.violation.admissions"|
@@ -170,7 +152,7 @@ purrr::iwalk(adm_parole_plot_list,
 )
 
 ##################
-# pop by year (prob, parole, new commits)
+# Prison Population by Year
 ##################
 
 # subset data
@@ -212,10 +194,8 @@ purrr::iwalk(pop_by_year_plot_list,
 )
 
 ##################
-# pop for probation violations (tech vs nontech)
-##################
-
 # Probation Violations Resulting in DOC Incarceration
+##################
 
 # subset data
 pop_prob <- pop_long %>% filter(category=="New.offense.probation.violation.population"|
@@ -235,7 +215,7 @@ pop_prob_plot <- function(df, myvar) {
     #ylab("Count") +
     labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
     geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values = c("#8856a7", "#8c96c6")) + 
+    scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -254,7 +234,7 @@ purrr::iwalk(pop_prob_plot_list,
 )
 
 ##################
-# pop for parole violations (tech vs nontech)
+# Parole Violations Resulting in DOC Incarceration
 ##################
 
 # subset data

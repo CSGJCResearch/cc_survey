@@ -17,7 +17,7 @@ adm_change$Violation.admissions = paste(round(adm_change$Violation.admissions, 2
 adm_table <- adm_change %>%
   select(States, year, Violation.admissions) %>%
   dplyr::rename("Admissions for Supervision Violation" = Violation.admissions, 
-                Year = yeary) %>% arrange(desc(States))
+                Year = year) %>% arrange(desc(States))
 adm_table[adm_table == "NA%"] <- "No Data"  
 
 ##################################### ADD IN   select(States, `Change from Previous Year`,`2019`,`2020`)
@@ -32,7 +32,7 @@ pop_table[pop_table == "NA%"] <- "No Data"
 
 # add adm and pop together
 adm_pop_table <- cbind(adm_table, pop_table)
-adm_pop_table <- adm_pop_table[-c(4:5)] # remove columns
+adm_pop_table <- adm_pop_table[-c(4:5)] # remove extra State and Year columns
 
 # custom generate pop table function
 generate_table <- function(df, myvar){
@@ -41,7 +41,8 @@ generate_table <- function(df, myvar){
                                        names_to = "category", values_to = "count")
   df_long <- cast(df_long, States+category~Year)
   df_long <- df_long %>% select(-`2018`) # remove 2018 year
-  # kable(df1)
+  df_long <- df_long %>% mutate(`Change from Previous Year` = category) %>% select(-category)
+  df_long <- df_long %>% select(States,`Change from Previous Year`, `2019`, `2020`)
 }
 
 # loop through states var, create plots & store them in a list
