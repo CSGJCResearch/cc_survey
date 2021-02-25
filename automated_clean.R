@@ -212,34 +212,75 @@ pop_long <- pop_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Ariz
 # Costs
 ##################
 
-# costs <- read_excel("data/Cost Per Day For Calculation.xlsx")
-# costs <- costs %>% select(`State Abbrev`, States, cost = `State Reported CostPerDay`)
-# 
-# # costs_adm <- adm_long %>% 
-# #   filter(category == "Total.violation.admissions"|
-# #          category == "Technical.probation.violation.admissions"|
-# #          category == "Technical.parole.violation.admissions") %>% select(States, year, category, count)
-# 
-# # creat costs_adm df
-# costs_adm <- adm %>% select(States, year, Total.violation.admissions, Technical.probation.violation.admissions, Technical.parole.violation.admissions)
-# 
-# # add technical prob and parole together to get tech number
-# costs_adm <- costs_adm %>% mutate(total_admissions = Total.violation.admissions,
-#                                   technical_admissions = Technical.probation.violation.admissions + Technical.parole.violation.admissions) %>% 
-#                            select(-Technical.probation.violation.admissions,
-#                                   -Technical.parole.violation.admissions,
-#                                   -Total.violation.admissions)
-# 
-# # merge costs and admissions numbers
-# costs_adm_df <- merge(costs_adm, costs, by = "States")
-# 
-# # calc costs
-# costs_adm_df <- costs_adm_df %>% mutate(adm_sup_cost = total_admissions*cost*365,
-#                                         adm_tech_cost = technical_admissions*cost*365) %>% 
-#                                  select(States,Year=year,adm_sup_cost,adm_tech_cost)
-# 
-# # add column for "DOC Costs to incarcerate violators"
-# costs_adm_df <- costs_adm_df %>% mutate(text = "Admissions")
+# get 2019 budget data
+budget <- read.csv("data/NASBO - State Corrections Expenditures - 1991 to current.csv")
+budget <- budget %>% filter(Year == "2019" | Year == "2020") %>% select(States = State, Year, Budget = `Corrections....Total.Funds`)
+budget <- budget %>% filter(States != "Puerto Rico")
+
+# get 2020 budget data
+budget_2020 <- read.csv("data/budget_2020.csv")
+budget_2020$Year <- "2020"
+budget_2020 <- budget_2020 %>% select(States, Year, Budget = budget)
+
+# combine data
+budget <- rbind(budget, budget_2020) 
+
+# get cost data
+costs <- read_excel("data/Cost Per Day For Calculation.xlsx")
+costs <- costs %>% select(`State Abbrev`, States, cost = `State Reported CostPerDay`)
+
+################################################################# need to add updated 2020 costs
+
+# costs_adm <- adm_long %>%
+#   filter(category == "Total.violation.admissions"|
+#          category == "Technical.probation.violation.admissions"|
+#          category == "Technical.parole.violation.admissions") %>% select(States, year, category, count)
+
+# creat costs_adm df
+costs_adm <- adm %>% select(States, year, Total.violation.admissions, Technical.probation.violation.admissions, Technical.parole.violation.admissions)
+
+# add technical prob and parole together to get tech number
+costs_adm <- costs_adm %>% mutate(total_admissions = Total.violation.admissions,
+                                  technical_admissions = Technical.probation.violation.admissions + Technical.parole.violation.admissions) %>%
+                           select(-Technical.probation.violation.admissions,
+                                  -Technical.parole.violation.admissions,
+                                  -Total.violation.admissions)
+
+# merge costs and admissions numbers
+costs_adm_df <- merge(costs_adm, costs, by = "States")
+
+# calc costs
+costs_adm_df <- costs_adm_df %>% mutate(adm_sup_cost = total_admissions*cost*365,
+                                        adm_tech_cost = technical_admissions*cost*365) %>%
+                                 select(States,Year=year,adm_sup_cost,adm_tech_cost)
+
+# remove 2017 and 2018
+costs_adm_df <- costs_adm_df %>% filter(Year != 2017 & Year != 2018)
+
+# calc by millions
+costs_adm_df$adm_sup_cost <- (costs_adm_df$adm_sup_cost)/1000000
+costs_adm_df$adm_tech_cost <- (costs_adm_df$adm_tech_cost)/1000000
+
+# round - add $ and M
+costs_adm_df$adm_sup_cost <- paste("$", round(costs_adm_df$adm_sup_cost, 1), "M", sep="")
+costs_adm_df$adm_tech_cost <- paste("$", round(costs_adm_df$adm_tech_cost, 1), "M", sep="")
+
+# add costs and budgets together
+expenditures <- merge(budget, costs_adm_df, by = c("States", "Year"))
+
+# change to numeric
+expenditures$adm_sup_cost <- as.numeric(expenditures$adm_sup_cost)
+expenditures$adm_tech_cost <- as.numeric(expenditures$adm_tech_cost)
+
+# # add commas
+# expenditures$adm_sup_cost <- prettyNum(expenditures$adm_sup_cost, big.mark = ",", scientific = FALSE)
+# expenditures$adm_tech_cost <- prettyNum(expenditures$adm_tech_cost, big.mark = ",", scientific = FALSE)
+
+# replace NAs with "No Data"
+expenditures[expenditures == "$NAM"] <- "No Data"  
+
+
+
 
 
 

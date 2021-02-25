@@ -25,7 +25,8 @@ Erat velit scelerisque in dictum non consectetur. Ut consequat semper viverra na
 # Alabama
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
-kable(Alabama, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year', position = "left")
+# kable(Alabama, format = 'markdown', padding=1.5L, caption = '% Change From Previous Year')
+# knitr::kable(list(Alabama, Alabama))
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
@@ -52,6 +53,8 @@ knitr::include_graphics("plots/pop_prob_Alaska.png")
 knitr::include_graphics("plots/adm_parole_Alaska.png")
 knitr::include_graphics("plots/pop_parole_Alaska.png")
 ```
+
+Admissions and population figures include people incarcerated pretrial, as Alaska is a unified state where the state has jurisdiction over people incarcerated in both jail and prison.
 
 \newpage
 # Arizona
@@ -85,6 +88,8 @@ knitr::include_graphics("plots/adm_parole_Colorado.png")
 knitr::include_graphics("plots/pop_parole_Colorado.png")
 ```
 
+Persons in state funded custody only include revocations, not violations. People incarcerated for probation violations are only included in population data if they served probation immediately following a release from Colorado Department of Corrections (i.e., post-prison probation).
+
 \newpage
 # Connecticut
 
@@ -100,6 +105,8 @@ knitr::include_graphics("plots/pop_prob_Connecticut.png")
 knitr::include_graphics("plots/adm_parole_Connecticut.png")
 knitr::include_graphics("plots/pop_parole_Connecticut.png")
 ```
+
+Admissions include people incarcerated pretrial, as Connecticut is a unified state where the state has jurisdiction over people incarcerated in both jail and prison. The Connecticut Department of Correction probation violation counts include only people who receive a new sentence of Probation Violation. Parole violation admissions do not include all types of parole (e.g., Returns Without Prejudice, Parcom are excluded). Technical parole violation admissions do not include people who absconded. Technical parole violations may include individuals ultimately receiving a new felony conviction. 
 
 \newpage
 # Delaware
@@ -117,6 +124,8 @@ knitr::include_graphics("plots/adm_parole_Delaware.png")
 knitr::include_graphics("plots/pop_parole_Delaware.png")
 ```
 
+Delaware has a unified system, meaning the state has jurisdiction over people incarcerated in both jail and prison. Delaware Department of Correction did not provide violation information for admissions. In Delaware, people incarcerated are admitted using the same codes whether they are detained or sentenced on a technical violation or a violation for a new crime. The state discontinued use of parole on cases after 1991, but a small number of people are still under supervision of the Parole Board. For the purposes of this report, parole populations were not included. 
+
 \newpage
 # Illinois
 
@@ -132,6 +141,8 @@ knitr::include_graphics("plots/pop_prob_Illinois.png")
 knitr::include_graphics("plots/adm_parole_Illinois.png")
 knitr::include_graphics("plots/pop_parole_Illinois.png")
 ```
+
+Probation terms are not identified in prison data, as probation is run by the Illinois Administrative Office of the Courts. In addition to other parole sanction options reported, some individuals are eligible for pre-release electronic detention or partial release work release programs. In the case of some people with a sex offense, parole admissions can include those who never exited due to violation of parole rule requiring an approvable host site. Technical parole violations may include individuals ultimately receiving a new felony conviction.
 
 \newpage
 # Indiana
@@ -165,6 +176,8 @@ knitr::include_graphics("plots/adm_parole_Louisiana.png")
 knitr::include_graphics("plots/pop_parole_Louisiana.png")
 ```
 
+In the snapshot data provided, total violations for new offences and technical violations includes those who have a pending felony charge who waived their rights to a revocation hearing.
+
 \newpage
 # Maine
 
@@ -180,6 +193,8 @@ knitr::include_graphics("plots/pop_prob_Maine.png")
 knitr::include_graphics("plots/adm_parole_Maine.png")
 knitr::include_graphics("plots/pop_parole_Maine.png")
 ```
+
+The state abolished parole in 1976 but maintains a very small number of people under parole supervision. For the purposes of this report, parole populations were not included. Technical probation violations may include individuals ultimately receiving a new felony conviction.
 
 \newpage
 # Maryland
@@ -197,6 +212,8 @@ knitr::include_graphics("plots/adm_parole_Maryland.png")
 knitr::include_graphics("plots/pop_parole_Maryland.png")
 ```
 
+For the current iteration of the survey, Maryland Department of Public Safety & Correctional Services (DPSCS) provided additional detail on violations not reported in the previous survey. DPSCS provided additional information on violations going back to July 1, 2014.
+
 \newpage
 # Missouri
 
@@ -212,6 +229,8 @@ knitr::include_graphics("plots/pop_prob_Missouri.png")
 knitr::include_graphics("plots/adm_parole_Missouri.png")
 knitr::include_graphics("plots/pop_parole_Missouri.png")
 ```
+
+Missouri incarcerates both probationers and parolees without a revocation of the probation or parole. These cases are reported as technical violations in this survey. Technical probation and parole violations may include individuals ultimately receiving a new felony conviction.
 
 \newpage
 # Nebraska
@@ -229,6 +248,8 @@ knitr::include_graphics("plots/adm_parole_Nebraska.png")
 knitr::include_graphics("plots/pop_parole_Nebraska.png")
 ```
 
+While the state did not respond to the survey request for this report, information was obtained by the CSG Justice Center through Nebraska Justice Reinvestment in 2020.
+
 \newpage
 # North Carolina
 
@@ -244,6 +265,8 @@ knitr::include_graphics("plots/pop_prob_North Carolina.png")
 knitr::include_graphics("plots/adm_parole_North Carolina.png")
 knitr::include_graphics("plots/pop_parole_North Carolina.png")
 ```
+
+Figures used include only Conditional Release Violator (CRV) admissions, which represent a minimum estimate for technical violation admissions. CRV facility admissions only include people with technical violations, but there are likely additional technical violation admissions that do not go to CRVs. Technical probation and parole violations may include individuals ultimately receiving a new felony conviction.
 
 \newpage
 # North Dakota
@@ -261,6 +284,8 @@ knitr::include_graphics("plots/adm_parole_North Dakota.png")
 knitr::include_graphics("plots/pop_parole_North Dakota.png")
 ```
 
+Technical supervision violations resulting in placement in a contract facility are funded by the state but are not included in the counts provided. Many times, new conviction information is received by the Department of Corrections following a person’s admission for a supervision violation, but the admission type is not updated to reflect the new conviction. Technical probation and parole violations may include individuals ultimately receiving a new felony conviction.
+
 \newpage
 # Oklahoma
 
@@ -276,6 +301,8 @@ knitr::include_graphics("plots/pop_prob_Oklahoma.png")
 knitr::include_graphics("plots/adm_parole_Oklahoma.png")
 knitr::include_graphics("plots/pop_parole_Oklahoma.png")
 ```
+
+Supervision violation admissions and population data does not include private probation and district attorney supervision. People may return to prison and be identified as having returned due to a technical violation because the disposition of their case has not been determined at that time. Population data does not include admission types for cases older than 15 years.
 
 \newpage
 # Rhode Island
@@ -293,6 +320,8 @@ knitr::include_graphics("plots/adm_parole_Rhode Island.png")
 knitr::include_graphics("plots/pop_parole_Rhode Island.png")
 ```
 
+Rhode Island is a unified state, where the state has jurisdiction over people incarcerated in both jail and prison, but figures exclude all admissions awaiting trial and include only sentenced admissions. This was done to more closely align with state definitions and reports. Rhode Island Department of Corrections provided the number of cases where an outcome was still pending. These cases were excluded in the figures reported.
+
 \newpage
 # Texas
 
@@ -308,6 +337,8 @@ knitr::include_graphics("plots/pop_prob_Texas.png")
 knitr::include_graphics("plots/adm_parole_Texas.png")
 knitr::include_graphics("plots/pop_parole_Texas.png")
 ```
+
+All admissions data include prison, state jail, and Substance Abuse Facility Program (SAFP) admissions. Other alternative and substance addiction and mental health treatment facility admissions are not included. Only people on felony probation can legally be revoked to prison. Parole violation admissions include Mandatory Supervision and Discretionary Mandatory Supervision violation admissions, as well as parole violation admissions to SAFP. This iteration of the survey reports only those probation revocations admitted to TDCJ based on a match of Texas Department of Criminal Justice (TDCJ) and Community Justice Assistance Division (CJAD) data. The prior iteration of the survey included probation revocations not actually admitted. 
 
 \newpage
 # Vermont
@@ -325,6 +356,8 @@ knitr::include_graphics("plots/adm_parole_Vermont.png")
 knitr::include_graphics("plots/pop_parole_Vermont.png")
 ```
 
+Parole admissions and snapshot total includes people returning from both parole and furlough. Snapshot total prison population data include those housed out-of-state (due to potential movement between in-state and out-of-state Vermont inmates), but does not include those detained pre-trial or held for another jurisdiction.
+
 \newpage
 # West Virginia
 
@@ -341,6 +374,8 @@ knitr::include_graphics("plots/adm_parole_West Virginia.png")
 knitr::include_graphics("plots/pop_parole_West Virginia.png")
 ```
 
+Additional types of supervision were not included in this analysis, such as Community Corrections, Home Confinement, and Sex Offender Supervision Release revocations. Technical probation violations may include individuals ultimately receiving a new felony conviction.
+
 \newpage
 # Wyoming
 
@@ -356,3 +391,6 @@ knitr::include_graphics("plots/pop_prob_Wyoming.png")
 knitr::include_graphics("plots/adm_parole_Wyoming.png")
 knitr::include_graphics("plots/pop_parole_Wyoming.png")
 ```
+
+Parole violation admissions include returns from work release, but in the population data, work release returns were not defined and there for not included.
+

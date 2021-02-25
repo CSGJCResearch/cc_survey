@@ -29,6 +29,24 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
                      plot.subtitle = element_text(hjust = 0.5, size = 15),
                      plot.margin = margin(0, 0, 0, 0, "cm"))
 
+# custom theme -y axis on right 
+theme_csgjc2 <- theme(axis.ticks = element_blank(),
+                     #axis.text.y = element_blank(),
+                     axis.text.x = element_text(vjust = 6.5, margin = margin(t = 6),size=8,face="italic"),
+                     axis.title.y = element_blank(),
+                     axis.title.x = element_blank(),
+                     panel.border = element_blank(), 
+                     panel.grid.major.x = element_blank(), 
+                     panel.grid.minor.x = element_blank(), 
+                     #panel.grid.major.y = element_blank(), 
+                     #panel.grid.minor.y = element_blank(),
+                     legend.title = element_blank(),
+                     legend.position = "top",
+                     plot.title = element_text(hjust = 0.5,size = 12, face = "bold"),
+                     plot.subtitle = element_text(hjust = 0.5, size = 15),
+                     plot.margin = margin(0, 0, 0, 0, "cm"))
+
+
 
 ##################
 # Prison Admissions by Year
@@ -152,6 +170,7 @@ purrr::iwalk(adm_parole_plot_list,
 )
 
 ##################
+# POP
 # Prison Population by Year
 ##################
 
@@ -170,7 +189,7 @@ pop_by_year_plot <- function(df, myvar) {
   ggplot(data = df %>% filter(States == myvar), 
          aes(x = year, y = count, fill=category)) +
     geom_bar(stat = "identity", position = "stack", width = 0.65) +
-    scale_y_continuous(labels = scales::comma) +
+    scale_y_continuous(labels = scales::comma, position = "right") +
     #xlab("Year") + 
     #ylab("Count") +
     labs(subtitle = "Prison Population by Year") +
@@ -194,6 +213,7 @@ purrr::iwalk(pop_by_year_plot_list,
 )
 
 ##################
+# POP
 # Probation Violations Resulting in DOC Incarceration
 ##################
 
@@ -210,7 +230,7 @@ pop_prob_plot <- function(df, myvar) {
   ggplot(data = df %>% filter(States == myvar), 
          aes(x = year, y = count, fill=category)) +
     geom_bar(stat = "identity", position = "stack", width = 0.65) +
-    scale_y_continuous(labels = scales::comma) +
+    scale_y_continuous(labels = scales::comma, position = "right") +
     #xlab("Year") + 
     #ylab("Count") +
     labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
@@ -234,13 +254,13 @@ purrr::iwalk(pop_prob_plot_list,
 )
 
 ##################
+# POP
 # Parole Violations Resulting in DOC Incarceration
 ##################
 
 # subset data
 pop_parole <- pop_long %>% filter(category=="New.offense.parole.violation.population"|
-                                      category=="Technical.parole.violation.population") %>% 
-  select(-Totals,-Parole,-Probation)
+                                      category=="Technical.parole.violation.population") %>% select(-Totals,-Parole,-Probation)
 pop_parole <- pop_parole %>%
   mutate(category = case_when(category == "New.offense.parole.violation.population" ~ "Non-Technical",
                               category == "Technical.parole.violation.population" ~ "Technical"))
@@ -250,7 +270,7 @@ pop_parole_plot <- function(df, myvar) {
   ggplot(data = df %>% filter(States == myvar), 
          aes(x = year, y = count, fill=category)) +
     geom_bar(stat = "identity", position = "stack", width = 0.65) +
-    scale_y_continuous(labels = scales::comma) +
+    scale_y_continuous(labels = scales::comma, position = "right") +
     #xlab("Year") + 
     #ylab("Count") +
     labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
