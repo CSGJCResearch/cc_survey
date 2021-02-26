@@ -182,12 +182,12 @@ adm_change <- adm_change1 %>%
 
 adm_change <- adm_change %>% filter(year != 2017)
 # calculate percent change         
-adm_change <- adm_change %>% group_by(States) %>% mutate(Total.admissions.pct = (Total.admissions / lag(Total.admissions) -1)*100)
-adm_change <- adm_change %>% group_by(States) %>% mutate(Total.violation.admissions.pct = (Total.violation.admissions / lag(Total.violation.admissions) -1)*100)
-adm_change <- adm_change %>% group_by(States) %>% mutate(Total.probation.violation.admissions.pct = (Total.probation.violation.admissions / lag(Total.probation.violation.admissions) -1)*100)
-adm_change <- adm_change %>% group_by(States) %>% mutate(Total.parole.violation.admissions.pct = (Total.parole.violation.admissions / lag(Total.parole.violation.admissions) -1)*100)
-adm_change <- adm_change %>% group_by(States) %>% mutate(Technical.violations.pct = (Technical.violations / lag(Technical.violations) -1)*100)
-adm_change <- adm_change %>% group_by(States) %>% mutate(New.commitments = (New.commitments / lag(New.commitments) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(Total.admissions.pct = (Total.admissions / dplyr::lag(Total.admissions) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(Total.violation.admissions.pct = (Total.violation.admissions / dplyr::lag(Total.violation.admissions) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(Total.probation.violation.admissions.pct = (Total.probation.violation.admissions / dplyr::lag(Total.probation.violation.admissions) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(Total.parole.violation.admissions.pct = (Total.parole.violation.admissions / dplyr::lag(Total.parole.violation.admissions) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(Technical.violations.pct = (Technical.violations / dplyr::lag(Technical.violations) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(New.commitments = (New.commitments / dplyr::lag(New.commitments) -1)*100)
 
 # calculate tech violations
 pop_change <- pop_change1 %>% 
@@ -195,12 +195,12 @@ pop_change <- pop_change1 %>%
 
 pop_change <- pop_change %>% filter(year != 2017)
 # calculate percent change         
-pop_change <- pop_change %>% group_by(States) %>% mutate(Total.population.pct = (Total.population / lag(Total.population) -1)*100)
-pop_change <- pop_change %>% group_by(States) %>% mutate(Total.violation.population.pct = (Total.violation.population / lag(Total.violation.population) -1)*100)
-pop_change <- pop_change %>% group_by(States) %>% mutate(Total.probation.violation.population.pct = (Total.probation.violation.population / lag(Total.probation.violation.population) -1)*100)
-pop_change <- pop_change %>% group_by(States) %>% mutate(Total.parole.violation.population.pct = (Total.parole.violation.population / lag(Total.parole.violation.population) -1)*100)
-pop_change <- pop_change %>% group_by(States) %>% mutate(Technical.violations.pct = (Technical.violations / lag(Technical.violations) -1)*100)
-pop_change <- pop_change %>% group_by(States) %>% mutate(New.commitments = (New.commitments / lag(New.commitments) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(Total.population.pct = (Total.population / dplyr::lag(Total.population) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(Total.violation.population.pct = (Total.violation.population / dplyr::lag(Total.violation.population) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(Total.probation.violation.population.pct = (Total.probation.violation.population / dplyr::lag(Total.probation.violation.population) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(Total.parole.violation.population.pct = (Total.parole.violation.population / dplyr::lag(Total.parole.violation.population) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(Technical.violations.pct = (Technical.violations / dplyr::lag(Technical.violations) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(New.commitments = (New.commitments / dplyr::lag(New.commitments) -1)*100)
 
 # create factor variables
 adm_long$year <- factor(adm_long$year)
