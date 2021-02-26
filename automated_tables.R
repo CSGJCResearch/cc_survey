@@ -16,24 +16,30 @@ source("automated_clean.R")
 ##################
 
 # reformat adm change table
-adm_change$Violation.admissions = paste(round(adm_change$Violation.admissions, 2), "%", sep="")
+adm_change$Total.violation.admissions.pct = paste(round(adm_change$Total.violation.admissions.pct, 2), "%", sep="")
 adm_table <- adm_change %>%
-  select(States, year, Violation.admissions) %>%
-  dplyr::rename("Admissions for Supervision Violation" = Violation.admissions, 
+  select(States, year, Total.violation.admissions.pct) %>%
+  dplyr::rename("Admissions for Supervision Violation" = Total.violation.admissions.pct, 
                 Year = year) %>% arrange(desc(States))
 adm_table[adm_table == "NA%"] <- "No Data"  
 
 # reformat pop change table
-pop_change$Violation.population = paste(round(pop_change$Violation.population, 2), "%", sep="")
+pop_change$Total.violation.population.pct <- as.numeric(pop_change$Total.violation.population.pct)
+pop_change$Total.violation.population.pct = paste(round(pop_change$Total.violation.population.pct, 2), "%", sep="")
+
 pop_table <- pop_change %>%
-  select(States, year, Violation.population) %>%
-  dplyr::rename("Population of Supervision Violators" = Violation.population,
+  select(States, year, Total.violation.population.pct) %>%
+  dplyr::rename("Population of Supervision Violators" = Total.violation.population.pct,
                 Year = year) %>% arrange(desc(States)) 
 pop_table[pop_table == "NA%"] <- "No Data"  
 
 # add adm and pop together
 adm_pop_table <- cbind(adm_table, pop_table)
 adm_pop_table <- adm_pop_table[-c(4:5)] # remove extra State and Year columns
+adm_pop_table <- adm_pop_table %>% select(States = `States...1`,
+                                          Year = `Year...2`,
+                                          `Admissions for Supervision Violation`,
+                                          `Population of Supervision Violators`)
 
 # custom generate pop table function
 generate_table <- function(df, myvar){
@@ -109,9 +115,11 @@ Wyoming <- Wyoming %>% select(-States)
 # Costs
 ##################
 
+expenditures$`DOC Budget` <- as.character(expenditures$`DOC Budget`)
+expenditures$Year <- factor(expenditures$Year)
+expenditures$States <- factor(expenditures$States)
+str(expenditures)
 
-
-# custom generate cost table function
 generate_cost_table <- function(df, myvar){
   df_myvar <- df %>% filter(States == myvar)
   df_long <- df_myvar %>% pivot_longer(cols = -c(States,Year), 
@@ -119,8 +127,19 @@ generate_cost_table <- function(df, myvar){
   df_long <- cast(df_long, States+category~Year)
   df_long$Expenditures <- df_long$category
   df_long <- df_long %>% select(-category)
-  df_long <- df_long %>% select(States, Expenditures, `2019`, `2020`)
+  df_long <- df_long %>% select(States, Expenditures, everything())
 }
+
+# # custom generate cost table function
+# generate_cost_table <- function(df, myvar){
+#   df_myvar <- df %>% filter(States == myvar)
+#   df_long <- df_myvar %>% pivot_longer(cols = -c(States,Year), 
+#                                        names_to = "category", values_to = "count")
+#   df_long <- cast(df_long, States+category~Year)
+#   df_long$Expenditures <- df_long$category
+#   df_long <- df_long %>% select(-category)
+#   # df_long <- df_long %>% select(States, Expenditures, `2019`, `2020`)
+# }
 
 # loop through states var, create plots & store them in a list
 table_list <- unique(expenditures$States) %>% 

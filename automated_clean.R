@@ -146,39 +146,61 @@ pop_long$Totals <- as.factor(pop_long$Totals)
 adm_long$Totals <- factor(adm_long$Totals, levels = c("New Commitments","Probation","Parole"))
 pop_long$Totals <- factor(pop_long$Totals, levels = c("New Commitments","Probation","Parole"))
 
-# calculate admission changes
-adm_change <- subset(adm, select = c(States, year, Total.admissions, Total.violation.admissions, New.offense.probation.violation.admissions,
-                                            Technical.probation.violation.admissions, New.offense.parole.violation.admissions,
-                                            Technical.parole.violation.admissions)) %>% arrange(desc(States))
+# set up table for adm change
+adm_change1 <- adm %>% select(States, year, everything()) %>% arrange(desc(States))
 
-# calculate pop changes
-pop_change <- subset(population, select = c(States, year, Total.population, Total.violation.population, New.offense.probation.violation.population,
-                                            Technical.probation.violation.population, New.offense.parole.violation.population,
-                                            Technical.parole.violation.population)) %>% arrange(desc(States))
+# set up table for pop change
+pop_change1 <- population %>% select(States, year, everything()) %>% arrange(desc(States))
 
-# create overarching categories
-adm_change <- adm_change %>% 
-  mutate(Supervision.violations = New.offense.probation.violation.admissions + New.offense.parole.violation.admissions) %>%
-  mutate(Technical.violations = Technical.probation.violation.admissions + Technical.parole.violation.admissions) %>%
-  select(-c(New.offense.probation.violation.admissions, New.offense.parole.violation.admissions, 
-            Technical.probation.violation.admissions, Technical.parole.violation.admissions)) %>%
-  mutate(Overall.admissions = (Total.admissions / lag(Total.admissions) -1)*100) %>%
-  mutate(Violation.admissions = (Total.violation.admissions / lag(Total.violation.admissions) -1)*100) %>% 
-  mutate(Admissions.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
-  mutate(Admissions.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
-  filter(year != "2017")
+# # calculate changes
+# adm_change <- adm_change %>% 
+#   mutate(Supervision.violations = New.offense.probation.violation.admissions + New.offense.parole.violation.admissions) %>%
+#   mutate(Technical.violations = Technical.probation.violation.admissions + Technical.parole.violation.admissions) %>%
+#   select(-c(New.offense.probation.violation.admissions, New.offense.parole.violation.admissions, 
+#             Technical.probation.violation.admissions, Technical.parole.violation.admissions)) %>%
+#   mutate(Overall.admissions = (Total.admissions / lag(Total.admissions) -1)*100) %>%
+#   mutate(Violation.admissions = (Total.violation.admissions / lag(Total.violation.admissions) -1)*100) %>% 
+#   mutate(Admissions.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
+#   mutate(Admissions.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
+#   filter(year != "2017")
+# 
+# # calculate changes
+# pop_change <- pop_change %>% 
+#   mutate(Supervision.violations = New.offense.probation.violation.population + New.offense.parole.violation.population) %>%
+#   mutate(Technical.violations = Technical.probation.violation.population + Technical.parole.violation.population) %>%
+#   select(-c(New.offense.probation.violation.population, New.offense.parole.violation.population, 
+#             Technical.probation.violation.population, Technical.parole.violation.population)) %>%
+#   mutate(Overall.population = (Total.population / lag(Total.population) -1)*100) %>%
+#   mutate(Violation.population = (Total.violation.population / lag(Total.violation.population) -1)*100) %>%
+#   mutate(Population.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
+#   mutate(Population.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
+#   filter(year != "2017")
 
-# create overarching categories
-pop_change <- pop_change %>% 
-  mutate(Supervision.violations = New.offense.probation.violation.population + New.offense.parole.violation.population) %>%
-  mutate(Technical.violations = Technical.probation.violation.population + Technical.parole.violation.population) %>%
-  select(-c(New.offense.probation.violation.population, New.offense.parole.violation.population, 
-            Technical.probation.violation.population, Technical.parole.violation.population)) %>%
-  mutate(Overall.population = (Total.population / lag(Total.population) -1)*100) %>%
-  mutate(Violation.population = (Total.violation.population / lag(Total.violation.population) -1)*100) %>%
-  mutate(Population.supervision.violators = (Supervision.violations / lag(Supervision.violations) -1)*100) %>%
-  mutate(Population.technical.violators = (Technical.violations / lag(Technical.violations) -1)*100) %>%
-  filter(year != "2017")
+# calculate tech violations
+adm_change <- adm_change1 %>% 
+  mutate(Technical.violations = Technical.probation.violation.admissions + Technical.parole.violation.admissions)
+
+adm_change <- adm_change %>% filter(year != 2017)
+# calculate percent change         
+adm_change <- adm_change %>% group_by(States) %>% mutate(Total.admissions.pct = (Total.admissions / lag(Total.admissions) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(Total.violation.admissions.pct = (Total.violation.admissions / lag(Total.violation.admissions) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(Total.probation.violation.admissions.pct = (Total.probation.violation.admissions / lag(Total.probation.violation.admissions) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(Total.parole.violation.admissions.pct = (Total.parole.violation.admissions / lag(Total.parole.violation.admissions) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(Technical.violations.pct = (Technical.violations / lag(Technical.violations) -1)*100)
+adm_change <- adm_change %>% group_by(States) %>% mutate(New.commitments = (New.commitments / lag(New.commitments) -1)*100)
+
+# calculate tech violations
+pop_change <- pop_change1 %>% 
+  mutate(Technical.violations = Technical.probation.violation.population + Technical.parole.violation.population)
+
+pop_change <- pop_change %>% filter(year != 2017)
+# calculate percent change         
+pop_change <- pop_change %>% group_by(States) %>% mutate(Total.population.pct = (Total.population / lag(Total.population) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(Total.violation.population.pct = (Total.violation.population / lag(Total.violation.population) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(Total.probation.violation.population.pct = (Total.probation.violation.population / lag(Total.probation.violation.population) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(Total.parole.violation.population.pct = (Total.parole.violation.population / lag(Total.parole.violation.population) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(Technical.violations.pct = (Technical.violations / lag(Technical.violations) -1)*100)
+pop_change <- pop_change %>% group_by(States) %>% mutate(New.commitments = (New.commitments / lag(New.commitments) -1)*100)
 
 # create factor variables
 adm_long$year <- factor(adm_long$year)
@@ -236,53 +258,45 @@ costs <- costs %>% select(`State Abbrev`, States, cost = `State Reported CostPer
 #          category == "Technical.probation.violation.admissions"|
 #          category == "Technical.parole.violation.admissions") %>% select(States, year, category, count)
 
-# creat costs_adm df
-costs_adm <- adm %>% select(States, year, Total.violation.admissions, Technical.probation.violation.admissions, Technical.parole.violation.admissions)
+# creat costs_pop df
+costs_pop <- population %>% select(States, year, Total.violation.population, Technical.probation.violation.population, Technical.parole.violation.population)
 
 # add technical prob and parole together to get tech number
-costs_adm <- costs_adm %>% mutate(total_admissions = Total.violation.admissions,
-                                  technical_admissions = Technical.probation.violation.admissions + Technical.parole.violation.admissions) %>%
-                           select(-Technical.probation.violation.admissions,
-                                  -Technical.parole.violation.admissions,
-                                  -Total.violation.admissions)
+costs_pop <- costs_pop %>% mutate(total_population = Total.violation.population,
+                                  technical_population = Technical.probation.violation.population + Technical.parole.violation.population) %>%
+  select(-Technical.probation.violation.population,
+         -Technical.parole.violation.population,
+         -Total.violation.population)
 
-# merge costs and admissions numbers
-costs_adm_df <- merge(costs_adm, costs, by = "States")
+# merge costs and population numbers
+costs_pop_df <- merge(costs_pop, costs, by = "States")
 
 # calc costs
-costs_adm_df <- costs_adm_df %>% mutate(adm_sup_cost = total_admissions*cost*365,
-                                        adm_tech_cost = technical_admissions*cost*365) %>%
-                                 select(States,Year=year,adm_sup_cost,adm_tech_cost)
+costs_pop_df <- costs_pop_df %>% mutate(pop_sup_cost = total_population*cost*365,
+                                        pop_tech_cost = technical_population*cost*365) %>%
+  select(States,Year=year,pop_sup_cost,pop_tech_cost)
 
 # remove 2017 and 2018
-costs_adm_df <- costs_adm_df %>% filter(Year != 2017 & Year != 2018)
+costs_pop_df <- costs_pop_df %>% filter(Year != 2017 & Year != 2018)
 
 # calc by millions
-costs_adm_df$adm_sup_cost <- (costs_adm_df$adm_sup_cost)/1000000
-costs_adm_df$adm_tech_cost <- (costs_adm_df$adm_tech_cost)/1000000
+costs_pop_df$pop_sup_cost <- (costs_pop_df$pop_sup_cost)/1000000
+costs_pop_df$pop_tech_cost <- (costs_pop_df$pop_tech_cost)/1000000
 
 # round - add $ and M
-costs_adm_df$adm_sup_cost <- paste("$", round(costs_adm_df$adm_sup_cost, 1), "M", sep="")
-costs_adm_df$adm_tech_cost <- paste("$", round(costs_adm_df$adm_tech_cost, 1), "M", sep="")
+costs_pop_df$pop_sup_cost <- paste("$", round(costs_pop_df$pop_sup_cost, 1), "M", sep="")
+costs_pop_df$pop_tech_cost <- paste("$", round(costs_pop_df$pop_tech_cost, 1), "M", sep="")
 
 # add costs and budgets together
-expenditures <- merge(budget, costs_adm_df, by = c("States", "Year"))
-
-# # change to numeric
-# expenditures$adm_sup_cost <- as.numeric(expenditures$adm_sup_cost)
-# expenditures$adm_tech_cost <- as.numeric(expenditures$adm_tech_cost)
-
-# # add commas
-# expenditures$adm_sup_cost <- prettyNum(expenditures$adm_sup_cost, big.mark = ",", scientific = FALSE)
-# expenditures$adm_tech_cost <- prettyNum(expenditures$adm_tech_cost, big.mark = ",", scientific = FALSE)
+expenditures <- merge(budget, costs_pop_df, by = c("States", "Year"))
 
 # replace NAs with "No Data"
 expenditures[expenditures == "$NAM"] <- "No Data"  
 
 # rename categories
 expenditures$`DOC Budget` <- expenditures$Budget
-expenditures$`DOC Cost to Incarcerate Supervision Violators` <- expenditures$adm_sup_cost
-expenditures$`DOC Cost to Incarcerate Technical Supervision Violators` <- expenditures$adm_tech_cost
-expenditures <- expenditures %>% select(-adm_sup_cost,-adm_tech_cost,-Budget)
+expenditures$`DOC Cost to Incarcerate Supervision Violators` <- expenditures$pop_sup_cost
+expenditures$`DOC Cost to Incarcerate Technical Supervision Violators` <- expenditures$pop_tech_cost
+expenditures <- expenditures %>% select(-pop_sup_cost,-pop_tech_cost,-Budget)
 expenditures$States <- paste(expenditures$States, "_Expenditures", sep="")
 

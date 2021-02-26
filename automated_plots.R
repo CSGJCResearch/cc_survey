@@ -49,6 +49,7 @@ theme_csgjc2 <- theme(axis.ticks = element_blank(),
 
 
 ##################
+# ADMISSIONS
 # Prison Admissions by Year
 ##################
 
@@ -90,6 +91,7 @@ purrr::iwalk(adm_by_year_plot_list,
 )
 
 ##################
+# ADMISSIONS
 # Probation Violations Resulting in DOC Incarceration
 ##################
 
@@ -130,6 +132,7 @@ purrr::iwalk(adm_prob_plot_list,
 )
 
 ##################
+# ADMISSIONS
 # Parole Violations Resulting in DOC Incarceration
 ##################
 
