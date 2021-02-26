@@ -64,7 +64,7 @@ population20$year <- "2020"
 
 # combine pop data
 population <- rbind(population17, population18, population19, population20)
-rm(population17, population18, population19, population20) # remove old dfs
+# rm(population17, population18, population19, population20) # remove old dfs
 population <- filter(population, State.Abbrev != "NA")
 population <- population %>% select(-State.Abbrev)
 
@@ -98,7 +98,7 @@ adm20$year <- "2020"
 
 # combine data and remove unwanted data (NA, etc)
 adm <- rbind(adm17, adm18, adm19, adm20)
-rm(adm17, adm18, adm19, adm20) # remove old dfs
+# rm(adm17, adm18, adm19, adm20) # remove old dfs
 adm <- filter(adm, States != "NA")
 adm <- filter(adm, States != "Total")
 adm <- filter(adm, States != "Count")
@@ -298,5 +298,6 @@ expenditures$`DOC Budget` <- expenditures$Budget
 expenditures$`DOC Cost to Incarcerate Supervision Violators` <- expenditures$pop_sup_cost
 expenditures$`DOC Cost to Incarcerate Technical Supervision Violators` <- expenditures$pop_tech_cost
 expenditures <- expenditures %>% select(-pop_sup_cost,-pop_tech_cost,-Budget)
+# Add expenditures to state name for automation later
 expenditures$States <- paste(expenditures$States, "_Expenditures", sep="")
 
