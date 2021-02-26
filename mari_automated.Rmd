@@ -30,6 +30,8 @@ Erat velit scelerisque in dictum non consectetur. Ut consequat semper viverra na
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Alabama, format = 'markdown', padding=1.5L)
+Alabama_Expenditures <- expenditures %>% filter(States == "Alabama_Expenditures")
+Alabama_Expenditures <- Alabama_Expenditures %>% select(-States)
 kable(Alabama_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -48,6 +50,8 @@ knitr::include_graphics("plots/pop_parole_Alabama.png")
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Alaska, format = 'markdown', padding=1.5L)
+Alaska_Expenditures <- expenditures %>% filter(States == "Alaska_Expenditures")
+Alaska_Expenditures <- Alaska_Expenditures %>% select(-States)
 kable(Alaska_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -68,6 +72,8 @@ Admissions and population figures include people incarcerated pretrial, as Alask
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Arizona, format = 'markdown', padding=1.5L)
+Arizona_Expenditures <- expenditures %>% filter(States == "Arizona_Expenditures")
+Arizona_Expenditures <- Arizona_Expenditures %>% select(-States)
 kable(Arizona_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -86,6 +92,8 @@ knitr::include_graphics("plots/pop_parole_Arizona.png")
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Colorado, format = 'markdown', padding=1.5L)
+Colorado_Expenditures <- expenditures %>% filter(States == "Colorado_Expenditures")
+Colorado_Expenditures <- Colorado_Expenditures %>% select(-States)
 kable(Colorado_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -106,6 +114,8 @@ Persons in state funded custody only include revocations, not violations. People
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Connecticut, format = 'markdown', padding=1.5L)
+Connecticut_Expenditures <- expenditures %>% filter(States == "Connecticut_Expenditures")
+Connecticut_Expenditures <- Connecticut_Expenditures %>% select(-States)
 kable(Connecticut_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -126,6 +136,8 @@ Admissions include people incarcerated pretrial, as Connecticut is a unified sta
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Delaware, format = 'markdown', padding=1.5L)
+Delaware_Expenditures <- expenditures %>% filter(States == "Delaware_Expenditures")
+Delaware_Expenditures <- Delaware_Expenditures %>% select(-States)
 kable(Delaware_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -146,6 +158,8 @@ Delaware has a unified system, meaning the state has jurisdiction over people in
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Illinois, format = 'markdown', padding=1.5L)
+Illinois_Expenditures <- expenditures %>% filter(States == "Illinois_Expenditures")
+Illinois_Expenditures <- Illinois_Expenditures %>% select(-States)
 kable(Illinois_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -166,6 +180,8 @@ Probation terms are not identified in prison data, as probation is run by the Il
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Indiana, format = 'markdown', padding=1.5L)
+Indiana_Expenditures <- expenditures %>% filter(States == "Indiana_Expenditures")
+Indiana_Expenditures <- Indiana_Expenditures %>% select(-States)
 kable(Indiana_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -184,6 +200,8 @@ knitr::include_graphics("plots/pop_parole_Indiana.png")
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Louisiana, format = 'markdown', padding=1.5L)
+Louisiana_Expenditures <- expenditures %>% filter(States == "Louisiana_Expenditures")
+Louisiana_Expenditures <- Louisiana_Expenditures %>% select(-States)
 kable(Louisiana_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -204,6 +222,8 @@ In the snapshot data provided, total violations for new offences and technical v
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Maine, format = 'markdown', padding=1.5L)
+Maine_Expenditures <- expenditures %>% filter(States == "Maine_Expenditures")
+Maine_Expenditures <- Maine_Expenditures %>% select(-States)
 kable(Maine_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -224,6 +244,8 @@ The state abolished parole in 1976 but maintains a very small number of people u
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Maryland, format = 'markdown', padding=1.5L)
+Maryland_Expenditures <- expenditures %>% filter(States == "Maryland_Expenditures")
+Maryland_Expenditures <- Maryland_Expenditures %>% select(-States)
 kable(Maryland_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -244,6 +266,8 @@ For the current iteration of the survey, Maryland Department of Public Safety & 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Missouri, format = 'markdown', padding=1.5L)
+Missouri_Expenditures <- expenditures %>% filter(States == "Missouri_Expenditures")
+Missouri_Expenditures <- Missouri_Expenditures %>% select(-States)
 kable(Missouri_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -264,6 +288,8 @@ Missouri incarcerates both probationers and parolees without a revocation of the
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Nebraska, format = 'markdown', padding=1.5L)
+Nebraska_Expenditures <- expenditures %>% filter(States == "Nebraska_Expenditures")
+Nebraska_Expenditures <- Nebraska_Expenditures %>% select(-States)
 kable(Nebraska_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -284,6 +310,7 @@ While the state did not respond to the survey request for this report, informati
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(`North Carolina`, format = 'markdown', padding=1.5L)
+`North Carolina_Expenditures` <- expenditures %>% filter(States == "North Carolina_Expenditures")
 kable(`North Carolina_Expenditures`, format = 'markdown', padding=1.5L)
 ```
   
@@ -304,6 +331,8 @@ Figures used include only Conditional Release Violator (CRV) admissions, which r
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(`North Dakota`, format = 'markdown', padding=1.5L)
+`North Dakota_Expenditures` <- expenditures %>% filter(States == "North Dakota_Expenditures")
+`North Dakota_Expenditures` <- `North Dakota_Expenditures` %>% select(-States)
 kable(`North Dakota_Expenditures`, format = 'markdown', padding=1.5L)
 ```
 
@@ -324,6 +353,8 @@ Technical supervision violations resulting in placement in a contract facility a
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Oklahoma, format = 'markdown', padding=1.5L)
+Oklahoma_Expenditures <- expenditures %>% filter(States == "Oklahoma_Expenditures")
+Oklahoma_Expenditures <- Oklahoma_Expenditures %>% select(-States)
 kable(Oklahoma_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -344,6 +375,8 @@ Supervision violation admissions and population data does not include private pr
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(`Rhode Island`, format = 'markdown', padding=1.5L)
+`Rhode Island_Expenditures` <- expenditures %>% filter(States == "Rhode Island_Expenditures")
+`Rhode Island_Expenditures`  <- `Rhode Island_Expenditures`  %>% select(-States)
 kable(`Rhode Island_Expenditures`, format = 'markdown', padding=1.5L)
 ```
   
@@ -364,6 +397,8 @@ Rhode Island is a unified state, where the state has jurisdiction over people in
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Texas, format = 'markdown', padding=1.5L)
+Texas_Expenditures <- expenditures %>% filter(States == "Texas_Expenditures")
+Texas_Expenditures  <- Texas_Expenditures  %>% select(-States)
 kable(Texas_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -384,6 +419,8 @@ All admissions data include prison, state jail, and Substance Abuse Facility Pro
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Vermont, format = 'markdown', padding=1.5L)
+Vermont_Expenditures <- expenditures %>% filter(States == "Vermont_Expenditures")
+Vermont_Expenditures  <- Vermont_Expenditures  %>% select(-States)
 kable(Vermont_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
@@ -404,6 +441,8 @@ Parole admissions and snapshot total includes people returning from both parole 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(`West Virginia`, format = 'markdown', padding=1.5L)
+`West Virginia_Expenditures` <- expenditures %>% filter(States == "West Virginia_Expenditures")
+`West Virginia_Expenditures`  <- `West Virginia_Expenditures`  %>% select(-States)
 kable(`West Virginia_Expenditures`, format = 'markdown', padding=1.5L)
 ```
   
@@ -424,6 +463,8 @@ Additional types of supervision were not included in this analysis, such as Comm
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 kable(Wyoming, format = 'markdown', padding=1.5L)
+Wyoming_Expenditures <- expenditures %>% filter(States == "Wyoming_Expenditures")
+Wyoming_Expenditures  <- Wyoming_Expenditures %>% select(-States)
 kable(Wyoming_Expenditures, format = 'markdown', padding=1.5L)
 ```
   

@@ -1,0 +1,54 @@
+Table 1,,,,,,,,,
+State Abbrev,States,Average length of stay for new commits,Average length of stay for probation,Average length of stay for parol,Measure,Cost,Cost Raw,Marginal Cost Raw,Notes
+AK,Alaska,,,,,$175.84,$175.84,,
+AL,Alabama,,45,45,Days,$72.28,$72.28,,
+AR,Arkansas,,,,,,,,
+AZ,Arizona,"1,061.7",686.6,238.5,Days,$71.49,$71.49,$4.91,"The $71.49 number is from the Finalized 2019 per capita report.; marginal cost no longer includes health care, as that cost is no longer per inmate.
+"
+CA,California,,,,,,,,
+CO,Colorado,953,1170,511,Days,,,,
+CT,Connecticut,,,,,$131.15,$131.15,,
+DE,Delaware,,,,,,,,
+FL,Florida,,,,,,,,
+GA,Georgia,,,,,,,,
+HI,Hawaii,,,,,,,,
+IA,Iowa,,,,,,,,
+ID,Idaho,61,24,25,Months,$76.32,$76.32,$32.14,
+IL,Illinois,26.7,,7.4,Months,$94.14,$94.14,$24.71,FY 2020
+IN,Indiana,,,,,,,,
+KS,Kansas,37.86,12.43,16.74,Months,10.18,Fiscal Year 2020 Cost per Day: $10.18 as shown in online FY20 Annual Report page 48,,This is for FY2020 as this data was not available in the summer (August 2020) of 2020.
+KY,Kentucky,,,,,,,,
+LA,Louisiana,6.2,4.9,4.89,Years,62.49,July 2019 - 62.49 state,$67.44 or $50.81,"See more explanation below. The $67.44 number is as of July 2020 so I am adjusting to include the July 2019 number but again see more explanation below on if I should be reporting state only or include our state offenders housed at the local level; $67.44 for those housed in our State prisons. If we include those housed on the local level that are DOC offenders then the cost per day is $50.81 - we have approximately 13,000 housed at the local level with $48.61 as there average cost per day. If we should be including them then yes we have an adjustment to previous reported 2019 number which would be $46.41 Cost per day is based on Fiscal numbers and not calendar"
+MA,Massachusetts,,,,,,,,
+MD,Maryland,,,,,$123.33,$123.33,$6.36,"The operating cost provided above reflects the finalized operating cost reflecting SFY 2020. For clarity, this is the combined cost rate of incarceration, which includes fixed and marginal costs. This is a rate determined by the 2020 monthly rate of $3,700. ; The current marginal cost provided for FY 2020 is a true marginal. In Maryland, due to the nature of our healthcare contract, it is a flat rate fixed cost. However, previously, inmate health has been considered a marginal cost. The cost of housing an inmate in Maryland, excluding overhead (staff, facilities, etc) is $32.20/month. This includes medical costs, which may be more comparable to marginal costs in other states.
+"
+ME,Maine,,,,,$151.00,$151.00,,"the cost in 2020 increased mostly due to a decrease in census, but budgeted and contracted amounts remaining the same even though we had less than expected/usual admissions. Maine had seen a slight decrease in previous year, however with COVID, we saw fewer admissions in 2020 than would have been typical."
+MI,Michigan,,,,,,,,
+MN,Minnesota,,,,,,,,
+MO,Missouri,4.9,2.1,1.4,Years,83.15,FY2020 AVERAGE COST $83.15,FY 2020 $21.37,
+MS,Mississippi,,,,,,,,
+MT,Montana,,,,,,,,
+NC,North Carolina,2,,,Years,,,127.63,
+ND,North Dakota,1.4,1.02,0.67,Years,132.61,The cost per day for 2020 is $132.61.,,
+NE,Nebraska,,,,,,,,
+NH,New Hampshire,,,,,,,,
+NJ,New Jersey,,,,,,,,
+NM,New Mexico,,,,,,,,
+NV,Nevada,,,,,,,,
+NY,New York,,,,,,,,
+OH,Ohio,,,,,,,,
+OK,Oklahoma,,,,,,,,
+OR,Oregon,,,,,,,,
+PA,Pennsylvania,,,,,,,,
+RI,Rhode Island,352,381,334,Days,226.13,2019 Cost Per Day = $212.55; 2020 Cost Per Day = $226.13.,,RIDOC's Financial Resources provided 2019 & 2020 cost per day figures.
+SC,South Carolina,,,,,,,,
+SD,South Dakota,,,,,,,,
+TN,Tennessee,,,,,,,,
+TX,Texas,34.1,,25.1,Months,$64.34,$64.34,$69.27,
+UT,Utah,,,,,,,,
+VA,Virginia,,,,,,,,
+VT,Vermont,,,,,,,,
+WA,Washington,,,,,,,,
+WI,Wisconsin,,,,,,,,
+WV,West Virginia,,,,,,,,
+WY,Wyoming,26,22,12,Months,,,,"ALOS data include only the months from the most recent prison intake to prison exit. Months accumulated on multiple stays in prison on the same conviction (e.g., new intake, then parole release, then return from parole, then re-parole) are not included in the ALOS data contained here."

@@ -41,20 +41,28 @@ getwd <- function(){
 }
 
 # read excel population data for 2017-2019
-population17 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2017", .name_repair = "universal")
-population18 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2018-Corrected", .name_repair = "universal")
-population19 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2019-Corrected", .name_repair = "universal")
-population20 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2020-Corrected", .name_repair = "universal")
+# read_xlsx is causing issues and creating duplicate rows
+# population17 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2017", .name_repair = "universal")
+# population18 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2018-Corrected", .name_repair = "universal")
+# population19 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2019-Corrected", .name_repair = "universal")
+# population20 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2020-Corrected", .name_repair = "universal")
 
-# remove pop year
-population17 <- population17 %>% select(-Population.Year)
-population20 <- population20 %>% select(-`...11`)
+population17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2017-Table 1.csv")
+population18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2018-Corrected-Table 1.csv")
+population19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2019-Corrected-Table 1.csv")
+population20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2020-Corrected-Table 1.csv")
+
+# remove unwanted variables
+population17 <- population17 %>% select(-`Population Year`,-X12,-X13)
+population18 <- population18 %>% select(-X11, -X12, -X13, -X14)
+population19 <- population19 %>% select(-X11, -X12, -X13)
+population20 <- population20 %>% select(-X11, -X12, -X13, -X14)
 
 # remove rows
 population17 <- population17[-c(51:52),] 
 population18 <- population18[-c(51:54),] # remove empty rows
 population19 <- population19[-c(51:54),] # remove empty rows
-population20 <- population20[-c(51:55),] # remove empty rows
+population20 <- population20[-c(51:52),] # remove empty rows
 
 # add year variable
 population17$year <- "2017"
@@ -65,27 +73,27 @@ population20$year <- "2020"
 # combine pop data
 population <- rbind(population17, population18, population19, population20)
 # rm(population17, population18, population19, population20) # remove old dfs
-population <- filter(population, State.Abbrev != "NA")
-population <- population %>% select(-State.Abbrev)
+population <- population %>% select(-`State Abbrev`)
 
 # read excel admissions data for 2017-2019
-adm17 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2017-R", .name_repair = "universal")
-adm18 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2018-Corrected", .name_repair = "universal")
-adm19 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2019-Corrected", .name_repair = "universal")
-adm20 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2020-Corrected", .name_repair = "universal")
+# adm17 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2017-R", .name_repair = "universal")
+# adm18 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2018-Corrected", .name_repair = "universal")
+# adm19 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2019-Corrected", .name_repair = "universal")
+# adm20 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2020-Corrected", .name_repair = "universal")
+
+adm17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2017-Table 1.csv")
+adm18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2018-Corrected-Table 1.csv")
+adm19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2019-Corrected-Table 1.csv")
+adm20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2020-Corrected-Table 1.csv")
 
 # remove unwanted variables
-adm17 <- adm17 %>%
-  select(-c(Change.in.Revised.Data, No.Revised.Data.Provided, ...11, State.Abbrev))
-adm18 <- adm18 %>%
-  select(-c(Publicly.Available.Data, ...11, State.Abbrev))
-adm19 <- adm19 %>% select(-c(Publicly.Available.Data, ...11, State.Abbrev))
-# adm20_backup <- adm20 %>% select(-Notes, -`...15`, -`...16`, -`...17`,-State.Abbrev,-Admissions.Year,-Reporting.Year)
-# adm20_backup <- adm20_backup %>% filter(Months.Reported == 12) %>% select(-Months.Reported)
-adm20 <- adm20 %>% select(-Notes, -`...15`, -`...16`, -`...17`,-State.Abbrev,-Admissions.Year,-Reporting.Year,-Months.Reported)
+adm17 <- adm17 %>% select(-X11)
+adm18 <- adm18 %>% select(-X11, -`Publicly Available Data`, -X13, -X14)
+adm19 <- adm19 %>% select(-X11, -`Publicly Available Data`, -X13, -X14)
+adm20 <- adm20 %>% select(-`Admissions Year`,-`Reporting Year`,-`Months Reported`, -Notes, -X15, -X16, -X17)
 
 # remove unwanted rows
-adm17 <- adm17[-c(51:54),] 
+adm17 <- adm17[-c(51:52),] 
 adm18 <- adm18[-c(51:54),] 
 adm19 <- adm19[-c(51:54),] 
 adm20 <- adm20[-c(51:54),] 
@@ -98,10 +106,12 @@ adm20$year <- "2020"
 
 # combine data and remove unwanted data (NA, etc)
 adm <- rbind(adm17, adm18, adm19, adm20)
+adm <- adm %>% select(-`State Abbrev`)
 # rm(adm17, adm18, adm19, adm20) # remove old dfs
-adm <- filter(adm, States != "NA")
-adm <- filter(adm, States != "Total")
-adm <- filter(adm, States != "Count")
+
+# replace spaces in variable names with periods
+names(adm)<-make.names(names(adm),unique = TRUE)
+names(population)<-make.names(names(population),unique = TRUE)
 
 # create new commitments variable
 adm <- adm %>%
