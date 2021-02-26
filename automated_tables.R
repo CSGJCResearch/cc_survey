@@ -49,7 +49,7 @@ generate_table <- function(df, myvar){
   df_long <- cast(df_long, States+category~Year)
   df_long <- df_long %>% select(-`2018`) # remove 2018 year
   df_long <- df_long %>% mutate(`Change from Previous Year` = category) %>% select(-category)
-  df_long <- df_long %>% select(States,`Change from Previous Year`, `2019`, `2020`)
+  df_long <- df_long %>% select(States,`Change from Previous Year`, everything())
 }
 
 # loop through states var, create plots & store them in a list
@@ -58,6 +58,16 @@ table_list <- unique(adm_pop_table$States) %>%
   purrr::map( ~ generate_table(adm_pop_table, .x))
 
 list2env(table_list, envir = .GlobalEnv)
+
+
+
+
+
+
+
+
+
+
 
 # remove state names
 Alabama <- Alabama %>% select(-States)
@@ -142,11 +152,11 @@ generate_cost_table <- function(df, myvar){
 # }
 
 # loop through states var, create plots & store them in a list
-table_list <- unique(expenditures$States) %>% 
+table_list1 <- unique(expenditures$States) %>% 
   purrr::set_names() %>% 
   purrr::map( ~ generate_cost_table(expenditures, .x))
 
-list2env(table_list, envir = .GlobalEnv)
+list2env(table_list1, envir = .GlobalEnv)
 
 # remove state names
 Alabama_Expenditures <- Alabama_Expenditures %>% select(-States)
