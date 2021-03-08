@@ -54,15 +54,26 @@ population20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 20
 
 # remove unwanted variables
 population17 <- population17 %>% select(-`Population Year`,-X12,-X13)
-population18 <- population18 %>% select(-X11, -X12, -X13, -X14)
-population19 <- population19 %>% select(-X11, -X12, -X13)
-population20 <- population20 %>% select(-X11, -X12, -X13, -X14)
+population18 <- population18 %>% select(-Notes,-Corrected,-X13, -X14)
+population19 <- population19 %>% select(-Notes,-Corrected, -X13)
+population20 <- population20 %>% select(-Notes,-Corrected, -X13, -X14)
 
 # remove rows
-population17 <- population17[-c(51:52),] 
-population18 <- population18[-c(51:54),] # remove empty rows
-population19 <- population19[-c(51:54),] # remove empty rows
-population20 <- population20[-c(51:52),] # remove empty rows
+# population17 <- population17[-c(51:52),]
+# population18 <- population18[-c(51:54),] # remove empty rows
+# population19 <- population19[-c(51:54),] # remove empty rows
+# population20 <- population20[-c(51:52),] # remove empty rows
+population17 <- population17 %>% filter(`State Abbrev` != "NA")
+population18 <- population18 %>% filter(`State Abbrev` != "NA")
+population19 <- population19 %>% filter(`State Abbrev` != "NA")
+population20 <- population20 %>% filter(`State Abbrev` != "NA")
+
+######
+# check this
+######
+# issue with pop 20, some rows were duplicated with NAs - weird bug?
+population20 <- population20 %>% arrange(States)
+population20 <- population20[-c(4, 20, 27, 34, 46, 49),] # remove duplicate rows
 
 # add year variable
 population17$year <- "2017"
@@ -88,15 +99,19 @@ adm20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2020-Corr
 
 # remove unwanted variables
 adm17 <- adm17 %>% select(-X11)
-adm18 <- adm18 %>% select(-X11, -`Publicly Available Data`, -X13, -X14)
-adm19 <- adm19 %>% select(-X11, -`Publicly Available Data`, -X13, -X14)
-adm20 <- adm20 %>% select(-`Admissions Year`,-`Reporting Year`,-`Months Reported`, -Notes, -X15, -X16, -X17)
+adm18 <- adm18 %>% select(-Notes, -Corrected, -`Publicly Available Data`,-X14)
+adm19 <- adm19 %>% select(-Notes, -Corrected, -`Publicly Available Data`,-X14)
+adm20 <- adm20 %>% select(-`Admissions Year`,-`Reporting Year`,-`Months Reported`, -Notes, -Corrected, -X16, -X17)
 
 # remove unwanted rows
-adm17 <- adm17[-c(51:52),] 
-adm18 <- adm18[-c(51:54),] 
-adm19 <- adm19[-c(51:54),] 
-adm20 <- adm20[-c(51:54),] 
+# adm17 <- adm17[-c(51:52),] 
+# adm18 <- adm18[-c(51:54),] 
+# adm19 <- adm19[-c(51:54),] 
+# adm20 <- adm20[-c(51:54),] 
+adm17 <- adm17 %>% filter(`State Abbrev` != "NA")
+adm18 <- adm18 %>% filter(`State Abbrev` != "NA")
+adm19 <- adm19 %>% filter(`State Abbrev` != "NA")
+adm20 <- adm20 %>% filter(`State Abbrev` != "NA")
 
 # add year variable
 adm17$year <- "2017"
@@ -238,7 +253,6 @@ pop_long <- pop_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Ariz
                                   States=="Oklahoma"|States=="Rhode Island"|States== "Texas"|
                                   States=="Vermont"|States=="West Virginia"|States== "Wyoming"
 )
-
 
 ##################
 # Costs
