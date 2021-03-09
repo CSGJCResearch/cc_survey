@@ -340,4 +340,3 @@ expenditures$`DOC Cost to Incarcerate Technical Supervision Violators` <- expend
 expenditures <- expenditures %>% select(-pop_sup_cost,-pop_tech_cost,-Budget)
 # Add expenditures to state name for automation later
 expenditures$States <- paste(expenditures$States, "_Expenditures", sep="")
-
