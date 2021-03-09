@@ -57,6 +57,7 @@ statespop20 <- population20 %>% select(States, Corrected)
 statespop20 <- statespop20 %>% arrange(States)
 statespop20 <- statespop20[-c(4,21,28,35,47,50),] # remove duplicate rows
 statespop20 <- statespop20 %>% filter(States != "NA" & States != "Count" & States != "Total")
+statespop20 <- statespop20 %>%  filter(Corrected == "Yes")
 
 # remove unwanted variables
 population17 <- population17 %>% select(-`Population Year`,-X12,-X13)
@@ -85,7 +86,7 @@ population19$year <- "2019"
 population20$year <- "2020"
 
 # subset to states that have submitted
-
+population20 <- population20 %>% filter(States %in% statespop20$States)
 
 # combine pop data
 population <- rbind(population17, population18, population19, population20)
@@ -104,7 +105,10 @@ adm19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2019-Corr
 adm20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2020-Corrected-Table 1.csv")
 
 # fix adm 2020 for corrected states, this lets you know who has submitted adm data so far
-
+statesadm20 <- adm20 %>% select(States, Corrected)
+statesadm20 <- statesadm20 %>% arrange(States)
+statesadm20 <- statesadm20 %>% filter(States != "NA" & States != "Count" & States != "Total")
+statesadm20 <- statesadm20 %>%  filter(Corrected == "Yes")
 
 # remove unwanted variables
 adm17 <- adm17 %>% select(-X11)
@@ -127,6 +131,9 @@ adm17$year <- "2017"
 adm18$year <- "2018"
 adm19$year <- "2019"
 adm20$year <- "2020"
+
+# subset to states that have submitted
+adm20 <- adm20 %>% filter(States %in% statesadm20$States)
 
 # combine data and remove unwanted data (NA, etc)
 adm <- rbind(adm17, adm18, adm19, adm20)
