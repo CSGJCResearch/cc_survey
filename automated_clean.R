@@ -288,7 +288,7 @@ budget_2020 <- budget_2020 %>% select(States, Year, Budget = budget)
 budget <- rbind(budget, budget_2020) 
 
 ##################
-# 2021 Costs
+# 2021 Reported Costs
 ##################
 
 # get cost data for 2021
@@ -307,7 +307,7 @@ costs <- costs[complete.cases(costs), ]
 costs$year = "2020"
 
 ##################
-# 2019/2020 Costs
+# 2019 Reported Costs
 ##################
 
 # get cost data
