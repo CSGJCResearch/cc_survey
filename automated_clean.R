@@ -271,7 +271,7 @@ pop_long <- pop_long %>% filter(year != 2017)
 # )
 
 ##################
-# Costs
+# Budgets
 ##################
 
 # get 2019 budget data
@@ -287,11 +287,32 @@ budget_2020 <- budget_2020 %>% select(States, Year, Budget = budget)
 # combine data
 budget <- rbind(budget, budget_2020) 
 
-# get cost data
-costs <- read_excel("data/Cost Per Day For Calculation.xlsx")
-costs <- costs %>% select(`State Abbrev`, States, cost = `State Reported CostPerDay`)
+##################
+# 2021 Costs
+##################
 
-################################################################# need to add updated 2020 costs
+# get cost data for 2021
+costs <- read.csv("data/Data for web team 2020 v6 CORRECTED/Survey 2021-Table 1.csv")
+
+# select general cost info
+costs <- costs %>% select(States, Cost)
+
+# remove dollar sign
+costs$Cost = as.numeric(gsub("\\$", "", costs$Cost))
+
+# remove NAs
+costs <- costs[complete.cases(costs), ]
+
+# add year 
+costs$year = "2020"
+
+##################
+# 2019/2020 Costs
+##################
+
+# get cost data
+costs2020 <- read_excel("data/Cost Per Day For Calculation.xlsx")
+costs2020 <- costs2020 %>% select(`State Abbrev`, States, Cost = `State Reported CostPerDay`)
 
 # costs_adm <- adm_long %>%
 #   filter(category == "Total.violation.admissions"|
@@ -308,35 +329,4 @@ costs_pop <- costs_pop %>% mutate(total_population = Total.violation.population,
          -Technical.parole.violation.population,
          -Total.violation.population)
 
-# merge costs and population numbers
-costs_pop_df <- merge(costs_pop, costs, by = "States")
 
-# calc costs
-costs_pop_df <- costs_pop_df %>% mutate(pop_sup_cost = total_population*cost*365,
-                                        pop_tech_cost = technical_population*cost*365) %>%
-  select(States,Year=year,pop_sup_cost,pop_tech_cost)
-
-# remove 2017 and 2018
-costs_pop_df <- costs_pop_df %>% filter(Year != 2017 & Year != 2018)
-
-# calc by millions
-costs_pop_df$pop_sup_cost <- (costs_pop_df$pop_sup_cost)/1000000
-costs_pop_df$pop_tech_cost <- (costs_pop_df$pop_tech_cost)/1000000
-
-# round - add $ and M
-costs_pop_df$pop_sup_cost <- paste("$", round(costs_pop_df$pop_sup_cost, 1), "M", sep="")
-costs_pop_df$pop_tech_cost <- paste("$", round(costs_pop_df$pop_tech_cost, 1), "M", sep="")
-
-# add costs and budgets together
-expenditures <- merge(budget, costs_pop_df, by = c("States", "Year"))
-
-# replace NAs with "No Data"
-expenditures[expenditures == "$NAM"] <- "No Data"  
-
-# rename categories
-expenditures$`DOC Budget` <- expenditures$Budget
-expenditures$`DOC Cost to Incarcerate Supervision Violators` <- expenditures$pop_sup_cost
-expenditures$`DOC Cost to Incarcerate Technical Supervision Violators` <- expenditures$pop_tech_cost
-expenditures <- expenditures %>% select(-pop_sup_cost,-pop_tech_cost,-Budget)
-# Add expenditures to state name for automation later
-expenditures$States <- paste(expenditures$States, "_Expenditures", sep="")
