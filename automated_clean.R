@@ -52,6 +52,12 @@ population18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 20
 population19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2019-Corrected-Table 1.csv")
 population20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2020-Corrected-Table 1.csv")
 
+# fix pop 2020 for corrected states, this lets you know who has submitted population data so far
+statespop20 <- population20 %>% select(States, Corrected)
+statespop20 <- statespop20 %>% arrange(States)
+statespop20 <- statespop20[-c(4,21,28,35,47,50),] # remove duplicate rows
+statespop20 <- statespop20 %>% filter(States != "NA" & States != "Count" & States != "Total")
+
 # remove unwanted variables
 population17 <- population17 %>% select(-`Population Year`,-X12,-X13)
 population18 <- population18 %>% select(-Notes,-Corrected,-X13, -X14)
@@ -68,9 +74,6 @@ population18 <- population18 %>% filter(`State Abbrev` != "NA")
 population19 <- population19 %>% filter(`State Abbrev` != "NA")
 population20 <- population20 %>% filter(`State Abbrev` != "NA")
 
-######
-# check this
-######
 # issue with pop 20, some rows were duplicated with NAs - weird bug?
 population20 <- population20 %>% arrange(States)
 population20 <- population20[-c(4, 20, 27, 34, 46, 49),] # remove duplicate rows
@@ -80,6 +83,9 @@ population17$year <- "2017"
 population18$year <- "2018"
 population19$year <- "2019"
 population20$year <- "2020"
+
+# subset to states that have submitted
+
 
 # combine pop data
 population <- rbind(population17, population18, population19, population20)
@@ -96,6 +102,9 @@ adm17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2017-Tabl
 adm18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2018-Corrected-Table 1.csv")
 adm19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2019-Corrected-Table 1.csv")
 adm20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2020-Corrected-Table 1.csv")
+
+# fix adm 2020 for corrected states, this lets you know who has submitted adm data so far
+
 
 # remove unwanted variables
 adm17 <- adm17 %>% select(-X11)
@@ -236,23 +245,23 @@ adm_long <- adm_long %>% filter(year != 2017)
 pop_long <- pop_long %>% filter(year != 2017)
 
 # subset to a few states for now ################################################
-adm_long <- adm_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
-                                  States=="Colorado"|States=="Connecticut"|States== "Delaware"|
-                                  States=="Illinois"|States=="Indiana"|States== "Louisiana"|  
-                                  States=="Maine"|States=="Maryland"|States== "Missouri"|    
-                                  States=="Nebraska"|States=="North Carolina"|States== "North Dakota"|   
-                                  States=="Oklahoma"|States=="Rhode Island"|States== "Texas"|
-                                  States=="Vermont"|States=="West Virginia"|States== "Wyoming"
-)
-
-pop_long <- pop_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
-                                  States=="Colorado"|States=="Connecticut"|States== "Delaware"|
-                                  States=="Illinois"|States=="Indiana"|States== "Louisiana"|  
-                                  States=="Maine"|States=="Maryland"|States== "Missouri"|    
-                                  States=="Nebraska"|States=="North Carolina"|States== "North Dakota"|   
-                                  States=="Oklahoma"|States=="Rhode Island"|States== "Texas"|
-                                  States=="Vermont"|States=="West Virginia"|States== "Wyoming"
-)
+# adm_long <- adm_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
+#                                   States=="Colorado"|States=="Connecticut"|States== "Delaware"|
+#                                   States=="Illinois"|States=="Indiana"|States== "Louisiana"|  
+#                                   States=="Maine"|States=="Maryland"|States== "Missouri"|    
+#                                   States=="Nebraska"|States=="North Carolina"|States== "North Dakota"|   
+#                                   States=="Oklahoma"|States=="Rhode Island"|States== "Texas"|
+#                                   States=="Vermont"|States=="West Virginia"|States== "Wyoming"
+# )
+# 
+# pop_long <- pop_long %>% filter(States=="Alabama"|States=="Alaska"|States=="Arizona"|
+#                                   States=="Colorado"|States=="Connecticut"|States== "Delaware"|
+#                                   States=="Illinois"|States=="Indiana"|States== "Louisiana"|  
+#                                   States=="Maine"|States=="Maryland"|States== "Missouri"|    
+#                                   States=="Nebraska"|States=="North Carolina"|States== "North Dakota"|   
+#                                   States=="Oklahoma"|States=="Rhode Island"|States== "Texas"|
+#                                   States=="Vermont"|States=="West Virginia"|States== "Wyoming"
+# )
 
 ##################
 # Costs
