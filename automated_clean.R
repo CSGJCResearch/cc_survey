@@ -271,27 +271,6 @@ pop_long <- pop_long %>% filter(year != 2017)
 # )
 
 ##################
-# Create CSVs
-##################
-
-# for marshall
-pop_long_marshall <- pop_long %>% filter(category == "Total.population" |
-                                         category == "Total.violation.population") %>% select(States, year, category, count)
-pop_long_marshall <- pop_long_marshall %>% mutate(type = "Population")
-
-adm_long_marshall <- adm_long %>% filter(category == "Total.admissions" |
-                                         category == "Total.violation.admissions") %>% select(States, year, category, count)
-adm_long_marshall <- adm_long_marshall %>% mutate(type = "Admissions")
-
-# combine adm and pop data
-adm_pop_cc_long <- rbind(pop_long_marshall,adm_long_marshall)
-
-# write csvs and save to data folder
-write.csv(pop_long_marshall, "data/pop_long.csv")
-write.csv(adm_long_marshall, "data/adm_long.csv")
-write.csv(adm_pop_cc_long, "data/cc_adm_pop_long.csv")
-
-##################
 # Budgets
 ##################
 
