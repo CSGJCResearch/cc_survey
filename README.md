@@ -8,7 +8,9 @@ tEst test test
 ## Repository Structure
 
     |-- code    
+      |-- analysis_plan.R                                          # plots for JS and comms team
       |-- automated_clean.R                                        # imports/cleans survey data 
+      |-- automated_functions.R                                    # ustom plot functions (saves lines of code)    
       |-- automated_plots.R                                        # automated plots 
       |-- automated_tables.R                                       # automated tables
       |-- mari_automated.Rmd                                       # automated state reports
