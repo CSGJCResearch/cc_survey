@@ -23,7 +23,6 @@ kable(Alabama, format = 'markdown', padding=1.5L)
 kable(Alabama_Expenditures, format = 'markdown', padding=1.5L)
 ```
   
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
 knitr::include_graphics("plots/adm_by_year_Alabama.png")
 knitr::include_graphics("plots/pop_by_year_Alabama.png")

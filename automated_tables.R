@@ -116,20 +116,25 @@ Wyoming <- Wyoming %>% select(-States)
 # Costs
 ##################
 
-expenditures$`DOC Budget` <- as.character(expenditures$`DOC Budget`)
-expenditures$Year <- factor(expenditures$Year)
-expenditures$States <- factor(expenditures$States)
-str(expenditures)
+# expenditures$`DOC Budget` <- as.character(expenditures$`DOC Budget`)
+# expenditures$Year <- factor(expenditures$Year)
+# expenditures$States <- factor(expenditures$States)
+# str(expenditures)
 
 generate_cost_table <- function(df, myvar){
   df_myvar <- df %>% filter(States == myvar)
-  df_long <- df_myvar %>% pivot_longer(cols = -c(States,Year), 
-                                       names_to = "category", values_to = "count")
-  df_long <- cast(df_long, States+category~Year)
-  df_long$Expenditures <- df_long$category
-  df_long <- df_long %>% select(-category)
-  df_long <- df_long %>% select(States, Expenditures, everything())
 }
+
+# 
+# generate_cost_table <- function(df, myvar){
+#   df_myvar <- df %>% filter(States == myvar)
+#   df_long <- df_myvar %>% pivot_longer(cols = -c(States,Year), 
+#                                        names_to = "category", values_to = "count")
+#   df_long <- cast(df_long, States+category~Year)
+#   df_long$Expenditures <- df_long$category
+#   df_long <- df_long %>% select(-category)
+#   df_long <- df_long %>% select(States, Expenditures, everything())
+# }
 
 # # custom generate cost table function
 # generate_cost_table <- function(df, myvar){
@@ -200,21 +205,6 @@ Washington_Expenditures <- Washington_Expenditures %>% select(-States)
 `West Virginia_Expenditures` <- `West Virginia_Expenditures` %>% select(-States)
 Wisconsin_Expenditures <- Wisconsin_Expenditures %>% select(-States)
 Wyoming_Expenditures <- Wyoming_Expenditures %>% select(-States)
-
-
-###################################
-# Save tables as images
-###################################
-
-# library(kableExtra)
-# t1 <- knitr::kables(list(kable(Alabama) %>% kable_styling(),kable(Alabama_Expenditures) %>% kable_styling())) %>% kable_styling()
-# save_kable(t1, file = "Alabama.png")
-
-
-
-
-
-
 
 ###################################
 # Old Code

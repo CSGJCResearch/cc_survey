@@ -36,8 +36,8 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
 
 # subset data
 adm_by_year <- adm_long %>% filter(category=="Total.probation.violation.admissions"|
-                                   category=="Total.parole.violation.admissions"| 
-                                   category=="New.commitments") %>% select(-Totals,-Probation,-Parole)
+                                     category=="Total.parole.violation.admissions"| 
+                                     category=="New.commitments") %>% select(-Totals,-Probation,-Parole)
 adm_by_year <- adm_by_year %>%
   mutate(category = case_when(category == "New.commitments" ~ "New Commitments",
                               category == "Total.parole.violation.admissions" ~ "Parole",
@@ -45,13 +45,13 @@ adm_by_year <- adm_by_year %>%
 
 # custom plot function
 adm_by_year_plot <- function(df, myvar) {      
-   ggplot(data = df %>% filter(States == myvar), 
+  ggplot(data = df %>% filter(States == myvar), 
          aes(x = category, y = count, fill=year)) +
-         geom_bar(position="dodge", stat="identity") +
-         scale_y_continuous(labels = scales::comma) +
-         #xlab("Year") + 
-         #ylab("Count") +
-         labs(subtitle = "Prison Admissions by Year") +
+    geom_bar(position="dodge", stat="identity") +
+    scale_y_continuous(labels = scales::comma) +
+    #xlab("Year") + 
+    #ylab("Count") +
+    labs(subtitle = "Prison Admissions by Year") +
     geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
     scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
     theme_bw() + #no_grid + 
@@ -68,7 +68,7 @@ purrr::iwalk(adm_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_by_year_", .y, ".png"),
-                      width = 6, height = 5, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -79,13 +79,13 @@ purrr::iwalk(adm_by_year_plot_list,
 # subset data
 adm_prob <- adm_long %>% filter(category=="New.offense.probation.violation.admissions"|
                                   category=="Technical.probation.violation.admissions") %>% 
-                           select(-Totals,-Probation,-Parole)
+  select(-Totals,-Probation,-Parole)
 adm_prob <- adm_prob %>%
   mutate(category = case_when(category == "New.offense.probation.violation.admissions" ~ "Non-Technical",
                               category == "Technical.probation.violation.admissions" ~ "Technical"))
 
 adm_prob$count <- round(adm_prob$count,0)
-  
+
 # custom plot function
 adm_prob_plot <- function(df, myvar) {      
   ggplot(data = df %>% filter(States == myvar), 
@@ -111,7 +111,7 @@ purrr::iwalk(adm_prob_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_prob_", .y, ".png"),
-                      width = 6, height = 5, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -121,7 +121,7 @@ purrr::iwalk(adm_prob_plot_list,
 
 # subset data
 adm_parole <- adm_long %>% filter(category=="New.offense.parole.violation.admissions"|
-                                      category=="Technical.parole.violation.admissions") %>% 
+                                    category=="Technical.parole.violation.admissions") %>% 
   select(-Totals,-Probation,-Parole)
 adm_parole <- adm_parole %>%
   mutate(category = case_when(category == "New.offense.parole.violation.admissions" ~ "Non-Technical",
@@ -152,7 +152,7 @@ purrr::iwalk(adm_parole_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_parole_", .y, ".png"),
-                      width = 6, height = 5, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -195,7 +195,7 @@ purrr::iwalk(pop_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_by_year_", .y, ".png"),
-                      width = 6, height = 5, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -205,7 +205,7 @@ purrr::iwalk(pop_by_year_plot_list,
 
 # subset data
 pop_prob <- pop_long %>% filter(category=="New.offense.probation.violation.population"|
-                                    category=="Technical.probation.violation.population") %>% 
+                                  category=="Technical.probation.violation.population") %>% 
   select(-Totals,-Probation,-Parole)
 pop_prob <- pop_prob %>%
   mutate(category = case_when(category == "New.offense.probation.violation.population" ~ "Non-Technical",
@@ -236,7 +236,7 @@ purrr::iwalk(pop_prob_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_prob_", .y, ".png"),
-                      width = 6, height = 3.25, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )
 
 ##################
@@ -246,7 +246,7 @@ purrr::iwalk(pop_prob_plot_list,
 
 # subset data
 pop_parole <- pop_long %>% filter(category=="New.offense.parole.violation.population"|
-                                      category=="Technical.parole.violation.population") %>% select(-Totals,-Parole,-Probation)
+                                    category=="Technical.parole.violation.population") %>% select(-Totals,-Parole,-Probation)
 pop_parole <- pop_parole %>%
   mutate(category = case_when(category == "New.offense.parole.violation.population" ~ "Non-Technical",
                               category == "Technical.parole.violation.population" ~ "Technical"))
@@ -276,5 +276,5 @@ purrr::iwalk(pop_parole_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_parole_", .y, ".png"),
-                      width = 6, height = 5, dpi = 150)
+                      width = 6, height = 4, dpi = 150)
 )

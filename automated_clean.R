@@ -13,7 +13,10 @@ requiredPackages = c('dplyr',
                      'ggplot2',
                      'readxl',
                      'tidyverse',
-                     'knitr'
+                     'knitr',
+                     'data.table',
+                     'formattable',
+                     'scales'
                      )
 # only downloads packages if needed
 for(p in requiredPackages){

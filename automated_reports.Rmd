@@ -1,0 +1,35 @@
+---
+title: "Confined and Costly State Reports"
+author: "CSG Justice Center"
+date: "3/24/2021"
+output: pdf_document
+geometry: "left=1cm,right=1cm,top=1.5cm,bottom=1.5cm"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+source("automated_clean.R") # run import and clean code
+source("automated_plots.R") # run automated_plots code
+source("automated_costs.R") # analyzes and creates tables of cost info
+source("automated_tables.R") # run automated_tables code
+```
+
+\newpage
+# Alabama
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+# kable(Alabama, format = 'markdown', padding=1.5L)
+# kable(Alabama_Expenditures, format = 'markdown', padding=1.5L)
+```
+  
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.width="50%", paged.print=FALSE}
+knitr::include_graphics("plots/adm_by_year_Alabama.png")
+knitr::include_graphics("plots/pop_by_year_Alabama.png")
+knitr::include_graphics("plots/adm_prob_Alabama.png")
+knitr::include_graphics("plots/pop_prob_Alabama.png")
+knitr::include_graphics("plots/adm_parole_Alabama.png")
+knitr::include_graphics("plots/pop_parole_Alabama.png")
+```
