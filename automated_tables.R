@@ -60,15 +60,6 @@ table_list <- unique(adm_pop_table$States) %>%
 list2env(table_list, envir = .GlobalEnv)
 
 
-
-
-
-
-
-
-
-
-
 # remove state names
 Alabama <- Alabama %>% select(-States)
 Alaska <- Alaska %>% select(-States)

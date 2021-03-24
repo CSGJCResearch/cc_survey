@@ -14,39 +14,20 @@ source("automated_clean.R")
 
 # custom theme
 theme_csgjc <- theme(axis.ticks = element_blank(),
-                     #axis.text.y = element_blank(),
-                     axis.text.x = element_text(vjust = 6.5, margin = margin(t = 6),size=8,face="italic"),
+                     axis.text.y = element_blank(),
+                     axis.text.x = element_text(vjust = 8, margin = margin(t = 6),size=11,face="bold"),
                      axis.title.y = element_blank(),
                      axis.title.x = element_blank(),
                      panel.border = element_blank(), 
                      panel.grid.major.x = element_blank(), 
                      panel.grid.minor.x = element_blank(), 
-                     #panel.grid.major.y = element_blank(), 
-                     #panel.grid.minor.y = element_blank(),
+                     panel.grid.major.y = element_blank(), 
+                     panel.grid.minor.y = element_blank(),
                      legend.title = element_blank(),
                      legend.position = "top",
                      plot.title = element_text(hjust = 0.5,size = 12, face = "bold"),
                      plot.subtitle = element_text(hjust = 0.5, size = 15),
                      plot.margin = margin(0, 0, 0, 0, "cm"))
-
-# custom theme -y axis on right 
-theme_csgjc2 <- theme(axis.ticks = element_blank(),
-                     #axis.text.y = element_blank(),
-                     axis.text.x = element_text(vjust = 6.5, margin = margin(t = 6),size=8,face="italic"),
-                     axis.title.y = element_blank(),
-                     axis.title.x = element_blank(),
-                     panel.border = element_blank(), 
-                     panel.grid.major.x = element_blank(), 
-                     panel.grid.minor.x = element_blank(), 
-                     #panel.grid.major.y = element_blank(), 
-                     #panel.grid.minor.y = element_blank(),
-                     legend.title = element_blank(),
-                     legend.position = "top",
-                     plot.title = element_text(hjust = 0.5,size = 12, face = "bold"),
-                     plot.subtitle = element_text(hjust = 0.5, size = 15),
-                     plot.margin = margin(0, 0, 0, 0, "cm"))
-
-
 
 ##################
 # ADMISSIONS
@@ -65,14 +46,14 @@ adm_by_year <- adm_by_year %>%
 # custom plot function
 adm_by_year_plot <- function(df, myvar) {      
    ggplot(data = df %>% filter(States == myvar), 
-         aes(x = year, y = count, fill=category)) +
-         geom_bar(stat = "identity", position = "stack", width = 0.65) +
+         aes(x = category, y = count, fill=year)) +
+         geom_bar(position="dodge", stat="identity") +
          scale_y_continuous(labels = scales::comma) +
          #xlab("Year") + 
          #ylab("Count") +
          labs(subtitle = "Prison Admissions by Year") +
-    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values = c("#6baed6", "#3182bd", "#08519c")) + 
+    geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
+    scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -87,7 +68,7 @@ purrr::iwalk(adm_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_by_year_", .y, ".png"),
-                      width = 6, height = 3.25, dpi = 150)
+                      width = 6, height = 5, dpi = 150)
 )
 
 ##################
@@ -103,17 +84,19 @@ adm_prob <- adm_prob %>%
   mutate(category = case_when(category == "New.offense.probation.violation.admissions" ~ "Non-Technical",
                               category == "Technical.probation.violation.admissions" ~ "Technical"))
 
+adm_prob$count <- round(adm_prob$count,0)
+  
 # custom plot function
 adm_prob_plot <- function(df, myvar) {      
   ggplot(data = df %>% filter(States == myvar), 
-         aes(x = year, y = count, fill=category)) +
-    geom_bar(stat = "identity", position = "stack", width = 0.65) +
+         aes(x=category, y=count, fill = year)) +
+    geom_bar(position="dodge", stat="identity") +
     scale_y_continuous(labels = scales::comma) +
     #xlab("Year") + 
     #ylab("Count") +
     labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
-    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
+    geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
+    scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -128,7 +111,7 @@ purrr::iwalk(adm_prob_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_prob_", .y, ".png"),
-                      width = 6, height = 3.25, dpi = 150)
+                      width = 6, height = 5, dpi = 150)
 )
 
 ##################
@@ -147,14 +130,14 @@ adm_parole <- adm_parole %>%
 # custom plot function
 adm_parole_plot <- function(df, myvar) {      
   ggplot(data = df %>% filter(States == myvar), 
-         aes(x = year, y = count, fill=category)) +
-    geom_bar(stat = "identity", position = "stack", width = 0.65) +
+         aes(x=category, y=count, fill = year)) +
+    geom_bar(position="dodge", stat="identity") +
     scale_y_continuous(labels = scales::comma) +
     #xlab("Year") + 
     #ylab("Count") +
     labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
-    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
+    geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
+    scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -169,7 +152,7 @@ purrr::iwalk(adm_parole_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("adm_parole_", .y, ".png"),
-                      width = 6, height = 3.25, dpi = 150)
+                      width = 6, height = 5, dpi = 150)
 )
 
 ##################
@@ -190,14 +173,14 @@ pop_by_year <- pop_by_year %>%
 # custom plot function
 pop_by_year_plot <- function(df, myvar) {      
   ggplot(data = df %>% filter(States == myvar), 
-         aes(x = year, y = count, fill=category)) +
-    geom_bar(stat = "identity", position = "stack", width = 0.65) +
-    scale_y_continuous(labels = scales::comma, position = "right") +
+         aes(x = category, y = count, fill=year)) +
+    geom_bar(position="dodge", stat="identity") +
+    scale_y_continuous(labels = scales::comma) +
     #xlab("Year") + 
     #ylab("Count") +
     labs(subtitle = "Prison Population by Year") +
-    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values = c("#6baed6", "#3182bd", "#08519c")) + 
+    geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
+    scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -212,7 +195,7 @@ purrr::iwalk(pop_by_year_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_by_year_", .y, ".png"),
-                      width = 6, height = 3.25, dpi = 150)
+                      width = 6, height = 5, dpi = 150)
 )
 
 ##################
@@ -231,14 +214,14 @@ pop_prob <- pop_prob %>%
 # custom plot function
 pop_prob_plot <- function(df, myvar) {      
   ggplot(data = df %>% filter(States == myvar), 
-         aes(x = year, y = count, fill=category)) +
-    geom_bar(stat = "identity", position = "stack", width = 0.65) +
-    scale_y_continuous(labels = scales::comma, position = "right") +
+         aes(x=category, y=count, fill = year)) +
+    geom_bar(position="dodge", stat="identity") +
+    scale_y_continuous(labels = scales::comma) +
     #xlab("Year") + 
     #ylab("Count") +
     labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
-    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
+    geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
+    scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -271,14 +254,14 @@ pop_parole <- pop_parole %>%
 # custom plot function
 pop_parole_plot <- function(df, myvar) {      
   ggplot(data = df %>% filter(States == myvar), 
-         aes(x = year, y = count, fill=category)) +
-    geom_bar(stat = "identity", position = "stack", width = 0.65) +
-    scale_y_continuous(labels = scales::comma, position = "right") +
+         aes(x=category, y=count, fill = year)) +
+    geom_bar(position="dodge", stat="identity") +
+    scale_y_continuous(labels = scales::comma) +
     #xlab("Year") + 
     #ylab("Count") +
     labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
-    geom_text(aes(label = scales::comma(count)), color="white", size=2.75,position = position_stack(vjust = .5)) +
-    scale_fill_manual(values = c("#1c9099", "#67a9cf")) + 
+    geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
+    scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -293,5 +276,5 @@ purrr::iwalk(pop_parole_plot_list,
              ~ ggsave(plot = .x,
                       path="plots",
                       filename = paste0("pop_parole_", .y, ".png"),
-                      width = 6, height = 3.25, dpi = 150)
+                      width = 6, height = 5, dpi = 150)
 )
