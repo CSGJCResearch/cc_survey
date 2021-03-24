@@ -10,14 +10,14 @@ tEst test test
     |-- code    
       |-- analysis_plan.R                                          # plots for JS and comms team
       |-- automated_clean.R                                        # imports/cleans survey data 
-      |-- automated_functions.R                                    # ustom plot functions (saves lines of code)    
+      |-- automated_costs.R                                        # automated costs
       |-- automated_plots.R                                        # automated plots 
       |-- automated_tables.R                                       # automated tables
-      |-- mari_automated.Rmd                                       # automated state reports
+      |-- automated_report.Rmd                                     # automated state reports for states that have submitted
     |-- data 
       |-- 50-State Revocation Survey_October 27, 2020_12.25.xlsx   # raw survey responses   
       |-- Cost Per Day For Calculation.xlsx                        # costs by state  
-      |-- Data for web team 2020 v6.xlsx                           # final summary data     
+      |-- Data for web team 2020 v6 CORRECTED.xlsx                 # final data     
     |-- survey_info  
       |-- 50 State Revocation Survey - FINAL.pdf                   # pdf of administered survey  
       |-- CSGJC_SurveyUpdate_Nov2020.pptx                          # summary statistics presented  
