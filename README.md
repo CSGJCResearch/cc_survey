@@ -14,10 +14,14 @@ tEst test test
       |-- automated_plots.R                                        # automated plots 
       |-- automated_tables.R                                       # automated tables
       |-- automated_report.Rmd                                     # automated state reports for states that have submitted
-    |-- data 
+      |-- cc_story.R                                               # national estimates, cc story requested by JS on 3/26/21
+    |-- data  
       |-- 50-State Revocation Survey_October 27, 2020_12.25.xlsx   # raw survey responses   
       |-- Cost Per Day For Calculation.xlsx                        # costs by state  
-      |-- Data for web team 2020 v6 CORRECTED.xlsx                 # final data     
+      |-- Data for web team 2020 v6 CORRECTED.xlsx                 # final data  
+    |-- shared_data  
+      |-- cc_admissions_changes.csv                                # imputed values, admissions changes from 2018-2020
+      |-- cc_population_changes.csv                                # imputed values, population changes from 2018-2020
     |-- survey_info  
       |-- 50 State Revocation Survey - FINAL.pdf                   # pdf of administered survey  
       |-- CSGJC_SurveyUpdate_Nov2020.pptx                          # summary statistics presented  
