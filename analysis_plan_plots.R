@@ -6,7 +6,7 @@
 #######################################
 
 # read in data
-# source("automated_clean.R")
+source("automated_clean.R")
 
 # tables for review
 adm_change_comms_2019 <- adm_change %>% select(States, year, Total.admissions, Total.violation.admissions, Total.admissions.pct, Total.violation.admissions.pct) %>% filter(year == 2019)
