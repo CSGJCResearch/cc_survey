@@ -67,14 +67,14 @@ total_viol_pop_plot_2019 <- function(df){
     geom_bar(position="dodge", stat="identity") +
     geom_text(aes(label = round(Total.violation.population,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="#8c8c8c", size=3.5, width = 0.65,fontface = "bold") +
     scale_y_continuous(labels = scales::comma) +
-    scale_fill_manual(values = c("#7fc241", "#5c922f")) +
+    scale_fill_manual(values = c("#0db4e4", "#007392")) +
     # ggtitle("States With Increases in Population Over 2%") + 
     theme_bw()
   plot1 <- plot1 + theme_csgjc + 
     geom_label(data = df, vjust = 1,
                mapping = aes(label = ifelse(Total.violation.population.pct>0,paste0("", round(Total.violation.population.pct,1),"%"),
-                                            paste0("",Total.violation.population.pct,"%")),y = 0), color = "#315c15", fill = "white", size = 3) + 
-    geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "#315c15", fill = "white") 
+                                            paste0("",Total.violation.population.pct,"%")),y = 0), color = "#007392", fill = "white", size = 3) + 
+    geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "#007392", fill = "white") 
   return(plot1)
 }
 
@@ -85,14 +85,14 @@ total_viol_pop_plot_2020 <- function(df){
     geom_bar(position="dodge", stat="identity") +
     geom_text(aes(label = round(Total.violation.population,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="#8c8c8c", size=3.5, width = 0.65,fontface = "bold") +
     scale_y_continuous(labels = scales::comma) +
-    scale_fill_manual(values = c("#5c922f", "#315c15")) +
+    scale_fill_manual(values = c("#007392", "#00475d")) +
     # ggtitle("States With Increases in Population Over 2%") + 
     theme_bw()
   plot1 <- plot1 + theme_csgjc + 
     geom_label(data = df, vjust = 1,
                mapping = aes(label = ifelse(Total.violation.population.pct>0,paste0("", round(Total.violation.population.pct,1),"%"),
-                                            paste0("",Total.violation.population.pct,"%")),y = 0), color = "#315c15", fill = "white", size = 3) + 
-    geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "#315c15", fill = "white") 
+                                            paste0("",Total.violation.population.pct,"%")),y = 0), color = "#00475d", fill = "white", size = 3) + 
+    geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "#00475d", fill = "white") 
   return(plot1)
 }
 
@@ -103,14 +103,14 @@ total_adm_plot_2019 <- function(df){
     geom_bar(position="dodge", stat="identity") +
     geom_text(aes(label = round(Total.admissions,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="#8c8c8c", size=3.5, width = 0.65,fontface = "bold") +
     scale_y_continuous(labels = scales::comma) +
-    scale_fill_manual(values = c("#0db4e4", "#007392")) +
+    scale_fill_manual(values = c("#7fc241", "#5c922f")) +
     # ggtitle("States With Increases in admissions Over 2%") + 
     theme_bw()
   plot1 <- plot1 + theme_csgjc + 
     geom_label(data = df, vjust = 1,
                mapping = aes(label = ifelse(Total.admissions.pct>0,paste0("", round(Total.admissions.pct,1),"%"),
-                                            paste0("",Total.admissions.pct,"%")),y = 0), color = "#007392", fill = "white", size = 3) + 
-    geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "#007392", fill = "white") 
+                                            paste0("",Total.admissions.pct,"%")),y = 0), color = "#5c922f", fill = "white", size = 3) + 
+    geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "#5c922f", fill = "white") 
   return(plot1)
 }
 
@@ -121,14 +121,14 @@ total_adm_plot_2020 <- function(df){
     geom_bar(position="dodge", stat="identity") +
     geom_text(aes(label = round(Total.admissions,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="#8c8c8c", size=3.5, width = 0.65,fontface = "bold") +
     scale_y_continuous(labels = scales::comma) +
-    scale_fill_manual(values = c("#007392", "#00475d")) +
+    scale_fill_manual(values = c("#5c922f", "#315c15")) +
     # ggtitle("States With Increases in admissions Over 2%") + 
     theme_bw()
   plot1 <- plot1 + theme_csgjc + 
     geom_label(data = df, vjust = 1,
                mapping = aes(label = ifelse(Total.admissions.pct>0,paste0("", round(Total.admissions.pct,1),"%"),
-                                            paste0("",Total.admissions.pct,"%")),y = 0), color = "#007392", fill = "white", size = 3) + 
-    geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "#007392", fill = "white") 
+                                            paste0("",Total.admissions.pct,"%")),y = 0), color = "#315c15", fill = "white", size = 3) + 
+    geom_point(x = 4.65, y = 3099900000, shape = 22, size = 8, color = "#315c15", fill = "white") 
   return(plot1)
 }
 

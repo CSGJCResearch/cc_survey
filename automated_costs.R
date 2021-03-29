@@ -121,16 +121,32 @@ expenditures$`DOC Cost to Incarcerate Supervision Violators 2020` <- expenditure
 expenditures$`DOC Cost to Incarcerate Technical Supervision Violators 2020` <- expenditures$pop_tech_cost_2020
 
 # # select variables
-# numbers <- expenditures %>% select(States, total_population_2019,total_population_2020,technical_population_2019,technical_population_2020) %>% 
-# 
-# # rename variables
-# numbers$`Total Population 2019` <- numbers$total_population_2019
-# numbers$`Total Population 2020` <- numbers$total_population_2020
-# numbers$`Technical Population 2019` <- numbers$technical_population_2019
-# numbers$`Technical Population 2020` <- numbers$technical_population_2020
-# 
-# # remove variables
-# numbers <- numbers %>% select(-technical_population_2020,-technical_population_2019,-total_population_2020, -total_population_2019)
+numbers <- expenditures %>% select(States, total_population_2019,total_population_2020,technical_population_2019,technical_population_2020)
+
+# rename variables
+numbers$`Total Population 2019` <- numbers$total_population_2019
+numbers$`Total Population 2020` <- numbers$total_population_2020
+numbers$`Technical Population 2019` <- numbers$technical_population_2019
+numbers$`Technical Population 2020` <- numbers$technical_population_2020
+
+# remove variables
+numbers <- numbers %>% select(-technical_population_2020,-technical_population_2019,-total_population_2020, -total_population_2019)
+
+# change from char to numeric, remove commas, round numbers
+numbers$`Total Population 2019` <- as.character(gsub("\\,", "", numbers$`Total Population 2019`))
+numbers$`Total Population 2020` <- as.character(gsub("\\,", "", numbers$`Total Population 2020`))
+numbers$`Technical Population 2019` <- as.character(gsub("\\,", "", numbers$`Technical Population 2019`))
+numbers$`Technical Population 2020` <- as.character(gsub("\\,", "", numbers$`Technical Population 2020`))
+
+numbers$`Total Population 2019` <- as.numeric(numbers$`Total Population 2019`)
+numbers$`Total Population 2020` <- as.numeric(numbers$`Total Population 2020`)
+numbers$`Technical Population 2019` <- as.numeric(numbers$`Technical Population 2019`)
+numbers$`Technical Population 2020` <- as.numeric(numbers$`Technical Population 2020`)
+
+numbers$`Total Population 2019` <- round(numbers$`Total Population 2019`,0)
+numbers$`Total Population 2020` <- round(numbers$`Total Population 2020`,0)
+numbers$`Technical Population 2019` <- round(numbers$`Technical Population 2019`,0)
+numbers$`Technical Population 2020` <- round(numbers$`Technical Population 2020`,0)
 
 # remove variables
 expenditures <- expenditures %>% select(-budget_2019, -budget_2020, -cost_2019, -cost_2020,

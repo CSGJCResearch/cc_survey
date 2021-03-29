@@ -11,8 +11,16 @@
 # tables for review
 adm_change_comms_2019 <- adm_change %>% select(States, year, Total.admissions, Total.violation.admissions, Total.admissions.pct, Total.violation.admissions.pct) %>% filter(year == 2019)
 adm_change_comms_2020 <- adm_change %>% select(States, year, Total.admissions, Total.violation.admissions, Total.admissions.pct, Total.violation.admissions.pct) %>% filter(year == 2020)
-adm_change_comms <- merge(adm_change_comms_2019, adm_change_comms_2020,by = "States", all.x = TRUE)
-write.csv(adm_change_comms, "adm_change_comms.csv")
+adm_change_comms <- rbind(adm_change_comms_2019, adm_change_comms_2020)
+
+# tables for review
+pop_change_comms_2019 <- pop_change %>% select(States, year, Total.population, Total.violation.population, Total.population.pct, Total.violation.population.pct) %>% filter(year == 2019)
+pop_change_comms_2020 <- pop_change %>% select(States, year, Total.population, Total.violation.population, Total.population.pct, Total.violation.population.pct) %>% filter(year == 2020)
+pop_change_comms <- rbind(pop_change_comms_2019, pop_change_comms_2020)
+
+adm_pop_change_comms <- merge(adm_change_comms, pop_change_comms, by = c("States","year"),all.x = TRUE, all.y = TRUE)
+
+write.csv(adm_pop_change_comms, "cc_study_adm_pop_change_comms.csv")
   
 ##########################################################################
 ##########################################################################
@@ -53,7 +61,7 @@ plot1
 # NO STATES FIT THIS CATEGORY
 
 # # filter 
-# df_2020 <- pop_change %>% filter(year == 2020) 
+# df_2020 <- pop_change %>% filter(year == 2020)
 # df_2020 <- df_2020 %>% filter(Total.population.pct > 2)
 # # get 2019 pop info for states with increases over 2% in 2020
 # df_2019 <- pop_change %>% filter(year == 2019)
@@ -392,7 +400,7 @@ df_med <- df %>% filter(States == "Pennnsylvania"| States == "Mississippi"| Stat
                           States == "Nevada"| States == "Oklahoma"| States == "South Dakota")
 df_low <- df %>% filter(States == "Oregon"|States == "West Virginia"| States == "Montana"| States == "Wyoming"| 
                           States == "Rhode Island"| States == "North Dakota"| 
-                          States == "Delaware"| States == "Alabama"| States == "New Hampshire")
+                          States == "Delaware"| States == "Alabama"| States == "New Hampshire" | States == "Hawaii")
 
 plot1 <- total_viol_pop_plot_2020(df_high)
 plot1
@@ -455,19 +463,19 @@ plot1
 
 # 2019 - 2020
 
-# # filter 
-df_2020 <- adm_change %>% filter(year == 2020)
-df_2020 <- df_2020 %>% filter(Total.admissions.pct > 2)
-# get 2019 adm info for states with increases over 2% in 2020
-df_2019 <- adm_change %>% filter(year == 2019)
-# subset to states in df_2020
-df_2019 <- df_2019 %>% filter(States %in% df_2020$States)
-df <- rbind(df_2019, df_2020)
-df$Total.admissions.pct <- round(df$Total.admissions.pct ,1)
-
-# call custom functon for plot
-plot1 <- total_adm_plot_2020(df)
-plot1
+# # # filter 
+# df_2020 <- adm_change %>% filter(year == 2020)
+# df_2020 <- df_2020 %>% filter(Total.admissions.pct > 2)
+# # get 2019 adm info for states with increases over 2% in 2020
+# df_2019 <- adm_change %>% filter(year == 2019)
+# # subset to states in df_2020
+# df_2019 <- df_2019 %>% filter(States %in% df_2020$States)
+# df <- rbind(df_2019, df_2020)
+# df$Total.admissions.pct <- round(df$Total.admissions.pct ,1)
+# 
+# # call custom functon for plot
+# plot1 <- total_adm_plot_2020(df)
+# plot1
 
 #####################################
 # 2. states experienced no changes in admissions between -2% and +2%
@@ -597,7 +605,7 @@ df_1 <- df %>% filter(States == "Texas" | States == "Alaska" | States == "Califo
                         States == "Connecticut" | States == "Georgia" | States == "Pennsylvania" | States == "Arizona")
 df_2 <- df %>% filter(States == "Louisiana" | States == "Missouri" | States == "Alabama" | 
                         States == "Delaware" | States == "Colorado" | States == "Oklahoma" | 
-                        States == "Arkansas" | States == "Wisconsin" | States == "Oregon" | States == "Mississippi")
+                        States == "Arkansas" | States == "Wisconsin" | States == "Oregon" | States == "Hawaii"|States == "Mississippi")
 df_3 <- df %>% filter(States == "Washington" | States == "Vermont" | States == "New Jersey" | 
                         States == "Maryland" | States == "South Carolina" | 
                         States ==  "Idaho" | States == "Kansas" |States ==  "Nevada")

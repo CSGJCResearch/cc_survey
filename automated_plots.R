@@ -53,7 +53,7 @@ adm_by_year_plot <- function(df, myvar) {
     #ylab("Count") +
     labs(subtitle = "Prison Admissions by Year") +
     geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
-    scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
+    scale_fill_manual(values = c("#7fc241","#5c922f","#315c15")) +
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -96,7 +96,7 @@ adm_prob_plot <- function(df, myvar) {
     #ylab("Count") +
     labs(subtitle = "Probation Violations Resulting in DOC Incarceration") +
     geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
-    scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
+    scale_fill_manual(values = c("#7fc241","#5c922f","#315c15")) +
     theme_bw() + #no_grid + 
     theme_csgjc
 }
@@ -137,7 +137,7 @@ adm_parole_plot <- function(df, myvar) {
     #ylab("Count") +
     labs(subtitle = "Parole Violations Resulting in DOC Incarceration") +
     geom_text(aes(label = round(count,0)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=-0.5, hjust=.5,color="black", size=3.5, width = 0.65,fontface = "bold") +
-    scale_fill_manual(values = c("#0db4e4","#007392","#00475d")) +
+    scale_fill_manual(values = c("#7fc241","#5c922f","#315c15")) +
     theme_bw() + #no_grid + 
     theme_csgjc
 }
