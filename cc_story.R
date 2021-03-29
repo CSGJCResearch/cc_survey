@@ -19,7 +19,8 @@ requiredPackages = c('dplyr',
                      'knitr',
                      'data.table',
                      'formattable',
-                     'scales'
+                     'scales',
+                     'mice'
 )
 # only downloads packages if needed
 for(p in requiredPackages){
