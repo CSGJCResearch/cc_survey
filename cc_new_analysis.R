@@ -144,7 +144,7 @@ ucr_all <- ucr_all %>% select(state = State, city = City, year = Year,
                               motor_theft = `Motor vehicle theft`,
                               arson = Arson3)
 
-# remove + and commas from number sand make numeric
+# remove + and commas from numbers and make numeric
 ucr_all[] <- lapply(ucr_all, gsub, pattern=',', replacement='')
 ucr_all$violent_crime_change <- as.character(gsub("\\+", "", ucr_all$violent_crime_change))
 ucr_all$property_crime_change <- as.character(gsub("\\+", "", ucr_all$property_crime_change))
@@ -218,6 +218,33 @@ df_final <- df_final %>% select(state, ucr_pop, census_pop_2019,ucr_proportion,
 # Correlate change in crime from 2019 to 2020 with change in total prison admissions and pops 2019-2020
 ########
 
+# view data to find linear relationship
+ggscatter(df_final, x = "cc_population_change", y = "violent_crime_avg",
+          add = "reg.line", conf.int = TRUE,
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Population Change from 2019-2020", ylab = "Violent Crime Average")
+ggscatter(df_final, x = "cc_population_change", y = "property_crime_avg",
+          add = "reg.line", conf.int = TRUE,
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Population Change from 2019-2020", ylab = "Property Crime Average")
+ggscatter(df_final, x = "cc_admissions_change", y = "violent_crime_avg",
+          add = "reg.line", conf.int = TRUE,
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Admissions Change from 2019-2020", ylab = "Violent Crime Average")
+ggscatter(df_final, x = "cc_admissions_change", y = "property_crime_avg",
+          add = "reg.line", conf.int = TRUE,
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Admissions Change from 2019-2020", ylab = "Property Crime Average")
+
+# check for normality
+shapiro.test(df_final$violent_crime_avg) # => p = 1.518e-05, not normal
+shapiro.test(df_final$property_crime_avg) # => p = 6.124e-07, not normal
+shapiro.test(df_final$cc_admissions_change) # => p = 0.07148, normal
+shapiro.test(df_final$cc_population_change) # => p = 0.1696, normal
+ggqqplot(df_final$violent_crime_avg, ylab = "violent_crime_avg")
+ggqqplot(df_final$property_crime_avg, ylab = "property_crime_avg")
+# normal enough? will include non-parametric correlation approaches below (Spearman)
+
 # subset data for analysis
 df_sub <- df_final %>% select(-state,-ucr_pop,-census_pop_2019,-ucr_proportion,-state_violent_crime,-state_property_crime)
 
@@ -250,4 +277,39 @@ flattenCorrMatrix <- function(cormat, pmat) {
 res2<-rcorr(as.matrix(df_sub[,1:4]))
 flattenCorrMatrix(res2$r, res2$P)
 
+##############
+# Include non-parametric correlation approach (Spearman)
+##############
 
+rcorr(as.matrix(df_sub), type = c("pearson","spearman"))
+cor_2 <- rcorr(as.matrix(df_sub))
+cor_2
+
+# p-values
+cor_2$P
+
+# correlation matrix
+cor_2$r
+
+flat_cor_mat <- function(cor_r, cor_p){
+  #This function provides a simple formatting of a correlation matrix
+  #into a table with 4 columns containing :
+  # Column 1 : row names (variable 1 for the correlation test)
+  # Column 2 : column names (variable 2 for the correlation test)
+  # Column 3 : the correlation coefficients
+  # Column 4 : the p-values of the correlations
+  library(tidyr)
+  library(tibble)
+  cor_r <- rownames_to_column(as.data.frame(cor_r), var = "row")
+  cor_r <- gather(cor_r, column, cor, -1)
+  cor_p <- rownames_to_column(as.data.frame(cor_p), var = "row")
+  cor_p <- gather(cor_p, column, p, -1)
+  cor_p_matrix <- left_join(cor_r, cor_p, by = c("row", "column"))
+  cor_p_matrix
+}
+
+cor_3 <- rcorr(as.matrix(df_sub[, 1:4]))
+
+# formatting of the correlation matrix
+my_cor_matrix <- flat_cor_mat(cor_3$r, cor_3$P)
+head(my_cor_matrix)
