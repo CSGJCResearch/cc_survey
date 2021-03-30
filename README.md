@@ -8,13 +8,14 @@ tEst test test
 ## Repository Structure
 
     |-- code    
-      |-- analysis_plan.R                                          # plots for JS and comms team
-      |-- automated_clean.R                                        # imports/cleans survey data 
-      |-- automated_costs.R                                        # automated costs
-      |-- automated_plots.R                                        # automated plots 
-      |-- automated_tables.R                                       # automated tables
-      |-- automated_report.Rmd                                     # automated state reports for states that have submitted
-      |-- cc_story.R                                               # national estimates, cc story requested by JS on 3/26/21
+      |-- analysis_plan.R                    # plots for JS and comms team
+      |-- automated_clean.R                  # imports/cleans survey data 
+      |-- automated_costs.R                  # automated costs
+      |-- automated_plots.R                  # automated plots 
+      |-- automated_tables.R                 # automated tables
+      |-- automated_report.Rmd               # automated state reports for states that have submitted
+      |-- cc_story.R                         # national estimates, cc story requested by JS on 3/26/21
+      |-- cc_analysis.R                      # uses UCR, census, and cc data to find correlations between adm, pop, crime changes
     |-- data  
       |-- 50-State Revocation Survey_October 27, 2020_12.25.xlsx   # raw survey responses   
       |-- Cost Per Day For Calculation.xlsx                        # costs by state  
