@@ -155,10 +155,10 @@ getmode <- function(v){
 # if the column data type is num, impute with mean
 for (cols in colnames(adm)) {
   if (cols %in% names(adm[,sapply(adm, is.numeric)])) {
-    adm <- adm %>% mutate(!!cols := replace(!!rlang::sym(cols), is.na(!!rlang::sym(cols)), mean(!!rlang::sym(cols), na.rm=TRUE)))
+    adm <- adm %>% group_by(year) %>% mutate(!!cols := replace(!!rlang::sym(cols), is.na(!!rlang::sym(cols)), mean(!!rlang::sym(cols), na.rm=TRUE)))
   }
   else {
-    adm <- adm %>% mutate(!!cols := replace(!!rlang::sym(cols), !!rlang::sym(cols)=="", getmode(!!rlang::sym(cols))))
+    adm <- adm %>% group_by(year) %>% mutate(!!cols := replace(!!rlang::sym(cols), !!rlang::sym(cols)=="", getmode(!!rlang::sym(cols))))
   }
 }
 
@@ -169,10 +169,10 @@ for (cols in colnames(adm)) {
 # if the column data type is num, impute with mean
 for (cols in colnames(population)) {
   if (cols %in% names(population[,sapply(population, is.numeric)])) {
-    population <- population %>% mutate(!!cols := replace(!!rlang::sym(cols), is.na(!!rlang::sym(cols)), mean(!!rlang::sym(cols), na.rm=TRUE)))
+    population <- population %>% group_by(year) %>% mutate(!!cols := replace(!!rlang::sym(cols), is.na(!!rlang::sym(cols)), mean(!!rlang::sym(cols), na.rm=TRUE)))
   }
   else {
-    population <- population %>% mutate(!!cols := replace(!!rlang::sym(cols), !!rlang::sym(cols)=="", getmode(!!rlang::sym(cols))))
+    population <- population %>% group_by(year) %>% mutate(!!cols := replace(!!rlang::sym(cols), !!rlang::sym(cols)=="", getmode(!!rlang::sym(cols))))
   }
 }
 
@@ -320,7 +320,7 @@ costs_pop_df <- costs_pop_df %>% select(States, cost_2019,cost_2020,
                                         everything())
 
 avg_sup_cost <- mean(costs_pop_df$pop_sup_cost_2020)
-avg_sup_cost # $178,919,717
+avg_sup_cost # $171,439,834
 
 ########
 # prison info
