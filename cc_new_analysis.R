@@ -17,7 +17,8 @@ requiredPackages = c('dplyr',
                      'data.table',
                      'formattable',
                      'scales',
-                     'mice'
+                     'mice',
+                     'Hmisc'
 )
 # only downloads packages if needed
 for(p in requiredPackages){
@@ -188,7 +189,7 @@ df <- merge(ucr_agg, census, by = "state", all.x = TRUE)
 df <- df %>% mutate(ucr_proportion = ucr_pop/census_pop_2019)
 
 ##################
-# Correlate change in crime from 2019 to 2020 with change in total prison admissions and pops 2019-2020
+# ANALYSIS
 ##################
 
 # dup for cleaning
@@ -213,7 +214,40 @@ df_final <- df_final %>% select(state, ucr_pop, census_pop_2019,ucr_proportion,
                     cc_population_change, cc_admissions_change,
                     violent_crime_avg, property_crime_avg, everything())
 
+########
+# Correlate change in crime from 2019 to 2020 with change in total prison admissions and pops 2019-2020
+########
 
+# subset data for analysis
+df_sub <- df_final %>% select(-state,-ucr_pop,-census_pop_2019,-ucr_proportion,-state_violent_crime,-state_property_crime)
 
+# compute correlation matrix
+res <- cor(df_sub)
+round(res, 2)
+
+# compute correlation matrix
+res2 <- rcorr(as.matrix(df_sub))
+res2
+
+# extract the correlation coefficients
+res2$r
+
+# extract p-values
+res2$P
+
+# custom function to format correlation matrix
+flattenCorrMatrix <- function(cormat, pmat) {
+  ut <- upper.tri(cormat)
+  data.frame(
+    row = rownames(cormat)[row(cormat)[ut]],
+    column = rownames(cormat)[col(cormat)[ut]],
+    cor  =(cormat)[ut],
+    p = pmat[ut]
+  )
+}
+
+# create correlation matrix
+res2<-rcorr(as.matrix(df_sub[,1:4]))
+flattenCorrMatrix(res2$r, res2$P)
 
 
