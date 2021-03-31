@@ -56,46 +56,6 @@ census.xlsx <- read_excel("data/nst-est2019-01.xlsx", skip = 3)
 # ucr
 ######
 
-# dup for cleaning
-crime_changes <- q1
-
-# remove unwanted rows
-crime_changes <- crime_changes[-c(1,10:14),]
-
-# create min and max city sizes for merging
-crime_changes <- crime_changes %>% mutate(city_min = case_when(`Population Group` == "Cities 1,000,000 or over" ~ 1000000,
-                                                               `Population Group` == "Cities from 10,000 thru 24,999" ~ 10000,
-                                                               `Population Group` == "Cities from 100,000 thru 249,999" ~ 100000,
-                                                               `Population Group` == "Cities from 25,000 thru 49,999" ~ 25000,
-                                                               `Population Group` == "Cities from 250,000 thru 499,999" ~ 250000,
-                                                               `Population Group` == "Cities from 50,000 thru 99,999" ~ 50000,
-                                                               `Population Group` == "Cities from 500,000 thru 999,999" ~ 500000,
-                                                               `Population Group` == "Cities Under 10,000" ~ 0))
-crime_changes <- crime_changes %>% mutate(city_max = case_when(`Population Group` == "Cities 1,000,000 or over" ~ 100000000,
-                                                               `Population Group` == "Cities from 10,000 thru 24,999" ~ 24999,
-                                                               `Population Group` == "Cities from 100,000 thru 249,999" ~ 249999,
-                                                               `Population Group` == "Cities from 25,000 thru 49,999" ~ 49999,
-                                                               `Population Group` == "Cities from 250,000 thru 499,999" ~ 499999,
-                                                               `Population Group` == "Cities from 50,000 thru 99,999" ~ 99999,
-                                                               `Population Group` == "Cities from 500,000 thru 999,999" ~ 999999,
-                                                               `Population Group` == "Cities Under 10,000" ~ 10000))  
-# remove commas and other punctuation
-# crime_changes$state <- as.character(gsub("\\,", "", crime_changes$state))
-# crime_changes$state <- as.character(gsub("\\+", "", crime_changes$state))
-
-# rename variables
-crime_changes <- crime_changes %>% select(violent_crime_change = `Violent crime`,
-                                          murder_change = Murder,
-                                          rape_change = Rape1,
-                                          robbery_change = Robbery,
-                                          aggravated_assault_change = `Aggravated Assault`,
-                                          property_crime_change = `Property crime`,
-                                          burgalry_change = Burglary,
-                                          larceny_theft_change = `Larceny-theft`,
-                                          motor_theft_change = `Motor vehicle theft`,
-                                          arson_change = Arson,
-                                          city_min, city_max)
-
 # rows are missing state names, if NA, replace with state name in row above
 ucr <- q4 %>% fill(State, City)
 
@@ -106,61 +66,43 @@ ucr <- ucr[-c(445:452),]
 ucr$Population1 <- as.character(gsub("\\,", "", ucr$Population1))
 ucr$city_pop <- as.numeric(ucr$Population1)
 
-# factor state
+# remove punctuation
+ucr[] <- lapply(ucr, gsub, pattern=',', replacement='')
+ucr <- data.frame(ucr)
+
+# convert char to numeric (if its able to be numeric)
+ucr[] <- lapply(ucr, function(x) type.convert(as.character(x), as.is = TRUE))
+
+# factor state and year
 ucr$State <- factor(ucr$State)
+ucr$City <- factor(ucr$City)
+ucr$Year <- factor(ucr$Year)
 
-# subset to 2020 (only data available)
-ucr <- ucr %>% filter(Year == 2020)
+# aggregate up to the state level
+ucr_agg <- ucr %>% group_by(State, Year) %>% summarise(state_violent_crime = sum(Violent.crime),
+                                                      state_murder = sum(Murder),
+                                                      state_rape = sum(Rape2),
+                                                      state_roberry = sum(Robbery),
+                                                      state_aggravated_assault = sum(Aggravated.Assault),
+                                                      state_property_crime = sum(Property.crime),
+                                                      state_burglary = sum(Burglary),
+                                                      state_larceny_theft = sum(Larceny.theft),
+                                                      state_motor_theft = sum(Motor.vehicle.theft),
+                                                      state_arson = sum(Arson3))
 
-# merge data about crime changes depending on the size of the city
-# if the city pop lies within the min and max city sizes from q1, merge data
-ucr <- data.table(ucr)
-crime_changes <- data.table(crime_changes)
-ucr[, dummy := city_pop]
-setkey(crime_changes, city_min, city_max)
-ucr_all = foverlaps(ucr, crime_changes, by.x=c("city_pop", "dummy"), nomatch=0L)[, dummy := NULL]
-
-# rename and rearrange variables
-ucr_all <- ucr_all %>% select(state = State, city = City, year = Year,
-                              city_pop, 
-                              violent_crime_change,
-                              murder_change,
-                              rape_change,
-                              robbery_change,
-                              aggravated_assault_change,
-                              property_crime_change,
-                              burgalry_change,
-                              larceny_theft_change,
-                              motor_theft_change,
-                              arson_change,
-                              violent_crime = `Violent crime`,
-                              murder = Murder,
-                              rape = Rape2,
-                              robbery = Robbery,
-                              aggravated_assault = `Aggravated Assault`,
-                              property_crime = `Property crime`,
-                              burgalry = Burglary,
-                              larceny_theft = `Larceny-theft`,
-                              motor_theft = `Motor vehicle theft`,
-                              arson = Arson3)
-
-# remove + and commas from numbers and make numeric
-ucr_all[] <- lapply(ucr_all, gsub, pattern=',', replacement='')
-ucr_all$violent_crime_change <- as.character(gsub("\\+", "", ucr_all$violent_crime_change))
-ucr_all$property_crime_change <- as.character(gsub("\\+", "", ucr_all$property_crime_change))
-ucr_all$violent_crime <- as.numeric(ucr_all$violent_crime)
-ucr_all$property_crime <- as.numeric(ucr_all$property_crime)
-ucr_all$violent_crime_change <- as.numeric(ucr_all$violent_crime_change)
-ucr_all$property_crime_change <- as.numeric(ucr_all$property_crime_change)
-ucr_all$city_pop <- as.numeric(ucr_all$city_pop)
-
-# aggregate up to state level
-ucr_agg <- ucr_all %>% group_by(state) %>% summarise(ucr_pop = sum(city_pop),
-                                                     violent_crime_avg = mean(violent_crime_change),
-                                                     property_crime_avg = mean(property_crime_change),
-                                                     state_violent_crime = sum(violent_crime),
-                                                     state_property_crime = sum(property_crime))
-# length(unique(ucr$State)) # only 30 states
+# calculate change score for UCR crimes
+ucr_agg <- ucr_agg %>% group_by(State) %>% 
+  mutate(state_violent_crime_change = (state_violent_crime / lag(state_violent_crime)-1)*100,
+         state_murder_change = (state_murder / lag(state_murder)-1)*100,
+         state_rape_change = (state_rape / lag(state_rape)-1)*100,
+         state_roberry_change = (state_roberry / lag(state_roberry)-1)*100,
+         state_aggravated_assault_change = (state_aggravated_assault / lag(state_aggravated_assault)-1)*100,
+         state_property_crime_change = (state_property_crime / lag(state_property_crime)-1)*100,
+         state_burglary_change = (state_burglary / lag(state_burglary)-1)*100,
+         state_larceny_theft_change = (state_larceny_theft / lag(state_larceny_theft)-1)*100,
+         state_motor_theft_change = (state_motor_theft / lag(state_motor_theft)-1)*100,
+         state_arson_change = (state_arson / lag(state_arson)-1)*100
+         )
 
 ######
 # census
