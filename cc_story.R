@@ -131,8 +131,8 @@ adm <- adm %>% select(-`State Abbrev`)
 names(adm)<-make.names(names(adm),unique = TRUE)
 names(population)<-make.names(names(population),unique = TRUE)
 
-adm_backup <- adm
-pop_backup <- population
+adm_analysis <- adm
+pop_analysis <- population
 
 ##########
 # Imputation of multiple columns 
