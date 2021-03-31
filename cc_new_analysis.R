@@ -74,12 +74,14 @@ ucr <- data.frame(ucr)
 ucr[] <- lapply(ucr, function(x) type.convert(as.character(x), as.is = TRUE))
 
 # factor state and year
-ucr$State <- factor(ucr$State)
-ucr$City <- factor(ucr$City)
-ucr$Year <- factor(ucr$Year)
+ucr$state <- factor(ucr$State)
+ucr$city <- factor(ucr$City)
+ucr$year <- factor(ucr$Year)
+ucr <- ucr %>% select(-State,-Year, -City)
 
 # aggregate up to the state level
-ucr_agg <- ucr %>% group_by(State, Year) %>% summarise(state_violent_crime = sum(Violent.crime),
+ucr_agg <- ucr %>% group_by(state, year) %>% summarise(ucr_pop = sum(city_pop),
+                                                      state_violent_crime = sum(Violent.crime),
                                                       state_murder = sum(Murder),
                                                       state_rape = sum(Rape2),
                                                       state_roberry = sum(Robbery),
@@ -91,7 +93,7 @@ ucr_agg <- ucr %>% group_by(State, Year) %>% summarise(state_violent_crime = sum
                                                       state_arson = sum(Arson3))
 
 # calculate change score for UCR crimes
-ucr_agg <- ucr_agg %>% group_by(State) %>% 
+ucr_agg <- ucr_agg %>% group_by(state) %>% 
   mutate(state_violent_crime_change = (state_violent_crime / lag(state_violent_crime)-1)*100,
          state_murder_change = (state_murder / lag(state_murder)-1)*100,
          state_rape_change = (state_rape / lag(state_rape)-1)*100,
@@ -103,6 +105,9 @@ ucr_agg <- ucr_agg %>% group_by(State) %>%
          state_motor_theft_change = (state_motor_theft / lag(state_motor_theft)-1)*100,
          state_arson_change = (state_arson / lag(state_arson)-1)*100
          )
+
+# subset to 2020 so that there is one row per state
+ucr_agg_2020 <- ucr_agg %>% filter(year == 2020)
 
 ######
 # census
@@ -125,7 +130,7 @@ census$state <- factor(census$state)
 ######
 
 # merge
-df <- merge(ucr_agg, census, by = "state", all.x = TRUE)
+df <- merge(census, ucr_agg_2020, by = "state", all.y = TRUE)
 
 # get % of pop that UCR data covers per state
 df <- df %>% mutate(ucr_proportion = ucr_pop/census_pop_2019)
