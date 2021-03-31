@@ -480,5 +480,8 @@ pop_change_comms <- rbind(pop_change_comms_2018, pop_change_comms_2019, pop_chan
 
 adm_pop_change_comms <- merge(adm_change_comms, pop_change_comms, by = c("States","year"),all.x = TRUE, all.y = TRUE)
 
+# lowercase
+names(adm_pop_change_comms)[] <- tolower(names(adm_pop_change_comms)[])
+
 # write csv for comms
 write.csv(adm_pop_change_comms, "shared_data/cc_adm_pop_change_comms.csv")

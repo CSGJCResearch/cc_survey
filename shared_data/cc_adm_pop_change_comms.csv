@@ -1,4 +1,4 @@
-"","States","year","Total.admissions","Total.violation.admissions","Technical.violations.admissions","Total.admissions.pct","Total.violation.admissions.pct","Technical.violations.admissions.pct","Total.population","Total.violation.population","Technical.violations.population","Total.population.pct","Total.violation.population.pct","Technical.violations.population.pct"
+"","states","year","total.admissions","total.violation.admissions","technical.violations.admissions","total.admissions.pct","total.violation.admissions.pct","technical.violations.admissions.pct","total.population","total.violation.population","technical.violations.population","total.population.pct","total.violation.population.pct","technical.violations.population.pct"
 "1","Alabama","2018",14054,6080,2780,NA,NA,NA,27157,306,306,NA,NA,NA
 "2","Alabama","2019",14148,6360,2722,0.668848726341253,4.60526315789473,-2.0863309352518,27922,278,278,2.81695327171632,-9.15032679738562,-9.15032679738562
 "3","Alabama","2020",10080,4761,2080,-28.7531806615776,-25.1415094339623,-23.5855988243938,25344,1,6,-9.23286297543155,-99.6402877697842,-97.841726618705
