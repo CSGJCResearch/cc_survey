@@ -160,11 +160,14 @@ adm_change_anlysis <- adm_change_anlysis %>%  filter(year == 2020) %>%
 
 df_final <- merge(pop_change_anlysis, adm_change_anlysis, by = c("state"), all.x = TRUE, all.y = TRUE)
 # df_final <- merge(df_final, df, by = "state", all.x = TRUE, all.y = TRUE) # keeps all data, NAs
-df_final <- merge(df_final, df, by = "state", all.y = TRUE) # 30 UCR states
+df_final <- merge(df_final, df, by = "state", all.y = TRUE, all.x = TRUE) # 30 UCR states (only 22 overlap)
 
 # rename and rearrange variables
 df_final <- df_final %>% select(state, ucr_pop, census_pop_2019,ucr_proportion,
                     cc_population_change, cc_admissions_change,everything())
+
+# write this csv
+write.csv(df_final, "shared_data/ucr_final_data.csv")
 
 ########
 # Correlate change in crime from 2019 to 2020 with change in total prison admissions and pops 2019-2020
