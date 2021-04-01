@@ -128,7 +128,7 @@ df_final <- merge(df_final,state_abb, by = "states")
 
 # test nc
 north_carolina <- df_final %>% filter(states=="North Carolina") %>% distinct()
-View(north_carolina)
+# View(north_carolina)
 
 # add groups for state labels
 
@@ -148,8 +148,8 @@ line_plot <- ggplot(data=df_final, aes(x=year_plot, y=pop_change, group=states))
   # titles
   ggtitle("State Prison Populations Are Declining") +
   # labels
-  # geom_text(data = subset(df_final, year == "2020"),aes(label = state_abb),
-  #           color="#c8c8c8", size=3, fontface = "bold")
+  geom_text(data = subset(df_final, year == "2020"),aes(label = state_abb),
+            color="#c8c8c8", size=3, fontface = "bold")
 
 # add custom theme
 line_plot + theme_black() + theme(text = element_text(family = "HK Grotesk")) 
