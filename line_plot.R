@@ -130,6 +130,9 @@ df_final <- merge(df_final,state_abb, by = "states")
 north_carolina <- df_final %>% filter(states=="North Carolina") %>% distinct()
 # View(north_carolina)
 
+# add blank field for 2021 for graph purposes
+
+
 # add groups for state labels
 
 
