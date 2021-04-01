@@ -95,6 +95,11 @@ population20 <- population20 %>% filter(States %in% statespop20$States)
 # combine pop data
 population <- rbind(population17, population18, population19, population20)
 # rm(population17, population18, population19, population20) # remove old dfs
+
+# save state abb
+state_abb <- population %>% select(state_abb = `State Abbrev`, states = States)
+
+# remove state abb
 population <- population %>% select(-`State Abbrev`)
 
 # read excel admissions data for 2017-2019
