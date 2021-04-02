@@ -21,7 +21,8 @@ requiredPackages = c('dplyr',
                      'formattable',
                      'scales',
                      'mice',
-                     'VIM'
+                     'VIM',
+                     'finalfit'
 )
 # only downloads packages if needed
 for(p in requiredPackages){
