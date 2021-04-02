@@ -180,6 +180,19 @@ df_final <- df_final %>% select(state, ucr_pop, census_pop_2019,ucr_proportion,
 # write this csv
 write.csv(df_final, "shared_data/ucr_final_data.csv")
 
+########################################################################
+# CHECK FOR MISSING-NESS
+########################################################################
+
+# missing data for a certain feature or sample is more than 5%?
+pMiss <- function(x){sum(is.na(x))/length(x)*100}
+apply(df_final,2,pMiss)
+
+# md.pattern(adm_pop_analysis)
+# marginplot(adm_pop_analysis[c(1,2)])
+# % of data isnt missing info
+aggr_plot <- aggr(df_final, col=c('navyblue','red'), numbers=TRUE, sortVars=TRUE, labels=names(df_final), cex.axis=.7, gap=3, ylab=c("Histogram of missing data","Pattern"))
+
 ########
 # Correlate change in crime from 2019 to 2020 with change in total prison admissions and pops 2019-2020
 ########

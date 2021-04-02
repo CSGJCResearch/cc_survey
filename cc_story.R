@@ -1,6 +1,6 @@
 #######################################
 # Confined and Costly Survey
-# Story
+# Impute values, plots, data for comms
 # by Mari Roberts
 # 3/29/2021
 #######################################
@@ -154,7 +154,58 @@ adm_pop_analysis <- adm_pop_analysis %>% select(-Total.probation.violation.admis
                                                 -Total.violation.admissions,-Total.violation.population)
 
 ######################################################################################################################################################
+# MISSINGNESS
+######################################################################################################################################################
+
+miss_2018 <- adm_pop_analysis %>% filter(year == 2018) %>% select(state = States, admissions_18 = Total.admissions, population_18 = Total.population) 
+miss_2019 <- adm_pop_analysis %>% filter(year == 2019) %>% select(state = States, admissions_19 = Total.admissions, population_19 = Total.population) 
+miss_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% select(state = States, admissions_20 = Total.admissions, population_20 = Total.population) 
+miss_data <- merge(miss_2018, miss_2019, by = c("state"))
+miss_data <- merge(miss_data, miss_2020, by = c("state"))
+
+# examine missing data with ff_glimpse
+explanatory = c("admissions_19", "admissions_20", 
+                "population_18", "population_19", "population_20")
+dependent = "admissions_18"
+miss_data %>% 
+  ff_glimpse(dependent, explanatory)
+
+# visualize missing data and relationships
+miss_data %>%
+  missing_plot()
+
+# pattern of missingness between variables
+miss_data %>% 
+  missing_pattern(dependent, explanatory)
+
+# pairs plots to show relationships between missing values and observed values in all variables
+miss_data %>% 
+  missing_pairs(dependent, explanatory)
+
+# miss_data %>% 
+#   missing_compare(dependent, explanatory) %>% 
+#   # knitr::kable(row.names=FALSE, align = c("l", "l", "r", "r", "r")) # Omit when you run
+
+# remove state variable
+miss_data1 <- miss_data %>% select(-state)
+
+# extracting variables that have missing values
+x <- as.data.frame(abs(is.na(miss_data)))
+
+# elements of x are 1 if a value in the data is missing and 0 if non-missing
+head(miss_data)
+head(x)
+
+# extracting variables that have some missing values
+y <- x[which(sapply(x, sd) > 0)]
+cor(y)
+
+# look at the relationship between the presence of missing values in each variable and the observed values in other variables
+cor(miss_data1, y, use="pairwise.complete.obs")
+
+######################################################################################################################################################
 # IMPUTATION
+# MICE
 ######################################################################################################################################################
 
 # missing data for a certain feature or sample is more than 5%
@@ -176,20 +227,35 @@ summary(temp_data)
 temp_data$imp$Total.admissions
 
 # completed dataset
-imputed_data <- complete(temp_data,1)
+mice_imputed_data <- complete(temp_data,1)
 
 # inspect the distribution of original and imputed data
-# want to see magenta points (imputed) matche the shape of the blue ones (observed)
+# want to see magenta points (imputed) match the shape of the blue ones (observed)
 # plausible values
 xyplot(temp_data,Total.admissions ~ Total.population,pch=18,cex=1)
 densityplot(temp_data)
 
 ######################################################################################################################################################
-# CALCULATE CHANGES
+# IMPUTATION
+# MEAN
+######################################################################################################################################################
+
+# if the column data type is num, impute with mean
+for (cols in colnames(adm_pop_analysis)) {
+  if (cols %in% names(adm_pop_analysis[,sapply(adm_pop_analysis, is.numeric)])) {
+    mean_imputed_data <- adm_pop_analysis %>% group_by(year) %>% mutate(!!cols := replace(!!rlang::sym(cols), is.na(!!rlang::sym(cols)), mean(!!rlang::sym(cols), na.rm=TRUE)))
+  }
+  else {
+    mean_imputed_data <- adm_pop_analysis %>% group_by(year) %>% mutate(!!cols := replace(!!rlang::sym(cols), !!rlang::sym(cols)=="", getmode(!!rlang::sym(cols))))
+  }
+}
+
+######################################################################################################################################################
+# CALCULATE CHANGES / NATUINAL ESTIMATES
 ######################################################################################################################################################
 
 # calculate percent change         
-adm_pop_analysis <- imputed_data %>% group_by(States) %>% mutate(Total.admissions.pct = (Total.admissions / dplyr::lag(Total.admissions) -1)*100)
+adm_pop_analysis <- mean_imputed_data %>% group_by(States) %>% mutate(Total.admissions.pct = (Total.admissions / dplyr::lag(Total.admissions) -1)*100)
 adm_pop_analysis <- adm_pop_analysis %>% group_by(States) %>% mutate(Total.population.pct = (Total.population / dplyr::lag(Total.population) -1)*100)
 
 # create national estimate for admissions and pop change from 2018 to 2020 
@@ -375,51 +441,3 @@ plot1 <- ggplot(df, aes(x=reorder(States, -Technical.violations), y=Technical.vi
                                           paste0("",Technical.violations.pct,"%")),y = 0), color = "#00475d", fill = "white", size = 3) 
 plot1
 
-######################################################################################################################################################
-# DATA FOR COMMS
-######################################################################################################################################################
-# adm
-adm_change_comms_2018 <- adm_change %>% select(States, year, 
-                                               Total.admissions, Total.violation.admissions, 
-                                               Technical.violations.admissions = Technical.violations,
-                                               Total.admissions.pct, Total.violation.admissions.pct,
-                                               Technical.violations.admissions.pct = Technical.violations.pct) %>% filter(year == 2018)
-
-adm_change_comms_2019 <- adm_change %>% select(States, year, Total.admissions, Total.violation.admissions, 
-                                               Technical.violations.admissions = Technical.violations,
-                                               Total.admissions.pct, Total.violation.admissions.pct,
-                                               Technical.violations.admissions.pct = Technical.violations.pct) %>% filter(year == 2019)
-
-adm_change_comms_2020 <- adm_change %>% select(States, year, Total.admissions, Total.violation.admissions, 
-                                               Technical.violations.admissions = Technical.violations,
-                                               Total.admissions.pct, Total.violation.admissions.pct,
-                                               Technical.violations.admissions.pct = Technical.violations.pct) %>% filter(year == 2020)
-
-adm_change_comms <- rbind(adm_change_comms_2018, adm_change_comms_2019, adm_change_comms_2020)
-
-# pop
-
-pop_change_comms_2018 <- pop_change %>% select(States, year, Total.population, Total.violation.population, 
-                                               Technical.violations.population = Technical.violations,
-                                               Total.population.pct, Total.violation.population.pct, 
-                                               Technical.violations.population.pct = Technical.violations.pct) %>% filter(year == 2018)
-
-pop_change_comms_2019 <- pop_change %>% select(States, year, Total.population, Total.violation.population, 
-                                               Technical.violations.population = Technical.violations,
-                                               Total.population.pct, Total.violation.population.pct, 
-                                               Technical.violations.population.pct = Technical.violations.pct) %>% filter(year == 2019)
-
-pop_change_comms_2020 <- pop_change %>% select(States, year, Total.population, Total.violation.population, 
-                                               Technical.violations.population = Technical.violations,
-                                               Total.population.pct, Total.violation.population.pct, 
-                                               Technical.violations.population.pct = Technical.violations.pct) %>% filter(year == 2020)
-
-pop_change_comms <- rbind(pop_change_comms_2018, pop_change_comms_2019, pop_change_comms_2020)
-
-adm_pop_change_comms <- merge(adm_change_comms, pop_change_comms, by = c("States","year"),all.x = TRUE, all.y = TRUE)
-
-# lowercase
-names(adm_pop_change_comms)[] <- tolower(names(adm_pop_change_comms)[])
-
-# write csv for comms
-write.csv(adm_pop_change_comms, "shared_data/cc_adm_pop_change_comms.csv")
