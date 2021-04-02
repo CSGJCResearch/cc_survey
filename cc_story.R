@@ -162,6 +162,7 @@ miss_2019 <- adm_pop_analysis %>% filter(year == 2019) %>% select(state = States
 miss_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% select(state = States, admissions_20 = Total.admissions, population_20 = Total.population) 
 miss_data <- merge(miss_2018, miss_2019, by = c("state"))
 miss_data <- merge(miss_data, miss_2020, by = c("state"))
+miss_data$state <- factor(miss_data$state)
 
 # examine missing data with ff_glimpse
 explanatory = c("admissions_19", "admissions_20", 
@@ -177,6 +178,9 @@ miss_data %>%
 # pattern of missingness between variables
 miss_data %>% 
   missing_pattern(dependent, explanatory)
+
+# 2019 population is missing the most (7)
+aggr(miss_data, prop=FALSE, numbers=TRUE)
 
 # pairs plots to show relationships between missing values and observed values in all variables
 miss_data %>% 
@@ -202,6 +206,15 @@ cor(y)
 
 # look at the relationship between the presence of missing values in each variable and the observed values in other variables
 cor(miss_data1, y, use="pairwise.complete.obs")
+cor(miss_data1, use = "complete.obs")
+
+#####
+# MCAR test
+#####
+
+# MCAR test
+# not missing completely at random
+TestMCARNormality(data = miss_data1,del.lesscases = 1)
 
 ######################################################################################################################################################
 # IMPUTATION
