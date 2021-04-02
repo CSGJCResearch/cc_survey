@@ -20,7 +20,8 @@ requiredPackages = c('dplyr',
                      'data.table',
                      'formattable',
                      'scales',
-                     'mice'
+                     'mice',
+                     'VIM'
 )
 # only downloads packages if needed
 for(p in requiredPackages){
@@ -186,14 +187,12 @@ aggr(miss_data, prop=FALSE, numbers=TRUE)
 miss_data %>% 
   missing_pairs(dependent, explanatory)
 
-# miss_data %>% 
-#   missing_compare(dependent, explanatory) %>% 
-#   # knitr::kable(row.names=FALSE, align = c("l", "l", "r", "r", "r")) # Omit when you run
-
 # remove state variable
 miss_data1 <- miss_data %>% select(-state)
 
+# using correlations to explore missing values
 # extracting variables that have missing values
+# see which variables tend to be missing together
 x <- as.data.frame(abs(is.na(miss_data)))
 
 # elements of x are 1 if a value in the data is missing and 0 if non-missing
@@ -202,11 +201,14 @@ head(x)
 
 # extracting variables that have some missing values
 y <- x[which(sapply(x, sd) > 0)]
+
+# correlations among indicator variables
 cor(y)
 
 # look at the relationship between the presence of missing values in each variable and the observed values in other variables
+# rows are observed variables, and the columns are indicator variables representing missingness
+# ignore the warning message and NA values in the correlation matrix
 cor(miss_data1, y, use="pairwise.complete.obs")
-cor(miss_data1, use = "complete.obs")
 
 #####
 # MCAR test
