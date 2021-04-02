@@ -20,7 +20,9 @@ requiredPackages = c('dplyr',
                      'mice',
                      'Hmisc',
                      'ggpubr',
-                     'corrplot'
+                     'corrplot',
+                     'mice',
+                     'VIM'
 )
 # only downloads packages if needed
 for(p in requiredPackages){
@@ -174,7 +176,6 @@ df_final <- merge(df_final, df, by = "state", all.y = TRUE, all.x = TRUE) # 30 U
 # rename and rearrange variables
 df_final <- df_final %>% select(state, ucr_pop, census_pop_2019,ucr_proportion,
                     cc_population_change, cc_admissions_change,everything())
-
 
 # write this csv
 write.csv(df_final, "shared_data/ucr_final_data.csv")
