@@ -456,4 +456,3 @@ plot1 <- ggplot(df, aes(x=reorder(States, -Technical.violations), y=Technical.vi
              mapping = aes(label = ifelse(Technical.violations.pct>0,paste0("", round(Technical.violations.pct,1),"%"),
                                           paste0("",Technical.violations.pct,"%")),y = 0), color = "#00475d", fill = "white", size = 3) 
 plot1
-
