@@ -51,7 +51,7 @@ getwd <- function(){
 # population19 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2019-Corrected", .name_repair = "universal")
 # population20 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Population 2020-Corrected", .name_repair = "universal")
 
-population17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2017-Table 1.csv")
+# population17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2017-Table 1.csv")
 population18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2018-Corrected-Table 1.csv")
 population19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2019-Corrected-Table 1.csv")
 population20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2020-Corrected-Table 1.csv")
@@ -59,12 +59,12 @@ population20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 20
 # fix pop 2020 for corrected states, this lets you know who has submitted population data so far
 statespop20 <- population20 %>% select(States, Corrected)
 statespop20 <- statespop20 %>% arrange(States)
-statespop20 <- statespop20[-c(4,13,22,29,35,48,51),] # remove duplicate rows
+statespop20 <- statespop20[-c(4,13,21,23,30,36,49,52),] # remove duplicate rows
 statespop20 <- statespop20 %>% filter(States != "NA" & States != "Count" & States != "Total")
 statespop20 <- statespop20 %>% filter(Corrected == "Yes")
 
 # remove unwanted variables
-population17 <- population17 %>% select(-`Population Year`,-X12,-X13)
+# population17 <- population17 %>% select(-`Population Year`,-X12,-X13)
 population18 <- population18 %>% select(-Notes,-Corrected,-X13, -X14)
 population19 <- population19 %>% select(-Notes,-Corrected, -X13)
 population20 <- population20 %>% select(-Notes,-Corrected, -X13, -X14)
@@ -74,17 +74,17 @@ population20 <- population20 %>% select(-Notes,-Corrected, -X13, -X14)
 # population18 <- population18[-c(51:54),] # remove empty rows
 # population19 <- population19[-c(51:54),] # remove empty rows
 # population20 <- population20[-c(51:52),] # remove empty rows
-population17 <- population17 %>% filter(`State Abbrev` != "NA")
+# population17 <- population17 %>% filter(`State Abbrev` != "NA")
 population18 <- population18 %>% filter(`State Abbrev` != "NA")
 population19 <- population19 %>% filter(`State Abbrev` != "NA")
 population20 <- population20 %>% filter(`State Abbrev` != "NA")
 
 # issue with pop 20, some rows were duplicated with NAs - weird bug?
 population20 <- population20 %>% arrange(States)
-population20 <- population20[-c(4,12,21,28,35,47,50),] # remove duplicate rows
+population20 <- population20[-c(4,12,2,22,29,36,48,51),] # remove duplicate rows
 
 # add year variable
-population17$year <- "2017"
+# population17$year <- "2017"
 population18$year <- "2018"
 population19$year <- "2019"
 population20$year <- "2020"
@@ -93,7 +93,7 @@ population20$year <- "2020"
 population20 <- population20 %>% filter(States %in% statespop20$States)
 
 # combine pop data
-population <- rbind(population17, population18, population19, population20)
+population <- rbind(population18, population19, population20)
 # rm(population17, population18, population19, population20) # remove old dfs
 
 # save state abb
@@ -108,7 +108,7 @@ population <- population %>% select(-`State Abbrev`)
 # adm19 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2019-Corrected", .name_repair = "universal")
 # adm20 <- read_xlsx("data/Data for web team 2020 v6 CORRECTED.xlsx", sheet = "Admissions 2020-Corrected", .name_repair = "universal")
 
-adm17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2017-Table 1.csv")
+# adm17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2017-Table 1.csv")
 adm18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2018-Corrected-Table 1.csv")
 adm19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2019-Corrected-Table 1.csv")
 adm20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2020-Corrected-Table 1.csv")
@@ -120,23 +120,23 @@ statesadm20 <- statesadm20 %>% filter(States != "NA" & States != "Count" & State
 statesadm20 <- statesadm20 %>%  filter(Corrected == "Yes")
 
 # remove unwanted variables
-adm17 <- adm17 %>% select(-X11)
+# adm17 <- adm17 %>% select(-X11)
 adm18 <- adm18 %>% select(-Notes, -Corrected, -`Publicly Available Data`,-X14)
 adm19 <- adm19 %>% select(-Notes, -Corrected, -`Publicly Available Data`,-X14)
-adm20 <- adm20 %>% select(-`Admissions Year`,-`Reporting Year`,-`Months Reported`, -Notes, -Corrected, -X16, -X17)
+adm20 <- adm20 %>% select(-`Admissions Year`,-`Reporting Year`,-`Months Reported`, -Notes, -Corrected, -X16, -X17, -X18)
 
 # remove unwanted rows
 # adm17 <- adm17[-c(51:52),] 
 # adm18 <- adm18[-c(51:54),] 
 # adm19 <- adm19[-c(51:54),] 
 # adm20 <- adm20[-c(51:54),] 
-adm17 <- adm17 %>% filter(`State Abbrev` != "NA")
+# adm17 <- adm17 %>% filter(`State Abbrev` != "NA")
 adm18 <- adm18 %>% filter(`State Abbrev` != "NA")
 adm19 <- adm19 %>% filter(`State Abbrev` != "NA")
 adm20 <- adm20 %>% filter(`State Abbrev` != "NA")
 
 # add year variable
-adm17$year <- "2017"
+# adm17$year <- "2017"
 adm18$year <- "2018"
 adm19$year <- "2019"
 adm20$year <- "2020"
@@ -145,7 +145,7 @@ adm20$year <- "2020"
 adm20 <- adm20 %>% filter(States %in% statesadm20$States)
 
 # combine data and remove unwanted data (NA, etc)
-adm <- rbind(adm17, adm18, adm19, adm20)
+adm <- rbind(adm18, adm19, adm20)
 adm <- adm %>% select(-`State Abbrev`)
 # rm(adm17, adm18, adm19, adm20) # remove old dfs
 
@@ -230,7 +230,6 @@ pop_change1 <- population %>% select(States, year, everything()) %>% arrange(des
 adm_change <- adm_change1 %>% 
   mutate(Technical.violations = Technical.probation.violation.admissions + Technical.parole.violation.admissions)
 
-adm_change <- adm_change %>% filter(year != 2017)
 # calculate percent change         
 adm_change <- adm_change %>% group_by(States) %>% mutate(Total.admissions.pct = (Total.admissions / dplyr::lag(Total.admissions) -1)*100)
 adm_change <- adm_change %>% group_by(States) %>% mutate(Total.violation.admissions.pct = (Total.violation.admissions / dplyr::lag(Total.violation.admissions) -1)*100)
@@ -243,7 +242,6 @@ adm_change <- adm_change %>% group_by(States) %>% mutate(New.commitments = (New.
 pop_change <- pop_change1 %>% 
   mutate(Technical.violations = Technical.probation.violation.population + Technical.parole.violation.population)
 
-pop_change <- pop_change %>% filter(year != 2017)
 # calculate percent change         
 pop_change <- pop_change %>% group_by(States) %>% mutate(Total.population.pct = (Total.population / dplyr::lag(Total.population) -1)*100)
 pop_change <- pop_change %>% group_by(States) %>% mutate(Total.violation.population.pct = (Total.violation.population / dplyr::lag(Total.violation.population) -1)*100)
@@ -255,8 +253,4 @@ pop_change <- pop_change %>% group_by(States) %>% mutate(New.commitments = (New.
 # create factor variables
 adm_long$year <- factor(adm_long$year)
 pop_long$year <- factor(pop_long$year)
-
-# remove 2017
-adm_long <- adm_long %>% filter(year != 2017)
-pop_long <- pop_long %>% filter(year != 2017)
 
