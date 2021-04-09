@@ -179,24 +179,39 @@ states_plot + theme_bw() + theme_csgjc
 # costs_pop_df$pop_sup_cost <- (costs_pop_df$pop_sup_cost)/1000000
 # costs_pop_df$pop_tech_cost <- (costs_pop_df$pop_tech_cost)/1000000
 
+# # get costs
+# state_costs <- costs_pop %>% select(states, cost_2020, marginal_cost_2020)
+# 
+# # change to long form
+# state_costs$states <- factor(state_costs$states)
+# state_costs_long <- melt(setDT(state_costs), id.vars = c("states"), variable.name = "type")
+# 
+# # remove states with missing values
+# state_costs_long_noNas <- state_costs_long %>%
+#   group_by(states) %>%
+#   mutate(ind = sum(is.na(value))) %>% 
+#   group_by(states) %>%
+#   filter(!any(ind >=1)) %>%
+#   select(-ind)
+
 ####################################################
-# Barplot comparing marginal and avg costs by state
+# AGGREGATE
 ####################################################
+
+# remove NAs so you have states with marginal and avg costs for comparison
+aggregate <- costs_pop %>% select(states, cost_2020, marginal_cost_2020)
+aggregate <- na.omit(aggregate)
 
 # get costs
-state_costs <- costs_pop %>% select(states, cost_2020, marginal_cost_2020)
+tmp <- costs_pop %>% select(states, pop_sup_cost_2020, pop_sup_marginal_cost_2020)
+aggregate <- merge(aggregate, tmp, by = "states", all.x = TRUE)
+# remove kentucky
+aggregate <- aggregate %>% filter(states != "Kentucky")
 
-# change to long form
-state_costs$states <- factor(state_costs$states)
-state_costs_long <- melt(setDT(state_costs), id.vars = c("states"), variable.name = "type")
-
-# remove states with missing values
-state_costs_long_noNas <- state_costs_long %>%
-  group_by(states) %>%
-  mutate(ind = sum(is.na(value))) %>% 
-  group_by(states) %>%
-  filter(!any(ind >=1)) %>%
-  select(-ind)
+sum(aggregate$pop_sup_cost_2020) # $11,510,033,410
+sum(aggregate$pop_sup_marginal_cost_2020) # $8,865,400,072 
+mean(aggregate$pop_sup_cost_2020) # $605,791,232
+mean(aggregate$pop_sup_marginal_cost_2020) # $466,600,004 
 
 ####################################################
 # Budgets
