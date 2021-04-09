@@ -1,3 +1,10 @@
+
+source("automated_clean.R")
+
+# import fonts
+font_import()
+loadfonts(quiet = TRUE)
+
 ##################
 # Budgets
 ##################
@@ -135,13 +142,18 @@ costs_pop_noNAs <- costs_pop_noNAs[complete.cases(costs_pop_noNAs),]
 ###########
 
 # change data to long form for graphing
-costs_long <- costs_pop_noNAs %>% a
+costs_long <- costs_pop_noNAs %>% select(states, 
+                                         pop_sup_cost_2020, 
+                                         pop_tech_cost_2020, 
+                                         pop_sup_marginal_cost_2020, 
+                                         pop_tech_marginal_cost_2020)
+costs_long$states <- factor(costs_long$states)
+costs_long <- melt(setDT(costs_long), id.vars = c("states"), variable.name = "type")
 
 # custom theme
 theme_csgjc <- theme(axis.ticks = element_blank(),
-                     #axis.text.y = element_blank(),
+                     axis.text.y = element_blank(),
                      axis.text.x = element_text(vjust = 6.5, margin = margin(t = 10),size=10,face="bold"),
-                     axis.text.y = element_text(size=10),
                      axis.title.y = element_blank(),
                      axis.title.x = element_blank(),
                      panel.border = element_blank(),
@@ -150,22 +162,42 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
                      panel.grid.major.y = element_blank(),
                      panel.grid.minor.y = element_blank(),
                      legend.title = element_blank(),
-                     legend.text = element_text(size=10,face="bold"),
-                     legend.position = "right",
+                     # legend.text = element_text(size=10,face="bold"),
+                     legend.position = "top",
                      plot.title = element_text(hjust = 0.5,size = 12, face = "bold"),
                      plot.subtitle = element_text(hjust = 0.5, size = 15),
                      plot.margin = margin(0, 0, 0, 0, "cm"))
 
-# custom function for total population (save lines of code)
-plot1 <- ggplot(costs_pop_noNAs, aes(x=reorder(states, -pop_sup_cost_2020), y=Total.population, fill = year)) +
-    geom_bar(position="dodge", stat="identity") +
-    geom_text(aes(label = scales::comma(Total.population)),position = position_dodge2(width = 0.9, preserve = "single"), vjust=2, hjust=.5,color="white", size=3.5, width = 0.65,fontface = "bold") +
-    scale_y_continuous(labels = scales::comma) +
-    scale_fill_manual(values = c("#0db4e4", "#007392")) +
-    # ggtitle("States With Increases in Population Over 2%") + 
-    theme_bw()
-plot1 <- plot1 + theme_csgjc 
+temp <- costs_long %>% filter(type == "pop_sup_cost_2020" | type == "pop_sup_marginal_cost_2020")
+# change to cost in millions
+temp$value_mil <- temp$value/1000000
+temp <- merge(temp, state_abb, all.x = TRUE)
 
+# create ranking system for plots
+temp2 <- temp %>% filter(type == "pop_sup_cost_2020") %>% distinct()
+temp2 <- temp2 %>% arrange(-value)
+temp2$rank <- seq.int(nrow(temp2))
+temp2 <- temp2 %>% select(states, rank)
+
+# merge ranks with data
+temp <- merge(temp, temp2, all.x = TRUE, by = "states")
+
+# round and add comma to values
+temp$value_mil <- round(temp$value_mil,1)
+temp$value_mil <- formattable::comma(temp$value_mil, digits=1)
+
+states_plot <- ggplot(temp, aes(x=reorder(state_abb, rank), y=value_mil, fill=type)) + 
+  geom_bar(stat="identity", position=position_dodge()) +
+  scale_fill_manual(values = c("#0db4e4", "#007392"), 
+                    labels = c("Average Cost","Marginal Cost")) +
+  geom_text(aes(label = paste("$",value_mil, sep = "")), 
+            position = position_dodge(0.9),vjust = -0.5, size = 3) +
+  labs(
+    title = "Yearly Average and Marginal Supervision Costs (in Millions) by State"
+    #subtitle = "Yearly Average and Marginal Supervision Costs (in Millions) by State"
+  )
+  
+states_plot + theme_bw() + theme_csgjc + theme(text = element_text(family = "roboto")) 
 # # calc by millions
 # costs_pop_df$pop_sup_cost <- (costs_pop_df$pop_sup_cost)/1000000
 # costs_pop_df$pop_tech_cost <- (costs_pop_df$pop_tech_cost)/1000000
