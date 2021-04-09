@@ -30,7 +30,7 @@ theme_black = function(base_size = 12,base_family = "") {
       legend.key.width = NULL,      
       legend.text = element_text(size = base_size*0.8, color = "white"),  
       legend.title = element_text(size = base_size*0.8, face = "bold", hjust = 0, color = "white"),  
-      legend.position = "right",  
+      legend.position = "none",  
       legend.text.align = NULL,  
       legend.title.align = NULL,  
       legend.direction = "vertical",  
@@ -130,14 +130,8 @@ df_final <- merge(df_final,state_abb, by = "states")
 north_carolina <- df_final %>% filter(states=="North Carolina") %>% distinct()
 # View(north_carolina)
 
-# add blank field for 2021 for graph purposes
-
-
-# add groups for state labels
-
-
 ############################
-# plot
+# line plot
 ############################
 
 line_plot <- ggplot(data=df_final, aes(x=year_plot, y=pop_change, group=states)) +
@@ -157,4 +151,138 @@ line_plot <- ggplot(data=df_final, aes(x=year_plot, y=pop_change, group=states))
 # add custom theme
 line_plot + theme_black() + theme(text = element_text(family = "HK Grotesk")) 
 
+################################################################################################################
+# create a line plot showing the decline in pop, adm and no change in violation admissions/pop
+################################################################################################################
 
+# custom function which finds pct change from previous year, removes states with missing data
+baseline_pct <- function(df,variable){
+  
+  # dup for cleaning
+  line_data <- df
+  
+  # factor, change to numeric, etc.
+  line_data <- line_data %>% select(states = States, 
+                                    year, 
+                                    total = variable)
+  line_data$states <- factor(line_data$states)
+  line_data$total <- as.numeric(line_data$total)
+  
+  # remove states with NA in total
+  df_1 <- line_data %>%
+    group_by(states) %>%
+    mutate(ind = sum(is.na(total))) %>% 
+    group_by(states) %>%
+    filter(!any(ind >=1)) %>%
+    select(-ind)
+  
+  # if state doesn't have 2020 data, remove
+  states_missing <- df_1 %>%
+    group_by(states) %>%
+    filter(!any(year == "2020"))
+  
+  # subset to states that have 2018 and 2020 data for plot
+  '%!in%' <- function(x,y)!('%in%'(x,y))
+  df_1 <- df_1 %>% filter(states %!in% states_missing$states)
+  
+  # totals by year
+  df_year <- df_1 %>% group_by(year) %>% summarise(total = sum(total))
+  
+  # calculate pct change between 100% baseline(requires some separating)
+  df_year <- df_year %>%
+    arrange(year) %>%
+    mutate(pct_change = (total/lag(total) - 1) * 100)
+  df_year <- df_year %>% mutate(temp = case_when(year == 2018 ~ 100,
+                                                 year == 2019 ~ 100+pct_change,
+                                                 year == 2020 ~ pct_change))
+  df_year <- df_year %>% mutate(temp2 = (temp+lag(temp)))
+  df_year <- df_year %>% mutate(baseline_change = case_when(year==2018 ~ 100, 
+                                                            year == 2019 ~ temp, 
+                                                            year == 2020 ~ temp2)) 
+  df_year <- df_year %>% select(year, total, baseline_change)
+  
+  return(df_year)
+}
+
+#############
+# Population - pop, violation pop, tech pop
+#############
+
+pop_line <- baseline_pct(pop_change, "Total.population")
+pop_line$type = "Total Population"
+pop_line <- pop_line %>% select(-total)
+
+viol_pop_line <- baseline_pct(pop_change, "Total.violation.population")
+viol_pop_line$type = "Total Violation Population"
+viol_pop_line <- viol_pop_line %>% select(-total)
+
+tech_viol_pop_line <- baseline_pct(pop_change, "Technical.violations")
+tech_viol_pop_line$type = "Technical Violation Population"
+tech_viol_pop_line <- tech_viol_pop_line %>% select(-total)
+
+#############
+# Admissions - adm, violation adm, tech adm
+#############
+
+adm_line <- baseline_pct(adm_change, "Total.admissions")
+adm_line$type = "Total Admissions"
+adm_line <- adm_line %>% select(-total)
+
+viol_adm_line <- baseline_pct(adm_change, "Total.violation.admissions")
+viol_adm_line$type = "Total Violation Admissions"
+viol_adm_line <- viol_adm_line %>% select(-total)
+
+tech_viol_adm_line <- baseline_pct(adm_change, "Technical.violations")
+tech_viol_adm_line$type = "Technical Violation Admissions"
+tech_viol_adm_line <- tech_viol_adm_line %>% select(-total)
+
+#############
+# merge
+#############
+
+line_data <- rbind(pop_line,
+                   viol_pop_line,
+                   tech_viol_pop_line,
+                   adm_line,
+                   viol_adm_line,
+                   tech_viol_adm_line)
+
+#############
+# line plot
+#############
+
+# change year categories for plotting purposes
+line_data <- line_data %>% mutate(year_plot = ifelse(year==2018,0,ifelse(year==2019,1,2)))
+
+line_plot <- ggplot(data=line_data, aes(x=year_plot, y=baseline_change, group=type)) +
+  # lines
+  geom_line(alpha = .6,size=.8, aes(color=type)) + theme_dark() + 
+  # axis
+  scale_x_continuous(breaks=seq(0,2,1),labels = c("2018","2019","2020")) + 
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  # titles
+  ggtitle("State Prison Populations Are Declining") +
+  # labels
+  geom_text(data = subset(line_data, year == "2020"),aes(label = type),
+            color="#c8c8c8", size=3, fontface = "bold")
+
+# add custom theme
+line_plot + theme_black() + theme(text = element_text(family = "HK Grotesk")) 
+
+####3
+
+line_plot2 <- ggplot(line_data, aes(x=year_plot, y=baseline_change, group=type)) +
+  geom_line(aes(color=type),alpha = .6,size=.8)+
+  geom_point()+
+  # scale_color_manual(values=c('#9ed4ef','#9ed4ef','#9ed4ef','#d6df23','#d6df23','#d6df23'))+
+  # scale_linetype_manual(values=c("solid", "solid","solid", "solid","solid", "solid"))+
+  # axis
+  scale_x_continuous(breaks=seq(0,2,1),labels = c("2018","2019","2020")) + 
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  ggtitle("Populations And Admissions Are Declining") +
+  # labels
+  geom_text(data = subset(line_data, year == "2020"),aes(label = type),
+            color="#c8c8c8", size=3, fontface = "bold")  
+
+# add custom theme
+line_plot2 + theme_black() + theme(text = element_text(family = "HK Grotesk")) 
