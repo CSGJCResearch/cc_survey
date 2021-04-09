@@ -213,6 +213,8 @@ sum(aggregate$pop_sup_marginal_cost_2020) # $8,865,400,072
 mean(aggregate$pop_sup_cost_2020) # $605,791,232
 mean(aggregate$pop_sup_marginal_cost_2020) # $466,600,004 
 
+write.csv(costs_pop, "shared_data/avg_marginal_costs_by_state.csv")
+
 ####################################################
 # Budgets
 ####################################################
