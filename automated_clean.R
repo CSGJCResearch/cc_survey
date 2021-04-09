@@ -100,6 +100,7 @@ population <- rbind(population18, population19, population20)
 
 # save state abb
 state_abb <- population %>% select(state_abb = State.Abbrev, states = States)
+state_abb <- state_abb %>% distinct()
 
 # remove state abb
 population <- population %>% select(-State.Abbrev)

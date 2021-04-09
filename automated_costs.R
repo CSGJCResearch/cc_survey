@@ -6,48 +6,12 @@ font_import()
 loadfonts(quiet = TRUE)
 
 ##################
-# Budgets
-##################
-
-# get 2019 budget data
-budget <- read.csv("data/NASBO - State Corrections Expenditures - 1991 to current.csv")
-budget <- budget %>% filter(Year == "2019" | Year == "2020") %>% select(States = State, budget_2019 = `Corrections....Total.Funds`)
-budget <- budget %>% filter(States != "Puerto Rico") 
-
-# get 2020 budget data
-budget_2020 <- read.csv("data/budget_2020.csv")
-budget_2020$Year <- "2020"
-budget_2020 <- budget_2020 %>% select(States, budget_2020 = budget)
-
-# combine data
-budget <- merge(budget, budget_2020, by = c("States"))
-
-# change from factor to char
-budget$budget_2019 <- as.character(budget$budget_2019)
-budget$budget_2020 <- as.character(budget$budget_2020)
-
-# change by millions to actual number
-budget$budget_2019 = as.character(gsub("\\$", "", budget$budget_2019)) # remove $ sign
-budget$budget_2020 = as.character(gsub("\\$", "", budget$budget_2020)) 
-budget$budget_2019 = as.character(gsub("\\M", "", budget$budget_2019)) # remove M
-budget$budget_2020 = as.character(gsub("\\M", "", budget$budget_2020)) 
-budget$budget_2019 = as.character(gsub("\\,", "", budget$budget_2019)) # remove comma
-budget$budget_2020 = as.character(gsub("\\,", "", budget$budget_2020)) 
-budget$budget_2019 <- as.numeric(budget$budget_2019)
-budget$budget_2020 <- as.numeric(budget$budget_2020)
-budget$budget_2019 <- budget$budget_2019*1000000
-budget$budget_2020 <- budget$budget_2020*1000000
-
-# add commas
-budget$budget_2019 <- comma(budget$budget_2019,digits = 0)
-budget$budget_2020 <- comma(budget$budget_2020,digits = 0)
-
-##################
 # 2021 Reported Costs
 ##################
 
 # get cost data for 2021
-costs <- read.csv("data/Data for web team 2020 v6 CORRECTED/Survey 2021-Table 1.csv")
+# costs <- read.csv("data/Data for web team 2020 v6 CORRECTED/Survey 2021-Table 1.csv")
+costs <- read_xlsx("data/Data for web team 2021 v1.xlsx", sheet = "Length of Stay and Costs 2021", .name_repair = "universal")
 
 # marginal costs
 marginal_costs <- costs %>% select(states = States, marginal_cost_2020 = Marginal)
@@ -124,36 +88,66 @@ costs_pop <- costs_pop %>% mutate(pop_sup_marginal_cost_2020 = total_pop_2020*ma
                                   pop_tech_marginal_cost_2020 = tech_pop_2020*marginal_cost_2020*365) 
 
 # remove NAs for plotting the differences between cost and marginal cost
-costs_pop_noNAs <- costs_pop %>% select(states,
-                                        year,
-                                        total_pop_2020,
-                                        tech_pop_2020,
-                                        cost_2020,
-                                        pop_sup_cost_2020,
-                                        pop_tech_cost_2020,
-                                        marginal_cost_2020,
-                                        pop_sup_marginal_cost_2020,
-                                        pop_tech_marginal_cost_2020) 
-costs_pop_noNAs <- costs_pop_noNAs %>% filter(year != 2019) # remove costs where we had to use 2019 costs when 2020 was missing
-costs_pop_noNAs <- costs_pop_noNAs[complete.cases(costs_pop_noNAs),]
+# costs_pop_noNAs <- costs_pop %>% select(states,
+#                                         year,
+#                                         total_pop_2020,
+#                                         tech_pop_2020,
+#                                         cost_2020,
+#                                         pop_sup_cost_2020,
+#                                         pop_tech_cost_2020,
+#                                         marginal_cost_2020,
+#                                         pop_sup_marginal_cost_2020,
+#                                         pop_tech_marginal_cost_2020) 
+# costs_pop_noNAs <- costs_pop_noNAs %>% filter(year != 2019) # remove costs where we had to use 2019 costs when 2020 was missing
+# costs_pop_noNAs <- costs_pop_noNAs[complete.cases(costs_pop_noNAs),]
 
 ###########
 # Plots
 ###########
 
 # change data to long form for graphing
-costs_long <- costs_pop_noNAs %>% select(states, 
-                                         pop_sup_cost_2020, 
-                                         pop_tech_cost_2020, 
-                                         pop_sup_marginal_cost_2020, 
-                                         pop_tech_marginal_cost_2020)
+costs_long <- costs_pop %>% select(states, 
+                                   pop_sup_cost_2020, 
+                                   pop_tech_cost_2020, 
+                                   pop_sup_marginal_cost_2020, 
+                                   pop_tech_marginal_cost_2020)
 costs_long$states <- factor(costs_long$states)
 costs_long <- melt(setDT(costs_long), id.vars = c("states"), variable.name = "type")
+
+temp1 <- costs_long %>% filter(type == "pop_sup_cost_2020" | type == "pop_sup_marginal_cost_2020")
+# change to cost in millions
+temp1$value_mil <- temp1$value/1000000
+temp1 <- merge(temp1, state_abb, by = "states")
+
+# create ranking system for plots
+temp2 <- temp1 %>% filter(type == "pop_sup_cost_2020") %>% distinct()
+temp2 <- temp2 %>% arrange(-value)
+temp2$rank <- seq.int(nrow(temp2))
+temp2 <- temp2 %>% select(states, rank)
+
+# merge ranks with data
+temp <- merge(temp1, temp2, all.x = TRUE, by = "states")
+
+# remove states with missing values
+temp <- temp %>%
+  group_by(states) %>%
+  mutate(ind = sum(is.na(value))) %>% 
+  group_by(states) %>%
+  filter(!any(ind >=1)) %>%
+  select(-ind)
+
+# round and add comma to values
+temp$value_mil <- round(temp$value_mil,1)
+temp$value_mil <- formattable::comma(temp$value_mil, digits=1)
+
+####################################################
+# Barplot comparing marginal and avg yearly costs by state
+####################################################
 
 # custom theme
 theme_csgjc <- theme(axis.ticks = element_blank(),
                      axis.text.y = element_blank(),
-                     axis.text.x = element_text(vjust = 6.5, margin = margin(t = 10),size=10,face="bold"),
+                     axis.text.x = element_text(vjust = 15, margin = margin(t = 1),size=10,face="bold"),
                      axis.title.y = element_blank(),
                      axis.title.x = element_blank(),
                      panel.border = element_blank(),
@@ -168,39 +162,78 @@ theme_csgjc <- theme(axis.ticks = element_blank(),
                      plot.subtitle = element_text(hjust = 0.5, size = 15),
                      plot.margin = margin(0, 0, 0, 0, "cm"))
 
-temp <- costs_long %>% filter(type == "pop_sup_cost_2020" | type == "pop_sup_marginal_cost_2020")
-# change to cost in millions
-temp$value_mil <- temp$value/1000000
-temp <- merge(temp, state_abb, all.x = TRUE)
-
-# create ranking system for plots
-temp2 <- temp %>% filter(type == "pop_sup_cost_2020") %>% distinct()
-temp2 <- temp2 %>% arrange(-value)
-temp2$rank <- seq.int(nrow(temp2))
-temp2 <- temp2 %>% select(states, rank)
-
-# merge ranks with data
-temp <- merge(temp, temp2, all.x = TRUE, by = "states")
-
-# round and add comma to values
-temp$value_mil <- round(temp$value_mil,1)
-temp$value_mil <- formattable::comma(temp$value_mil, digits=1)
-
 states_plot <- ggplot(temp, aes(x=reorder(state_abb, rank), y=value_mil, fill=type)) + 
   geom_bar(stat="identity", position=position_dodge()) +
   scale_fill_manual(values = c("#0db4e4", "#007392"), 
-                    labels = c("Average Cost","Marginal Cost")) +
+                    labels = c("Average Cost (In Millions)","Marginal Cost (In Millions)")) +
+  scale_y_continuous(expand = c(0.15, 0)) +
   geom_text(aes(label = paste("$",value_mil, sep = "")), 
-            position = position_dodge(0.9),vjust = -0.5, size = 3) +
+            position = position_dodge(0.9), size = 3, angle = 90, hjust = -.1) +
   labs(
-    title = "Yearly Average and Marginal Supervision Costs (in Millions) by State"
-    #subtitle = "Yearly Average and Marginal Supervision Costs (in Millions) by State"
+    title = "Yearly Average and Marginal Supervision Costs by State"
+    #subtitle = "Yearly Average and Marginal Supervision Costs by State"
   )
   
-states_plot + theme_bw() + theme_csgjc + theme(text = element_text(family = "roboto")) 
-# # calc by millions
+states_plot + theme_bw() + theme_csgjc 
+# calc by millions
 # costs_pop_df$pop_sup_cost <- (costs_pop_df$pop_sup_cost)/1000000
 # costs_pop_df$pop_tech_cost <- (costs_pop_df$pop_tech_cost)/1000000
+
+####################################################
+# Barplot comparing marginal and avg costs by state
+####################################################
+
+# get costs
+state_costs <- costs_pop %>% select(states, cost_2020, marginal_cost_2020)
+
+# change to long form
+state_costs$states <- factor(state_costs$states)
+state_costs_long <- melt(setDT(state_costs), id.vars = c("states"), variable.name = "type")
+
+# remove states with missing values
+state_costs_long_noNas <- state_costs_long %>%
+  group_by(states) %>%
+  mutate(ind = sum(is.na(value))) %>% 
+  group_by(states) %>%
+  filter(!any(ind >=1)) %>%
+  select(-ind)
+
+####################################################
+# Budgets
+####################################################
+
+# get 2019 budget data
+budget <- read.csv("data/NASBO - State Corrections Expenditures - 1991 to current.csv")
+budget <- budget %>% filter(Year == "2019" | Year == "2020") %>% select(States = State, budget_2019 = `Corrections....Total.Funds`)
+budget <- budget %>% filter(States != "Puerto Rico") 
+
+# get 2020 budget data
+budget_2020 <- read.csv("data/budget_2020.csv")
+budget_2020$Year <- "2020"
+budget_2020 <- budget_2020 %>% select(States, budget_2020 = budget)
+
+# combine data
+budget <- merge(budget, budget_2020, by = c("States"))
+
+# change from factor to char
+budget$budget_2019 <- as.character(budget$budget_2019)
+budget$budget_2020 <- as.character(budget$budget_2020)
+
+# change by millions to actual number
+budget$budget_2019 = as.character(gsub("\\$", "", budget$budget_2019)) # remove $ sign
+budget$budget_2020 = as.character(gsub("\\$", "", budget$budget_2020)) 
+budget$budget_2019 = as.character(gsub("\\M", "", budget$budget_2019)) # remove M
+budget$budget_2020 = as.character(gsub("\\M", "", budget$budget_2020)) 
+budget$budget_2019 = as.character(gsub("\\,", "", budget$budget_2019)) # remove comma
+budget$budget_2020 = as.character(gsub("\\,", "", budget$budget_2020)) 
+budget$budget_2019 <- as.numeric(budget$budget_2019)
+budget$budget_2020 <- as.numeric(budget$budget_2020)
+budget$budget_2019 <- budget$budget_2019*1000000
+budget$budget_2020 <- budget$budget_2020*1000000
+
+# add commas
+budget$budget_2019 <- comma(budget$budget_2019,digits = 0)
+budget$budget_2020 <- comma(budget$budget_2020,digits = 0)
 
 ####################################################
 # AUTOMATED TABLES
