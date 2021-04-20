@@ -86,21 +86,10 @@ adm_pop_analysis <- adm_pop_analysis %>% select(States, year, everything()) %>% 
 adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017)
 
 # remove unwanted variables
-# adm_pop_analysis <- adm_pop_analysis %>% select(-Total.probation.violation.admissions, -Total.parole.violation.admissions, 
-#                                                 -Technical.probation.violation.admissions,-Technical.parole.violation.admissions,
-#                                                 -New.offense.parole.violation.admissions,-New.offense.probation.violation.admissions,
-#                                                 -Total.probation.violation.population, -Total.parole.violation.population, 
-#                                                 -Technical.probation.violation.population,-Technical.parole.violation.population,
-#                                                 -New.offense.parole.violation.population,-New.offense.probation.violation.population,
-#                                                 -Total.violation.admissions,-Total.violation.population)
-
-names(adm_pop_analysis)
-
-# remove unwanted variables
 adm_pop_analysis <- adm_pop_analysis %>% select(-New.commitments.admissions, -New.commitments.population)
 
 ######################################################################################################################################################
-# MISSINGNESS
+# CHECK MISSINGNESS
 ######################################################################################################################################################
 
 miss_2018 <- adm_pop_analysis %>% filter(year == 2018) %>% select(state = States, admissions_18 = Total.admissions, population_18 = Total.population) 
@@ -200,25 +189,6 @@ cor(miss_data1, y, use="pairwise.complete.obs")
 # MEAN
 ######################################################################################################################################################
 
-# if the column data type is num, impute with mean
-# getmode <- function(v){
-#   v=v[nchar(as.character(v))>0]
-#   uniqv <- unique(v)
-#   uniqv[which.max(tabulate(match(v, uniqv)))]
-# }
-
-# for (cols in colnames(adm_pop_analysis)) {
-#   if (cols %in% names(adm_pop_analysis[,sapply(adm_pop_analysis, is.numeric)])) {
-#     mean_imputed_data <- adm_pop_analysis %>% group_by(year) %>% mutate(!!cols := replace(!!rlang::sym(cols), is.na(!!rlang::sym(cols)), mean(!!rlang::sym(cols), na.rm=TRUE)))
-#     
-#   }
-#   else {
-#     
-#     mean_imputed_data <- adm_pop_analysis %>% group_by(year) %>% mutate(!!cols := replace(!!rlang::sym(cols), !!rlang::sym(cols)=="", getmode(!!rlang::sym(cols))))
-#     
-#   }
-# }
-
 # Create mean
 mean_imputed_data <-  adm_pop_analysis %>% 
   group_by(year) %>% 
@@ -252,28 +222,86 @@ adm_pop_analysis <- mean_imputed_data %>% group_by(States) %>% mutate(Total.admi
                                                                       Total.violation.population.pct = (Total.violation.population.mean / dplyr::lag(Total.violation.population.mean) -1)*100
                                                                       )
 
-# create national estimate for admissions and pop change from 2018 to 2020 
+# rearrange data
+adm_pop_analysis <- adm_pop_analysis %>% 
+  select(sort(names(.)))
+adm_pop_analysis <- adm_pop_analysis %>% select(States, year, everything())
+
+# change data types
 adm_pop_analysis$year <- factor(adm_pop_analysis$year)
 adm_pop_analysis$Total.admissions.mean <- as.numeric(adm_pop_analysis$Total.admissions.mean )
 adm_pop_analysis$Total.population.mean  <- as.numeric(adm_pop_analysis$Total.population.mean )
 adm_pop_analysis$Total.violation.admissions.mean  <- as.numeric(adm_pop_analysis$Total.violation.admissions.mean )
 adm_pop_analysis$Total.violation.population.mean  <- as.numeric(adm_pop_analysis$Total.violation.population.mean )
 
-adm_pop_national <- adm_pop_analysis %>% group_by(year) %>% dplyr::summarise(total.admissions = sum(Total.admissions.mean ),
-                                                                             total.population = sum(Total.population.mean ),
-                                                                             total.violation.admissions = sum(Total.violation.admissions.mean ),
-                                                                             total.violation.population = sum(Total.violation.population.mean ))
+# sum of variables
+adm_pop_national <- adm_pop_analysis %>% group_by(year) %>% dplyr::summarise(# admissions
+                                                                             total.admissions = sum(Total.admissions.mean),
+                                                                             total.violation.admissions = sum(Total.violation.admissions.mean),
+                                                                             prob.admissions = sum(Total.probation.violation.admissions.mean),
+                                                                             new.prob.admissions = sum(New.offense.probation.violation.admissions.mean),
+                                                                             tech.prob.admissions = sum(Technical.probation.violation.admissions.mean),
+                                                                             parole.admissions = sum(Total.parole.violation.admissions.mean),
+                                                                             new.parole.admissions = sum(New.offense.parole.violation.admissions.mean),
+                                                                             tech.parole.admissions = sum(Technical.parole.violation.admissions.mean),
+                                                                             # population
+                                                                             total.population = sum(Total.population.mean),
+                                                                             total.violation.population = sum(Total.violation.population.mean),
+                                                                             prob.population = sum(Total.probation.violation.population.mean),
+                                                                             new.prob.population = sum(New.offense.probation.violation.population.mean),
+                                                                             tech.prob.population = sum(Technical.probation.violation.population.mean),
+                                                                             parole.population = sum(Total.parole.violation.population.mean),
+                                                                             new.parole.population = sum(New.offense.parole.violation.population.mean),
+                                                                             tech.parole.population = sum(Technical.parole.violation.population.mean)
+                                                                             )
 
-adm_pop_national <- adm_pop_national %>%
-  mutate(total.admissions.pct = (total.admissions / dplyr::lag(total.admissions) -1)*100,
-         total.admissions.change = total.admissions - lag(total.admissions),
-         total.population.pct = (total.population / dplyr::lag(total.population) -1)*100,
-         total.population.change = total.population - lag(total.population),
-         total.violation.admissions.pct = (total.violation.admissions / dplyr::lag(total.violation.admissions) -1)*100,
-         total.violation.admissions.change = total.violation.admissions - lag(total.violation.admissions),
-         total.violation.population.pct = (total.violation.population / dplyr::lag(total.violation.population) -1)*100,
-         total.violation.population.change = total.violation.population - lag(total.violation.population)
-         )
+# transpose data
+national_estimates = t(adm_pop_national)
+national_estimates <- data.frame(national_estimates)
+national_estimates <- tibble::rownames_to_column(national_estimates, "type")
+national_estimates <- national_estimates %>% select(type, year2018 = X1, year2019 = X2, year2020 = X3)
+national_estimates <- national_estimates %>% filter(type != "year")
+
+# change data types
+national_estimates$year2018 <- as.numeric(national_estimates$year2018)
+national_estimates$year2019 <- as.numeric(national_estimates$year2019)
+national_estimates$year2020 <- as.numeric(national_estimates$year2020)
+
+# create changes variables
+national_estimates <- national_estimates %>% mutate(change_18_19 = year2018-year2019,
+                                                    change_19_20 = year2019-year2020,
+                                                    change_18_20 = year2018-year2020,
+                                                    pct_18_19 = ((year2019-year2018)/year2018)*100,
+                                                    pct_19_20 = ((year2020-year2019)/year2019)*100,
+                                                    pct_18_20 = ((year2020-year2018)/year2018)*100
+                                                    )
+
+# save data to send to comms
+write.csv(national_estimates, "shared_data/national_estimates.csv")
+
+############
+# NUMBERS FOR SLIDES
+############
+
+# pre pandemic violations
+admissions_2019 <- national_estimates[1, "year2019"]
+violations_2019 <- national_estimates[2, "year2019"]
+violations_2019/admissions_2019*100 # 41%
+
+
+# # create national estimate for admissions and pop change from 2018 to 2020 
+# adm_pop_national <- adm_pop_national %>%
+#   mutate(total.admissions.pct = (total.admissions / dplyr::lag(total.admissions) -1)*100,
+#          total.admissions.change = total.admissions - lag(total.admissions),
+#          total.population.pct = (total.population / dplyr::lag(total.population) -1)*100,
+#          total.population.change = total.population - lag(total.population),
+#          total.violation.admissions.pct = (total.violation.admissions / dplyr::lag(total.violation.admissions) -1)*100,
+#          total.violation.admissions.change = total.violation.admissions - lag(total.violation.admissions),
+#          total.violation.population.pct = (total.violation.population / dplyr::lag(total.violation.population) -1)*100,
+#          total.violation.population.change = total.violation.population - lag(total.violation.population)
+#          )
+# 
+# View(adm_pop_national)
 
 ######################################################################################################################################################
 # Costs
@@ -289,7 +317,7 @@ costs <- costs %>% select(States, Cost = Cost.per.day)
 costs$cost_2020 = as.numeric(gsub("\\$", "", costs$Cost))
 costs <- costs %>% select(-Cost)
 
-# get cost data from 2019
+# get cost data from 2019 - using costs from 2019 if cost data is missing for 2020
 costs2019 <- read_excel("data/Cost Per Day For Calculation.xlsx")
 costs2019 <- costs2019 %>% select(States, cost_2019 = `State Reported CostPerDay`)
 
@@ -298,7 +326,7 @@ setDT(costs); setDT(costs2019)
 costs[is.na(cost_2020), cost_2020 := costs2019[.SD, on=.(States), x.cost_2019]]
 costs <- merge(costs, costs2019, by = "States")
 
-# creat costs_pop df
+# select variables and filter by year
 costs_pop_2019 <- adm_pop_analysis %>% filter(year == 2019) %>% select(States, 
                                                                        Total.population.mean, 
                                                                        Total.violation.population.mean, 
@@ -318,7 +346,6 @@ costs_pop_2019 <- costs_pop_2019 %>%  mutate(total_population_2019 = Total.popul
          -Technical.parole.violation.population.mean,
          -Total.violation.population.mean,
          -Total.population.mean)
-
 costs_pop_2020 <- costs_pop_2020 %>%  mutate(total_population_2020 = Total.population.mean,
                                              total_viol_population_2020 = Total.violation.population.mean,
                                              technical_population_2020 = Technical.probation.violation.population.mean + Technical.parole.violation.population.mean) %>%
@@ -345,8 +372,17 @@ costs_pop_df <- costs_pop_df %>% select(States, cost_2019,cost_2020,
                                         pop_tech_cost_2019,pop_tech_cost_2020,
                                         everything())
 
-avg_sup_cost <- mean(costs_pop_df$pop_sup_cost_2020)
-avg_sup_cost # $746,152,781
+avg_sup_cost <- mean(costs_pop_df$viol_pop_sup_cost_2020)
+avg_sup_cost # $170,564,027
+
+# average cost to supervise for 2019 and 2020
+data.numcols <- costs_pop_df[, sapply(costs_pop_df, is.numeric)]
+all.means <- apply(data.numcols, 2, mean)
+all.means <- colMeans(data.numcols)
+all.means <- data.frame(all.means)
+all.means <- tibble::rownames_to_column(all.means, "type")
+all.means <- all.means %>% select(type, averages = all.means)
+all.means$averages <- format(all.means$averages, scientific=F)
 
 #########################################
 # prison info
