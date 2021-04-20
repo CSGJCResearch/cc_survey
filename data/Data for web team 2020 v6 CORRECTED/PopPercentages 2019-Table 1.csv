@@ -1,0 +1,55 @@
+State Abbrev,States,Total Non-Violation Population,Total Violation Population,Total Probation Violation Population,Total Parole Violation Population,Probation New Offense Violation Population,Probation Technical Violation Population,Parole Technical Violation Population,Parole New Offense Violation Population,Population Year
+AK,Alaska,64%,36%,30%,6%,19%,11%,2%,4%,2019
+AL,Alabama,99%,1%,1%,0.4%,  ,1%,0%,  ,2019
+AR,Arkansas,53%,47%,17%,30%,14%,3%,5%,25%,2019
+AZ,Arizona,,,,,  ,  ,  ,  ,2019
+CA,California,75%,25%,9%,16%,6%,3%,0%,16%,2019
+CO,Colorado,79%,21%,0.4%,21%,0.3%,0.1%,7%,14%,2019
+CT,Connecticut,,,,,  ,  ,  ,  ,2019
+DE,Delaware,90%,10%,10%,,  ,  ,  ,  ,2019
+FL,Florida,86%,14%,13%,1%,8%,5%,0.4%,0.3%,2019
+GA,Georgia,,,,,  ,  ,  ,  ,2019
+HI,Hawaii,66%,34%,15%,19%,12%,3%,4%,15%,2019
+IA,Iowa,68%,32%,21%,11%,11%,10%,4%,7%,2019
+ID,Idaho,57%,43%,29%,14%,21%,8%,3%,11%,2019
+IL,Illinois,86%,14%,,14%,  ,  ,9%,5%,2019
+IN,Indiana,,,,,  ,  ,  ,  ,2019
+KS,Kansas,70%,30%,23%,7%,9%,14%,  ,7%,2019
+KY,Kentucky,,,,,  ,  ,  ,  ,2019
+LA,Louisiana,70%,30%,11%,19%,3%,8%,3%,16%,2019
+MA,Massachusetts,97%,3%,0%,3%,  ,  ,2%,1%,2019
+MD,Maryland,92%,8%,4%,4%,  ,  ,  ,  ,2019
+ME,Maine,,,,,  ,  ,  ,  ,2019
+MI,Michigan,96%,4%,,4%,  ,  ,4%,  ,2019
+MN,Minnesota,70%,30%,12%,18%,  ,12%,12%,6%,2019
+MO,Missouri,48%,52%,32%,20%,19%,13%,8%,12%,2019
+MS,Mississippi,,,,,  ,  ,  ,  ,2019
+MT,Montana,86%,14%,8%,6%,3%,5%,5%,1%,2019
+NC,North Carolina,71%,29%,17%,12%,16%,1%,0%,12%,2019
+ND,North Dakota,64%,36%,25%,11%,  ,  ,  ,  ,2019
+NE,Nebraska,87%,13%,7%,6%,  ,  ,2%,4%,2019
+NH,New Hampshire,98%,2%,0%,2%,  ,0%,2%,  ,2019
+NJ,New Jersey,,,,,  ,  ,  ,  ,2019
+NM,New Mexico,,,,,  ,  ,  ,  ,2019
+NV,Nevada,79%,21%,13%,8%,1%,12%,7%,1%,2019
+NY,New York,78%,22%,,22%,  ,  ,10%,12%,2019
+OH,Ohio,,,,,  ,  ,  ,  ,2019
+OK,Oklahoma,91%,9%,9%,0%,3%,6%,  ,  ,2019
+OR,Oregon,89%,11%,10%,1%,5%,5%,1%,0%,2019
+PA,Pennsylvania,85%,15%,,15%,  ,  ,6%,9%,2019
+RI,Rhode Island,68%,32%,27%,5%,23%,4%,2%,3%,2019
+SC,South Carolina,84%,16%,9%,7%,  ,  ,  ,  ,2019
+SD,South Dakota,53%,47%,15%,32%,5%,10%,24%,8%,2019
+TN,Tennessee,,,,,  ,  ,  ,  ,2019
+TX,Texas,78%,22%,17%,5%,  ,  ,1%,4%,2019
+UT,Utah,49%,51%,22%,29%,  ,  ,  ,  ,2019
+VA,Virginia,59%,41%,39%,2%,35%,4%,0%,2%,2019
+VT,Vermont,84%,16%,5%,11%,  ,  ,  ,  ,2019
+WA,Washington,61%,39%,,39%,  ,  ,14%,25%,2019
+WI,Wisconsin,48%,52%,20%,32%,11%,9%,17%,15%,2019
+WV,West Virginia,87%,13%,13%,,1%,12%,  ,  ,2019
+WY,Wyoming,70%,30%,19%,11%,1%,18%,8%,3%,2019
+,,,,,,,,,,
+,Total,77%,23%,11%,11%,8%,3%,3%,8%,
+,,,,,,,,,,
+,Count,39,39,34,36,22,25,30,28,

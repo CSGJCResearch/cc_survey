@@ -46,53 +46,17 @@ getwd <- function(){
 
 # read excel population data for 2017-2019
 # read_xlsx is causing issues and creating duplicate rows
-population18 <- read_xlsx("data/Data for web team 2021 v1.xlsx", sheet = "Population 2018-Corrected", .name_repair = "universal")
-population19 <- read_xlsx("data/Data for web team 2021 v1.xlsx", sheet = "Population 2019-Corrected", .name_repair = "universal")
-population20 <- read_xlsx("data/Data for web team 2021 v1.xlsx", sheet = "Population 2020-Corrected", .name_repair = "universal")
-
-# population17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2017-Table 1.csv")
-# population18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2018-Corrected-Table 1.csv")
-# population19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2019-Corrected-Table 1.csv")
-# population20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2020-Corrected-Table 1.csv")
-
-# fix pop 2020 for corrected states, this lets you know who has submitted population data so far
-statespop20 <- population20 %>% select(States, Corrected)
-statespop20 <- statespop20 %>% arrange(States)
-statespop20 <- statespop20[-c(4,13,21,23,30,36,49,52),] # remove duplicate rows
-statespop20 <- statespop20 %>% filter(States != "NA" & States != "Count" & States != "Total")
-statespop20 <- statespop20 %>% filter(Corrected == "Yes")
+population18 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Population 2018", .name_repair = "universal")
+population19 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Population 2019", .name_repair = "universal")
+population20 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Population 2020", .name_repair = "universal")
 
 # remove unwanted variables
-# population17 <- population17 %>% select(-`Population Year`,-X12,-X13)
-# population18 <- population18 %>% select(-Notes,-Corrected,-X13, -X14)
-# population19 <- population19 %>% select(-Notes,-Corrected, -X13)
-# population20 <- population20 %>% select(-Notes,-Corrected, -X13, -X14)
-population18 <- population18 %>% select(-Notes,-Corrected)
-population19 <- population19 %>% select(-Notes,-Corrected)
-population20 <- population20 %>% select(-Notes,-Corrected)
-
-# remove rows
-# population17 <- population17[-c(51:52),]
-# population18 <- population18[-c(51:54),] # remove empty rows
-# population19 <- population19[-c(51:54),] # remove empty rows
-# population20 <- population20[-c(51:52),] # remove empty rows
-# population17 <- population17 %>% filter(State.Abbrev != "NA")
-population18 <- population18 %>% filter(State.Abbrev != "NA" | State.Abbrev != "Total" | State.Abbrev != "Count")
-population19 <- population19 %>% filter(State.Abbrev != "NA" | State.Abbrev != "Total" | State.Abbrev != "Count")
-population20 <- population20 %>% filter(State.Abbrev != "NA" | State.Abbrev != "Total" | State.Abbrev != "Count")
-
-# issue with pop 20, some rows were duplicated with NAs - weird bug?
-population20 <- population20 %>% arrange(States)
-population20 <- population20[-c(4,12,20,22,29,36,48,51),] # remove duplicate rows
+population20 <- population20 %>% select(-Numbers.were.corrected.or.validated.in.the.2021.survey.)
 
 # add year variable
-# population17$year <- "2017"
 population18$year <- "2018"
 population19$year <- "2019"
 population20$year <- "2020"
-
-# subset to states that have submitted
-population20 <- population20 %>% filter(States %in% statespop20$States)
 
 # combine pop data
 population <- rbind(population18, population19, population20)
@@ -106,49 +70,17 @@ state_abb <- state_abb %>% distinct()
 population <- population %>% select(-State.Abbrev)
 
 # read excel admissions data for 2017-2019
-
-adm18 <- read_xlsx("data/Data for web team 2021 v1.xlsx", sheet = "Admissions 2018-Corrected", .name_repair = "universal")
-adm19 <- read_xlsx("data/Data for web team 2021 v1.xlsx", sheet = "Admissions 2019-Corrected", .name_repair = "universal")
-adm20 <- read_xlsx("data/Data for web team 2021 v1.xlsx", sheet = "Admissions 2020-Corrected", .name_repair = "universal")
-
-# adm17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2017-Table 1.csv")
-# adm18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2018-Corrected-Table 1.csv")
-# adm19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2019-Corrected-Table 1.csv")
-# adm20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2020-Corrected-Table 1.csv")
-
-# fix adm 2020 for corrected states, this lets you know who has submitted adm data so far
-statesadm20 <- adm20 %>% select(States, Corrected)
-statesadm20 <- statesadm20 %>% arrange(States)
-statesadm20 <- statesadm20 %>% filter(States != "NA" & States != "Count" & States != "Total")
-statesadm20 <- statesadm20 %>%  filter(Corrected == "Yes")
+adm18 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
+adm19 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+adm20 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
 
 # remove unwanted variables
-# adm17 <- adm17 %>% select(-X11)
-# adm18 <- adm18 %>% select(-Notes, -Corrected, -`Publicly Available Data`,-X14)
-# adm19 <- adm19 %>% select(-Notes, -Corrected, -`Publicly Available Data`,-X14)
-# adm20 <- adm20 %>% select(-`Admissions Year`,-`Reporting Year`,-`Months Reported`, -Notes, -Corrected, -X16, -X17, -X18)
-adm18 <- adm18 %>% select(-Notes, -Corrected)
-adm19 <- adm19 %>% select(-Notes, -Corrected)
-adm20 <- adm20 %>% select(-`Admissions.Year`,-`Reporting.Year`,-`Months.Reported`, -Notes, -Corrected)
-
-# remove unwanted rows
-# adm17 <- adm17[-c(51:52),] 
-# adm18 <- adm18[-c(51:54),] 
-# adm19 <- adm19[-c(51:54),] 
-# adm20 <- adm20[-c(51:54),] 
-# adm17 <- adm17 %>% filter(State.Abbrev != "NA")
-adm18 <- adm18 %>% filter(States != "NA" & States != "Count" & States != "Total")
-adm19 <- adm19 %>% filter(States != "NA" & States != "Count" & States != "Total")
-adm20 <- adm20 %>% filter(States != "NA" & States != "Count" & States != "Total")
+adm20 <- adm20 %>% select(-`Admissions.Year`,-`Reporting.Year`,-`Months.Reported`, -Numbers.were.corrected.or.validated.in.the.2021.survey.)
 
 # add year variable
-# adm17$year <- "2017"
 adm18$year <- "2018"
 adm19$year <- "2019"
 adm20$year <- "2020"
-
-# subset to states that have submitted
-adm20 <- adm20 %>% filter(States %in% statesadm20$States)
 
 # combine data and remove unwanted data (NA, etc)
 adm <- rbind(adm18, adm19, adm20)

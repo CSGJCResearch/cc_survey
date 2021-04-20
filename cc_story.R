@@ -68,72 +68,7 @@ getwd <- function(){
   return(wd)
 }
 
-# read excel population data for 2017-2019
-population17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2017-Table 1.csv")
-population18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2018-Corrected-Table 1.csv")
-population19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2019-Corrected-Table 1.csv")
-population20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Population 2020-Corrected-Table 1.csv")
-
-# remove unwanted variables
-population17 <- population17 %>% select(-`Population Year`,-X12,-X13)
-population18 <- population18 %>% select(-Notes,-Corrected,-X13, -X14)
-population19 <- population19 %>% select(-Notes,-Corrected, -X13)
-population20 <- population20 %>% select(-Notes,-Corrected, -X13, -X14)
-
-# remove rows
-population17 <- population17 %>% filter(`State Abbrev` != "NA")
-population18 <- population18 %>% filter(`State Abbrev` != "NA")
-population19 <- population19 %>% filter(`State Abbrev` != "NA")
-population20 <- population20 %>% filter(`State Abbrev` != "NA")
-
-# issue with pop 20, some rows were duplicated with NAs - weird bug?
-population20 <- population20 %>% arrange(States)
-population20 <- population20[-c(4,12,21,28,35,47,50),] # remove duplicate rows
-
-# add year variable
-population17$year <- "2017"
-population18$year <- "2018"
-population19$year <- "2019"
-population20$year <- "2020"
-
-# combine pop data
-population <- rbind(population17, population18, population19, population20)
-population <- population %>% select(-`State Abbrev`)
-
-# read excel admissions data for 2017-2019
-adm17 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2017-Table 1.csv")
-adm18 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2018-Corrected-Table 1.csv")
-adm19 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2019-Corrected-Table 1.csv")
-adm20 <- read_csv("data/Data for web team 2020 v6 CORRECTED/Admissions 2020-Corrected-Table 1.csv")
-
-# remove unwanted variables
-adm17 <- adm17 %>% select(-X11)
-adm18 <- adm18 %>% select(-Notes, -Corrected, -`Publicly Available Data`,-X14)
-adm19 <- adm19 %>% select(-Notes, -Corrected, -`Publicly Available Data`,-X14)
-adm20 <- adm20 %>% select(-`Admissions Year`,-`Reporting Year`,-`Months Reported`, -Notes, -Corrected, -X16, -X17)
-
-# remove unwanted rows
-adm17 <- adm17 %>% filter(`State Abbrev` != "NA")
-adm18 <- adm18 %>% filter(`State Abbrev` != "NA")
-adm19 <- adm19 %>% filter(`State Abbrev` != "NA")
-adm20 <- adm20 %>% filter(`State Abbrev` != "NA")
-
-# add year variable
-adm17$year <- "2017"
-adm18$year <- "2018"
-adm19$year <- "2019"
-adm20$year <- "2020"
-
-# combine data and remove unwanted data (NA, etc)
-adm <- rbind(adm17, adm18, adm19, adm20)
-adm <- adm %>% select(-`State Abbrev`)
-# rm(adm17, adm18, adm19, adm20) # remove old dfs
-
-# replace spaces in variable names with periods
-names(adm)<-make.names(names(adm),unique = TRUE)
-names(population)<-make.names(names(population),unique = TRUE)
-
-# dup for later
+# dup for cleaning
 adm_analysis <- adm
 pop_analysis <- population
 
