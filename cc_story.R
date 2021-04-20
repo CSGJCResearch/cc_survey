@@ -192,6 +192,8 @@ densityplot(temp_data)
 ######################################################################################################################################################
 
 # if the column data type is num, impute with mean
+# install.packages("populationPDXdesign")
+library("populationPDXdesign")
 for (cols in colnames(adm_pop_analysis)) {
   if (cols %in% names(adm_pop_analysis[,sapply(adm_pop_analysis, is.numeric)])) {
     mean_imputed_data <- adm_pop_analysis %>% group_by(year) %>% mutate(!!cols := replace(!!rlang::sym(cols), is.na(!!rlang::sym(cols)), mean(!!rlang::sym(cols), na.rm=TRUE)))
