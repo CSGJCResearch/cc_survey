@@ -358,31 +358,60 @@ costs_pop_2020 <- costs_pop_2020 %>%  mutate(total_population_2020 = Total.popul
 costs_pop_df <- merge(costs_pop_2019, costs, by = "States", all.x = TRUE, all.y = TRUE)
 costs_pop_df <- merge(costs_pop_df, costs_pop_2020, by = "States", all.x = TRUE, all.y = TRUE)
 
-# calc costs
-costs_pop_df <- costs_pop_df %>% mutate(pop_sup_cost_2019 = total_population_2019*cost_2019*365,
-                                        viol_pop_sup_cost_2019 = total_viol_population_2019*cost_2019*365,
-                                        pop_tech_cost_2019 = technical_population_2019*cost_2019*365,
-                                        pop_sup_cost_2020 = total_population_2020*cost_2020*365,
-                                        viol_pop_sup_cost_2020 = total_viol_population_2020*cost_2020*365,
-                                        pop_tech_cost_2020 = technical_population_2020*cost_2020*365) 
+# prevent rounding
+options(digits=20)
 
-# rearrange data
-costs_pop_df <- costs_pop_df %>% select(States, cost_2019,cost_2020,
-                                        pop_sup_cost_2019,pop_sup_cost_2020,
-                                        pop_tech_cost_2019,pop_tech_cost_2020,
-                                        everything())
+# sum columns
+costs_final <- costs_pop_df %>% select(-cost_2020, -cost_2019)
+costs_final <- costs_final %>%
+  summarize_if(is.numeric, sum, na.rm=TRUE)
+costs_final$total <- "total"
 
-avg_sup_cost <- mean(costs_pop_df$viol_pop_sup_cost_2020)
-avg_sup_cost # $170,564,027
+# transpose
+costs_final <- recast(costs_final, variable~total, value.var='value')
 
-# average cost to supervise for 2019 and 2020
-data.numcols <- costs_pop_df[, sapply(costs_pop_df, is.numeric)]
-all.means <- apply(data.numcols, 2, mean)
-all.means <- colMeans(data.numcols)
-all.means <- data.frame(all.means)
-all.means <- tibble::rownames_to_column(all.means, "type")
-all.means <- all.means %>% select(type, averages = all.means)
-all.means$averages <- format(all.means$averages, scientific=F)
+# add avg costs per day
+costs_final$avg_cost_per_day_19 <- mean(costs_pop_df$cost_2019)
+costs_final$avg_cost_per_day_20 <- mean(costs_pop_df$cost_2020)
+
+# add cost per day depending on year
+costs_final <- costs_final %>% mutate(avg_cost_per_day = ifelse(variable == "total_population_2019"|
+                                                                variable == "total_viol_population_2019"|
+                                                                variable == "technical_population_2019", 
+                                                                avg_cost_per_day_19, avg_cost_per_day_20))
+costs_final <- costs_final %>% select(-avg_cost_per_day_19,-avg_cost_per_day_20) # remove unwanted variables
+
+# calculate total cost
+costs_final <- costs_final %>% mutate(yearly_cost = avg_cost_per_day*total*365)
+
+# save as csv
+write.csv(costs_final, "shared_data/costs_pop.csv")
+
+# # # calc costs
+# costs_pop_df <- costs_pop_df %>% mutate(pop_sup_cost_2019 = total_population_2019*cost_2019*365,
+#                                         viol_pop_sup_cost_2019 = total_viol_population_2019*cost_2019*365,
+#                                         pop_tech_cost_2019 = technical_population_2019*cost_2019*365,
+#                                         pop_sup_cost_2020 = total_population_2020*cost_2020*365,
+#                                         viol_pop_sup_cost_2020 = total_viol_population_2020*cost_2020*365,
+#                                         pop_tech_cost_2020 = technical_population_2020*cost_2020*365)
+# 
+# # rearrange data
+# costs_pop_df <- costs_pop_df %>% select(States, cost_2019,cost_2020,
+#                                         pop_sup_cost_2019,pop_sup_cost_2020,
+#                                         pop_tech_cost_2019,pop_tech_cost_2020,
+#                                         everything())
+# 
+# avg_sup_cost <- mean(costs_pop_df$viol_pop_sup_cost_2020)
+# avg_sup_cost # $170,564,027
+# 
+# # average cost to supervise for 2019 and 2020
+# data.numcols <- costs_pop_df[, sapply(costs_pop_df, is.numeric)]
+# all.means <- apply(data.numcols, 2, mean)
+# all.means <- colMeans(data.numcols)
+# all.means <- data.frame(all.means)
+# all.means <- tibble::rownames_to_column(all.means, "type")
+# all.means <- all.means %>% select(type, averages = all.means)
+# all.means$averages <- format(all.means$averages, scientific=F)
 
 #########################################
 # prison info
