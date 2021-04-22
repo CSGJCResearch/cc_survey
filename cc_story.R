@@ -255,6 +255,14 @@ adm_pop_national <- adm_pop_analysis %>% group_by(year) %>% dplyr::summarise(# a
                                                                              tech.parole.population = sum(Technical.parole.violation.population.mean)
                                                                              )
 
+# # transpose
+# x = colnames(adm_pop_national[,-1])
+# tmp <- melt(adm_pop_national, id.vars = "year", 
+#             measure.vars = x, 
+#             variable_name = "type", 
+#             value.name = "value", 
+#             na.rm = TRUE)
+
 # transpose data
 national_estimates = t(adm_pop_national)
 national_estimates <- data.frame(national_estimates)
@@ -277,7 +285,7 @@ national_estimates <- national_estimates %>% mutate(change_18_19 = year2018-year
                                                     )
 
 # save data to send to comms
-write.csv(national_estimates, "shared_data/national_estimates.csv")
+write.xlsx(national_estimates, "shared_data/national_estimates.xlsx")
 
 ############
 # NUMBERS FOR SLIDES
@@ -381,11 +389,11 @@ costs_final <- costs_final %>% mutate(avg_cost_per_day = ifelse(variable == "tot
                                                                 avg_cost_per_day_19, avg_cost_per_day_20))
 costs_final <- costs_final %>% select(-avg_cost_per_day_19,-avg_cost_per_day_20) # remove unwanted variables
 
-# calculate total cost
-costs_final <- costs_final %>% mutate(yearly_cost = avg_cost_per_day*total*365)
+# # calculate total cost
+# costs_final <- costs_final %>% mutate(yearly_cost = avg_cost_per_day*total*365)
 
 # save as csv
-write.csv(costs_final, "shared_data/costs_pop.csv")
+write.xlsx(costs_final, "shared_data/costs_pop.xlsx")
 
 # # # calc costs
 # costs_pop_df <- costs_pop_df %>% mutate(pop_sup_cost_2019 = total_population_2019*cost_2019*365,
