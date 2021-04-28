@@ -46,9 +46,14 @@ getwd <- function(){
 
 # read excel population data for 2017-2019
 # read_xlsx is causing issues and creating duplicate rows
-population18 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Population 2018", .name_repair = "universal")
-population19 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Population 2019", .name_repair = "universal")
-population20 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Population 2020", .name_repair = "universal")
+population18 <- read_xlsx("data/Data for web team 2021 v3.xlsx", sheet = "Population 2018", .name_repair = "universal")
+population19 <- read_xlsx("data/Data for web team 2021 v3.xlsx", sheet = "Population 2019", .name_repair = "universal")
+population20 <- read_xlsx("data/Data for web team 2021 v3.xlsx", sheet = "Population 2020", .name_repair = "universal")
+
+# read excel admissions data for 2017-2019
+adm18 <- read_xlsx("data/Data for web team 2021 v3.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
+adm19 <- read_xlsx("data/Data for web team 2021 v3.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+adm20 <- read_xlsx("data/Data for web team 2021 v3.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
 
 # remove unwanted variables
 population20 <- population20 %>% select(-Numbers.were.corrected.or.validated.in.the.2021.survey.)
@@ -69,10 +74,9 @@ state_abb <- state_abb %>% distinct()
 # remove state abb
 population <- population %>% select(-State.Abbrev)
 
-# read excel admissions data for 2017-2019
-adm18 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
-adm19 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
-adm20 <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
+##############
+# Admissions
+##############
 
 # remove unwanted variables
 adm20 <- adm20 %>% select(-`Admissions.Year`,-`Reporting.Year`,-`Months.Reported`, -Numbers.were.corrected.or.validated.in.the.2021.survey.)
