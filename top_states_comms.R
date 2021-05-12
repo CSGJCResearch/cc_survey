@@ -87,4 +87,4 @@ top_5_2020 <- top_5_2020 %>% select(States, pct_19_20)
 # combine data
 top_10_states <- cbind(top_5_2019, top_5_2020)
 
-write.csv(top_10_states, "top5adm.csv")
+write.csv(top_10_states, "shared_data/top5adm.csv")
