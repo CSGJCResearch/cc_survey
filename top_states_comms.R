@@ -45,7 +45,7 @@ top_5_2020 <- top_5_2020 %>% select(States, pct_19_20)
 # combine data
 top_10_states <- cbind(top_5_2019, top_5_2020)
 
-write.csv(top_10_states, "top5pop.csv")
+write.csv(top_10_states, "shared_data/top5pop.csv")
 
 # read excel admissions data for 2018-2019
 admissions18 <- read_xlsx("data/Data for web team 2021 v5.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
