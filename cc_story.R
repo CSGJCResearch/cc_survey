@@ -276,9 +276,9 @@ national_estimates$year2019 <- as.numeric(national_estimates$year2019)
 national_estimates$year2020 <- as.numeric(national_estimates$year2020)
 
 # create changes variables
-national_estimates <- national_estimates %>% mutate(change_18_19 = year2018-year2019,
-                                                    change_19_20 = year2019-year2020,
-                                                    change_18_20 = year2018-year2020,
+national_estimates <- national_estimates %>% mutate(change_18_19 = year2019-year2018,
+                                                    change_19_20 = year2020-year2019,
+                                                    change_18_20 = year2020-year2018,
                                                     pct_18_19 = ((year2019-year2018)/year2018)*100,
                                                     pct_19_20 = ((year2020-year2019)/year2019)*100,
                                                     pct_18_20 = ((year2020-year2018)/year2018)*100
@@ -316,10 +316,11 @@ violations_2019/admissions_2019*100 # 41%
 ######################################################################################################################################################
 
 # get cost data for 2021
-costs <- read_xlsx("data/Data for web team 2021 v2.xlsx", sheet = "Costs", .name_repair = "universal")
+costs <- read_xlsx("data/Cost data 2021.xlsx", .name_repair = "universal")
+costs <- costs %>% filter(States != "NA")
 
 # select general cost info
-costs <- costs %>% select(States, Cost = Cost.per.day)
+costs <- costs %>% select(States, Cost)
 
 # remove dollar sign
 costs$cost_2020 = as.numeric(gsub("\\$", "", costs$Cost))
