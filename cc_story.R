@@ -287,36 +287,12 @@ national_estimates <- national_estimates %>% mutate(change_18_19 = year2019-year
 # save data to send to comms
 write.xlsx(national_estimates, "shared_data/national_estimates.xlsx")
 
-############
-# NUMBERS FOR SLIDES
-############
-
-# pre pandemic violations
-admissions_2019 <- national_estimates[1, "year2019"]
-violations_2019 <- national_estimates[2, "year2019"]
-violations_2019/admissions_2019*100 # 41%
-
-
-# # create national estimate for admissions and pop change from 2018 to 2020 
-# adm_pop_national <- adm_pop_national %>%
-#   mutate(total.admissions.pct = (total.admissions / dplyr::lag(total.admissions) -1)*100,
-#          total.admissions.change = total.admissions - lag(total.admissions),
-#          total.population.pct = (total.population / dplyr::lag(total.population) -1)*100,
-#          total.population.change = total.population - lag(total.population),
-#          total.violation.admissions.pct = (total.violation.admissions / dplyr::lag(total.violation.admissions) -1)*100,
-#          total.violation.admissions.change = total.violation.admissions - lag(total.violation.admissions),
-#          total.violation.population.pct = (total.violation.population / dplyr::lag(total.violation.population) -1)*100,
-#          total.violation.population.change = total.violation.population - lag(total.violation.population)
-#          )
-# 
-# View(adm_pop_national)
-
 ######################################################################################################################################################
 # Costs
 ######################################################################################################################################################
 
 # get cost data for 2021
-costs <- read_xlsx("data/Cost data 2021.xlsx", .name_repair = "universal")
+costs <- read_xlsx("data/Cost and notes data 2021.xlsx", .name_repair = "universal")
 costs <- costs %>% filter(States != "NA")
 
 # select general cost info

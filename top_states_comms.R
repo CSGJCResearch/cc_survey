@@ -35,6 +35,13 @@ rev_pop <- rev_pop %>% mutate(# change_18_20 = violation_population_18-violation
 # reorder variables
 rev_pop <- rev_pop %>% select(States, pct_18_19, pct_19_20, everything())
 
+# number of states over 10% from 2019 to 2020
+over10pct <- rev_pop %>% filter(pct_19_20 < -.10)
+# number of states over 10% from 2018 to 2019
+over10priorpct <- rev_pop %>% filter(pct_18_19 < -.10)
+over5priorpct <- rev_pop %>% filter(pct_18_19 < -.05)
+over2priorpct <- rev_pop %>% filter(pct_18_19 < -.02)
+
 # top 5 states in 2019
 top_5_2019 <- rev_pop %>% arrange(pct_18_19) %>% head(5)
 top_5_2019 <- top_5_2019 %>% select(States, pct_18_19)
