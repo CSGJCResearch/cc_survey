@@ -36,11 +36,11 @@ rev_pop <- rev_pop %>% mutate(# change_18_20 = violation_population_18-violation
 rev_pop <- rev_pop %>% select(States, pct_18_19, pct_19_20, everything())
 
 # number of states over 10% from 2019 to 2020
-over10pct <- rev_pop %>% filter(pct_19_20 < -.10)
+pop_over10pct <- rev_pop %>% filter(pct_19_20 < -.10)
 # number of states over 10% from 2018 to 2019
-over10priorpct <- rev_pop %>% filter(pct_18_19 < -.10)
-over5priorpct <- rev_pop %>% filter(pct_18_19 < -.05)
-over2priorpct <- rev_pop %>% filter(pct_18_19 < -.02)
+pop_over10priorpct <- rev_pop %>% filter(pct_18_19 < -.10)
+pop_over5priorpct <- rev_pop %>% filter(pct_18_19 < -.05)
+pop_over2priorpct <- rev_pop %>% filter(pct_18_19 < -.02)
 
 # top 5 states in 2019
 top_5_2019 <- rev_pop %>% arrange(pct_18_19) %>% head(5)
@@ -52,7 +52,9 @@ top_5_2020 <- top_5_2020 %>% select(States, pct_19_20)
 # combine data
 top_10_states <- cbind(top_5_2019, top_5_2020)
 
-write.csv(top_10_states, "shared_data/top5pop.csv")
+#######
+# Admissions
+#######
 
 # read excel admissions data for 2018-2019
 admissions18 <- read_xlsx("data/Data for web team 2021 v5.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
@@ -84,6 +86,19 @@ rev_adm <- rev_adm %>% mutate(# change_18_20 = violation_admissions_18-violation
 # reorder variables
 rev_adm <- rev_adm %>% select(States, pct_18_19, pct_19_20, everything())
 
+# round
+rev_adm$pct_18_19_rd <- round(rev_adm$pct_18_19, 2)
+rev_adm$pct_19_20_rd <- round(rev_adm$pct_19_20, 2)
+
+# number of states over 10% from 2019 to 2020
+adm_over10pct <- rev_adm %>% filter(pct_19_20 < -.10)
+adm_over50pct <- rev_adm %>% filter(pct_19_20 < -.50)
+
+# number of states over 10% from 2018 to 2019
+adm_over10priorpct <- rev_adm %>% filter(pct_18_19 <= -.10)
+adm_over5priorpct <- rev_adm %>% filter(pct_18_19 < -.05)
+adm_over2priorpct <- rev_adm %>% filter(pct_18_19 < -.02)
+
 # top 5 states in 2019
 top_5_2019 <- rev_adm %>% arrange(pct_18_19) %>% head(5)
 top_5_2019 <- top_5_2019 %>% select(States, pct_18_19)
@@ -94,4 +109,16 @@ top_5_2020 <- top_5_2020 %>% select(States, pct_19_20)
 # combine data
 top_10_states <- cbind(top_5_2019, top_5_2020)
 
-write.csv(top_10_states, "shared_data/top5adm.csv")
+# combine state drops numbers
+rev_adm <- rev_adm %>% mutate(adm_pct_18_19 = pct_18_19,
+                              adm_pct_19_20 = pct_19_20) %>% select(-pct_18_19,-pct_19_20) 
+rev_pop <- rev_pop %>% mutate(pop_pct_18_19 = pct_18_19,
+                              pop_pct_19_20 = pct_19_20) %>% select(-pct_18_19,-pct_19_20)
+rev_changes <- merge(rev_adm, rev_pop, by = "States")
+
+# save csvs
+write.csv(top_10_states, "shared_data/Top 5 states population drops.csv")
+write.csv(top_10_states, "shared_data/Top 5 states admissions drops.csv")
+write.csv(rev_changes, "shared_data/State violation changes by year v1.csv")
+
+
