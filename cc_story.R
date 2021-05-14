@@ -279,9 +279,9 @@ national_estimates$year2020 <- as.numeric(national_estimates$year2020)
 national_estimates <- national_estimates %>% mutate(change_18_19 = year2019-year2018,
                                                     change_19_20 = year2020-year2019,
                                                     change_18_20 = year2020-year2018,
-                                                    pct_18_19 = ((year2019-year2018)/year2018)*100,
-                                                    pct_19_20 = ((year2020-year2019)/year2019)*100,
-                                                    pct_18_20 = ((year2020-year2018)/year2018)*100
+                                                    pct_18_19 = ((year2019-year2018)/year2018),
+                                                    pct_19_20 = ((year2020-year2019)/year2019),
+                                                    pct_18_20 = ((year2020-year2018)/year2018)
                                                     )
 
 # save data to send to comms
