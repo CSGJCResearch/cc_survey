@@ -88,6 +88,25 @@ adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017)
 # remove unwanted variables
 adm_pop_analysis <- adm_pop_analysis %>% select(-New.commitments.admissions, -New.commitments.population)
 
+par_prob_states <- adm_pop_analysis %>% filter(States == "Oklahoma" |
+                                               States == "Rhode Island" | 
+                                                 States == "Missouri" | 
+                                                 States == "Maine" | 
+                                                 States == "Alabama" | 
+                                                 States == "California" | 
+                                                 States == "Connecticut" | 
+                                                 States == "North Dakota" | 
+                                                 States == "Illinois")
+
+par_prob_states <- par_prob_states %>% select(States,
+                                              year,
+                                              Total.probation.violation.admissions,
+                                              Total.parole.violation.admissions,
+                                              Total.probation.violation.population,
+                                              Total.parole.violation.population)
+# 
+# par_prob_states <- data.frame(t(par_prob_states))
+
 ######################################################################################################################################################
 # CHECK MISSINGNESS
 ######################################################################################################################################################
