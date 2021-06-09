@@ -85,7 +85,9 @@ rev_adm <- rev_adm %>% mutate(# change_18_20 = violation_admissions_18-violation
   # pct_18_20 = ((violation_admissions_20-violation_admissions_18)/violation_admissions_18)*100
 )
 
-# reorder variables
+# decline
+adm_decline_states <- rev_adm %>% filter(pct_19_20 < 0)
+View(adm_decline_states)
 
 # number of states over 10% from 2019 to 2020
 adm_over10pct <- rev_adm %>% filter(pct_19_20 < -.10)
