@@ -79,7 +79,11 @@ population <- population %>% select(-State.Abbrev)
 ##############
 
 # remove unwanted variables
-adm20 <- adm20 %>% select(-`Admissions.Year`,-`Reporting.Year`,-`Months.Reported`, -Numbers.were.corrected.or.validated.in.the.2021.survey.)
+adm20 <- adm20 %>% select(-`Admissions.Year`,-`Reporting.Year`,
+                          -`Months.Reported`, -Numbers.were.corrected.or.validated.in.the.2021.survey.,
+                          -State.Abbrev)
+adm19 <- adm19 %>% select(-State.Abbrev)
+adm18 <- adm18 %>% select(-State.Abbrev)
 
 # add year variable
 adm18$year <- "2018"
@@ -88,7 +92,6 @@ adm20$year <- "2020"
 
 # combine data and remove unwanted data (NA, etc)
 adm <- rbind(adm18, adm19, adm20)
-adm <- adm %>% select(-State.Abbrev)
 # rm(adm17, adm18, adm19, adm20) # remove old dfs
 
 # replace spaces in variable names with periods
