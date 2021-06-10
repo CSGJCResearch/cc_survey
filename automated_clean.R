@@ -83,7 +83,7 @@ adm20 <- adm20 %>% select(-`Admissions.Year`,-`Reporting.Year`,
                           -`Months.Reported`, -Numbers.were.corrected.or.validated.in.the.2021.survey.,
                           -State.Abbrev)
 adm19 <- adm19 %>% select(-State.Abbrev)
-adm18 <- adm18 %>% select(-State.Abbrev)
+# adm18 <- adm18 %>% select(-State.Abbrev)
 
 # add year variable
 adm18$year <- "2018"
