@@ -193,11 +193,14 @@ df_final <- merge(df_final,state_abb, by = "states")
 # line plot
 ############################
 
+
 line_plot <- ggplot(data=df_final, aes(x=year_plot, y=pop_change, group=states)) +
   # lines
-  geom_line(color="darkgray",size=.8) + theme_dark() + 
+  geom_line(color="darkgray",size=.7) + theme_dark() + 
+  geom_line(data = subset(df_final, states == 'Colorado'), 
+            size = .8, color = blue3) +
   stat_summary(aes(y = pop_change,group=1), fun=mean, 
-               colour="orange", geom="line",group=1,size=.8) + 
+               colour="orange", geom="line",linetype = 'dashed',group=1,size=.8) + 
   # axis
   scale_x_continuous(breaks=seq(0,2,1),labels = c("2018","2019","2020")) + 
   scale_y_continuous(labels = function(x) paste0(x, "%")) 
@@ -207,10 +210,11 @@ line_plot <- ggplot(data=df_final, aes(x=year_plot, y=pop_change, group=states))
   # geom_text(data = subset(df_final, year == "2020"),aes(label = state_abb),
   #           color="#c8c8c8", size=3, fontface = "bold")
 
+
 line_plot + theme_csgjc_labels()
 
 # add custom theme
-line_plot + theme_black() + theme(text = element_text(family = "HK Grotesk")) 
+# line_plot + theme_black() + theme(text = element_text(family = "HK Grotesk")) 
 
 ####
 # find labels for 2018-2020 change
