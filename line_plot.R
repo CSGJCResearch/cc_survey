@@ -1,6 +1,6 @@
 
 # read in data
-# source("automated_clean.R")
+source("automated_clean.R")
 # 
 # # import fonts
 # font_import()
@@ -52,6 +52,51 @@ theme_black = function(base_size = 12,base_family = "") {
     )
 }
 
+theme_white = function(base_size = 12,base_family = "") {
+  
+  theme_grey() %+replace%
+    
+    theme(
+      # specify axis options
+      axis.line = element_blank(),  
+      axis.text.x = element_text(size = base_size*0.8, color = "636363", lineheight = 0.9,face="bold"),  
+      axis.text.y = element_text(size = base_size*0.8, color = "636363", lineheight = 0.9,face="bold"),  
+      axis.ticks = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      axis.line.x = element_line(colour = "636363", size = 0.3, linetype = "solid"),
+      #axis.title.x = element_text(size = base_size, color = "white", margin = margin(0, 10, 0, 0)),  
+      #axis.title.y = element_text(size = base_size, color = "white", angle = 90, margin = margin(0, 10, 0, 0)),  
+      # specify legend options
+      legend.background = element_rect(color = NA, fill = "white"),  
+      legend.key = element_rect(color = "white",  fill = "white"),  
+      legend.key.size = unit(1.2, "lines"),  
+      legend.key.height = NULL,  
+      legend.key.width = NULL,      
+      legend.text = element_text(size = base_size*0.8, color = "white"),  
+      legend.title = element_text(size = base_size*0.8, face = "bold", hjust = 0, color = "white"),  
+      legend.position = "none",  
+      legend.text.align = NULL,  
+      legend.title.align = NULL,  
+      legend.direction = "vertical",  
+      legend.box = NULL, 
+      # specify panel options
+      panel.background = element_rect(fill = "white", color  =  NA),  
+      panel.border = element_rect(fill = NA, color = "white"),  
+      panel.grid.major = element_line(color = "white"),  
+      panel.grid.minor = element_line(color = "white"),  
+      #panel.margin = unit(0.5, "lines"),   
+      # specify facetting options
+      strip.background = element_rect(fill = "grey30", color = "grey10"),  
+      strip.text.x = element_text(size = base_size*0.8, color = "white"),  
+      strip.text.y = element_text(size = base_size*0.8, color = "white",angle = -90),  
+      # specify plot options
+      plot.background = element_rect(color = "white", fill = "white"),  
+      plot.title = element_text(size = base_size*1.2, color = "#c8c8c8",face="bold"),  
+      plot.margin = unit(rep(1, 4), "lines")
+    )
+}
+
 ############################
 # data cleaning and prep for plotting
 ############################
@@ -96,7 +141,6 @@ states_missing <- df %>%
   filter(!any(year == "2020"))
 
 # subset to states that have 2018 and 2020 data for plot
-# 37 states
 '%!in%' <- function(x,y)!('%in%'(x,y))
 df <- df %>% filter(states %!in% states_missing$states)
 
@@ -166,138 +210,50 @@ line_plot <- ggplot(data=df_final, aes(x=year_plot, y=pop_change, group=states))
 # add custom theme
 line_plot + theme_black() + theme(text = element_text(family = "HK Grotesk")) 
 
-################################################################################################################
-# create a line plot showing the decline in pop, adm and no change in violation admissions/pop
-################################################################################################################
+####
+# find labels for 2018-2020 change
+####
 
-# # custom function which finds pct change from previous year, removes states with missing data
-# baseline_pct <- function(df,variable){
-#   
-#   # dup for cleaning
-#   line_data <- df
-#   
-#   # factor, change to numeric, etc.
-#   line_data <- line_data %>% select(states = States, 
-#                                     year, 
-#                                     total = variable)
-#   line_data$states <- factor(line_data$states)
-#   line_data$total <- as.numeric(line_data$total)
-#   
-#   # remove states with NA in total
-#   df_1 <- line_data %>%
-#     group_by(states) %>%
-#     mutate(ind = sum(is.na(total))) %>% 
-#     group_by(states) %>%
-#     filter(!any(ind >=1)) %>%
-#     select(-ind)
-#   
-#   # if state doesn't have 2020 data, remove
-#   states_missing <- df_1 %>%
-#     group_by(states) %>%
-#     filter(!any(year == "2020"))
-#   
-#   # subset to states that have 2018 and 2020 data for plot
-#   '%!in%' <- function(x,y)!('%in%'(x,y))
-#   df_1 <- df_1 %>% filter(states %!in% states_missing$states)
-#   
-#   # totals by year
-#   df_year <- df_1 %>% group_by(year) %>% summarise(total = sum(total))
-#   
-#   # calculate pct change between 100% baseline(requires some separating)
-#   df_year <- df_year %>%
-#     arrange(year) %>%
-#     mutate(pct_change = (total/lag(total) - 1) * 100)
-#   df_year <- df_year %>% mutate(temp = case_when(year == 2018 ~ 100,
-#                                                  year == 2019 ~ 100+pct_change,
-#                                                  year == 2020 ~ pct_change))
-#   df_year <- df_year %>% mutate(temp2 = (temp+lag(temp)))
-#   df_year <- df_year %>% mutate(baseline_change = case_when(year==2018 ~ 100, 
-#                                                             year == 2019 ~ temp, 
-#                                                             year == 2020 ~ temp2)) 
-#   df_year <- df_year %>% select(year, total, baseline_change)
-#   
-#   return(df_year)
-# }
-# 
-# #############
-# # Population - pop, violation pop, tech pop
-# #############
-# 
-# pop_line <- baseline_pct(pop_change, "Total.population")
-# pop_line$type = "Total Population"
-# pop_line <- pop_line %>% select(-total)
-# 
-# viol_pop_line <- baseline_pct(pop_change, "Total.violation.population")
-# viol_pop_line$type = "Total Violation Population"
-# viol_pop_line <- viol_pop_line %>% select(-total)
-# 
-# tech_viol_pop_line <- baseline_pct(pop_change, "Technical.violations")
-# tech_viol_pop_line$type = "Technical Violation Population"
-# tech_viol_pop_line <- tech_viol_pop_line %>% select(-total)
-# 
-# #############
-# # Admissions - adm, violation adm, tech adm
-# #############
-# 
-# adm_line <- baseline_pct(adm_change, "Total.admissions")
-# adm_line$type = "Total Admissions"
-# adm_line <- adm_line %>% select(-total)
-# 
-# viol_adm_line <- baseline_pct(adm_change, "Total.violation.admissions")
-# viol_adm_line$type = "Total Violation Admissions"
-# viol_adm_line <- viol_adm_line %>% select(-total)
-# 
-# tech_viol_adm_line <- baseline_pct(adm_change, "Technical.violations")
-# tech_viol_adm_line$type = "Technical Violation Admissions"
-# tech_viol_adm_line <- tech_viol_adm_line %>% select(-total)
-# 
-# #############
-# # merge
-# #############
-# 
-# line_data <- rbind(pop_line,
-#                    viol_pop_line,
-#                    tech_viol_pop_line,
-#                    adm_line,
-#                    viol_adm_line,
-#                    tech_viol_adm_line)
-# 
-# #############
-# # line plot
-# #############
-# 
-# # change year categories for plotting purposes
-# line_data <- line_data %>% mutate(year_plot = ifelse(year==2018,0,ifelse(year==2019,1,2)))
-# 
-# line_plot <- ggplot(data=line_data, aes(x=year_plot, y=baseline_change, group=type)) +
-#   # lines
-#   geom_line(alpha = .6,size=.8, aes(color=type)) + theme_dark() + 
-#   # axis
-#   scale_x_continuous(breaks=seq(0,2,1),labels = c("2018","2019","2020")) + 
-#   scale_y_continuous(labels = function(x) paste0(x, "%")) +
-#   # titles
-#   ggtitle("State Prison Populations Are Declining") +
-#   # labels
-#   geom_text(data = subset(line_data, year == "2020"),aes(label = type),
-#             color="#c8c8c8", size=3, fontface = "bold")
-# 
-# # add custom theme
-# line_plot + theme_black() + theme(text = element_text(family = "HK Grotesk")) 
-# 
-# ####3
-# 
-# line_plot2 <- ggplot(line_data, aes(x=year_plot, y=baseline_change, group=type)) +
-#   geom_line(aes(color=type),alpha = .6,size=.8)+
-#   geom_point()+
-#   # scale_color_manual(values=c('#9ed4ef','#9ed4ef','#9ed4ef','#d6df23','#d6df23','#d6df23'))+
-#   # scale_linetype_manual(values=c("solid", "solid","solid", "solid","solid", "solid"))+
-#   # axis
-#   scale_x_continuous(breaks=seq(0,2,1),labels = c("2018","2019","2020")) + 
-#   scale_y_continuous(labels = function(x) paste0(x, "%")) +
-#   ggtitle("Populations And Admissions Are Declining") +
-#   # labels
-#   geom_text(data = subset(line_data, year == "2020"),aes(label = type),
-#             color="#c8c8c8", size=3, fontface = "bold")  
-# 
-# # add custom theme
-# line_plot2 + theme_black() + theme(text = element_text(family = "HK Grotesk")) 
+# read excel population data for 2018-2019
+population18 <- read_xlsx("data/Data for web team 2021 v6.xlsx", sheet = "Population 2018", .name_repair = "universal")
+population19 <- read_xlsx("data/Data for web team 2021 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
+population20 <- read_xlsx("data/Data for web team 2021 v6.xlsx", sheet = "Population 2020", .name_repair = "universal")
+
+# remove unwanted variables
+population20 <- population20 %>% select(-Numbers.were.corrected.or.validated.in.the.2021.survey.)
+
+# rename variables
+pop18_a <- population18 %>% select(States, population_18 = Total.population)
+pop19_a <- population19 %>% select(States, population_19 = Total.population)
+pop20_a <- population20 %>% select(States, population_20 = Total.population)
+
+# merge pop data
+pop <- merge(pop18_a,pop19_a, by = "States")
+pop <- merge(pop,pop20_a, by = "States")
+
+# calculate changes
+pop <- pop %>% mutate(# change_18_20 = population_18-population_20,
+  pct_18_19 = ((population_19-population_18)/population_18),
+  pct_19_20 = ((population_20-population_19)/population_19),
+  pct_18_20 = ((population_20-population_18)/population_18)
+)
+
+# reorder variables
+pop <- pop %>% select(States, pct_18_19, pct_19_20, everything())
+
+# select western states
+western_pop <- pop %>% filter(States == "Washington"|
+                                States == "Oregon"|  
+                                States == "California"|  
+                                States == "Idaho"|
+                                States == "Nevada"|
+                                States == "Montana"|
+                                States == "Utah"|
+                                States == "Arizona"|
+                                States == "Wyoming"|
+                                States == "Colorado"|
+                                #States == "New Mexico"|
+                                States == "Alaska" |
+                                States == "Hawaii")
+western_pop$pct_label_18_20 <- western_pop$pct_18_20*100
+western_pop$pct_label_18_20 <- round(western_pop$pct_label_18_20,1)
