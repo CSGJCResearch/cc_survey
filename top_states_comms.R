@@ -35,6 +35,18 @@ rev_pop <- rev_pop %>% mutate(# change_18_20 = violation_population_18-violation
 # reorder variables
 rev_pop <- rev_pop %>% select(States, pct_18_19, pct_19_20, everything())
 
+rev_pop <- rev_pop %>% arrange(pct_18_19)
+rev_pop <- rev_pop %>% mutate(pct_18_19_1 = pct_18_19*100)
+rev_pop$pct_18_19_1 <- round(rev_pop$pct_18_19_1,1)
+rev_pop <- rev_pop %>% arrange(pct_18_19_1)
+
+rev_pop <- rev_pop %>% mutate(pct_19_20_1 = pct_19_20*100)
+rev_pop$pct_19_20_1 <- round(rev_pop$pct_19_20_1,1)
+rev_pop <- rev_pop %>% arrange(pct_19_20_1)
+
+rev_pop1 <- rev_pop %>% select(States, `Violation Pop Change from 2018 to 2019`=pct_18_19_1, `Violation Pop Change from 2019 to 2020`=pct_19_20_1)
+write.csv(rev_pop1, "shared_data/rev_pop.csv")
+
 # number of states over 10% from 2019 to 2020
 pop_over10pct <- rev_pop %>% filter(pct_19_20 < -.10)
 # number of states over 10% from 2018 to 2019
@@ -84,6 +96,18 @@ rev_adm <- rev_adm %>% mutate(# change_18_20 = violation_admissions_18-violation
   pct_19_20 = ((violation_admissions_20-violation_admissions_19)/violation_admissions_19)
   # pct_18_20 = ((violation_admissions_20-violation_admissions_18)/violation_admissions_18)*100
 )
+
+rev_adm <- rev_adm %>% arrange(pct_18_19)
+rev_adm <- rev_adm %>% mutate(pct_18_19_1 = pct_18_19*100)
+rev_adm$pct_18_19_1 <- round(rev_adm$pct_18_19_1,1)
+rev_adm <- rev_adm %>% arrange(pct_18_19_1)
+
+rev_adm <- rev_adm %>% mutate(pct_19_20_1 = pct_19_20*100)
+rev_adm$pct_19_20_1 <- round(rev_adm$pct_19_20_1,1)
+rev_adm <- rev_adm %>% arrange(pct_19_20_1)
+
+rev_adm1 <- rev_adm %>% select(States, `Violation Adm Change from 2018 to 2019`=pct_18_19_1, `Violation Adm Change from 2019 to 2020`=pct_19_20_1)
+write.csv(rev_adm1, "shared_data/rev_adm.csv")
 
 # decline
 adm_decline_states <- rev_adm %>% filter(pct_19_20 < 0)
