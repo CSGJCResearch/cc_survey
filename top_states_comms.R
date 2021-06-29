@@ -9,9 +9,9 @@
 # source("automated_clean.R")
 
 # read excel population data for 2018-2019
-population18 <- read_xlsx("data/Data for web team 2021 v6.xlsx", sheet = "Population 2018", .name_repair = "universal")
-population19 <- read_xlsx("data/Data for web team 2021 v6.xlsx", sheet = "Population 2019", .name_repair = "universal")
-population20 <- read_xlsx("data/Data for web team 2021 v6.xlsx", sheet = "Population 2020", .name_repair = "universal")
+population18 <- read_xlsx("data/Data for web team 2021 v7.xlsx", sheet = "Population 2018", .name_repair = "universal")
+population19 <- read_xlsx("data/Data for web team 2021 v7.xlsx", sheet = "Population 2019", .name_repair = "universal")
+population20 <- read_xlsx("data/Data for web team 2021 v7.xlsx", sheet = "Population 2020", .name_repair = "universal")
 
 # remove unwanted variables
 population20 <- population20 %>% select(-Numbers.were.corrected.or.validated.in.the.2021.survey.)
@@ -71,9 +71,9 @@ write.csv(top_10_states, "shared_data/top_5_pop_drops.csv")
 #######
 
 # read excel admissions data for 2018-2019
-admissions18 <- read_xlsx("data/Data for web team 2021 v6.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
-admissions19 <- read_xlsx("data/Data for web team 2021 v6.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
-admissions20 <- read_xlsx("data/Data for web team 2021 v6.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
+admissions18 <- read_xlsx("data/Data for web team 2021 v7.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
+admissions19 <- read_xlsx("data/Data for web team 2021 v7.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+admissions20 <- read_xlsx("data/Data for web team 2021 v7.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
 
 # remove unwanted variables
 admissions20 <- admissions20 %>% select(-Numbers.were.corrected.or.validated.in.the.2021.survey.,
