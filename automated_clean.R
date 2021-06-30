@@ -198,4 +198,3 @@ pop_change <- pop_change %>% group_by(States) %>% mutate(New.commitments = (New.
 # create factor variables
 adm_long$year <- factor(adm_long$year)
 pop_long$year <- factor(pop_long$year)
-
