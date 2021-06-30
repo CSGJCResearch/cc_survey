@@ -35,36 +35,42 @@ rev_pop <- rev_pop %>% mutate(# change_18_20 = violation_population_18-violation
 # reorder variables
 rev_pop <- rev_pop %>% select(States, pct_18_19, pct_19_20, everything())
 
+# pct change 2018-2019
 rev_pop <- rev_pop %>% arrange(pct_18_19)
 rev_pop <- rev_pop %>% mutate(pct_18_19_1 = pct_18_19*100)
 rev_pop$pct_18_19_1 <- round(rev_pop$pct_18_19_1,1)
 rev_pop <- rev_pop %>% arrange(pct_18_19_1)
 
+# pct change 2019-2020
 rev_pop <- rev_pop %>% mutate(pct_19_20_1 = pct_19_20*100)
 rev_pop$pct_19_20_1 <- round(rev_pop$pct_19_20_1,1)
 rev_pop <- rev_pop %>% arrange(pct_19_20_1)
 
+# save data
 rev_pop1 <- rev_pop %>% select(States, `Violation Pop Change from 2018 to 2019`=pct_18_19_1, `Violation Pop Change from 2019 to 2020`=pct_19_20_1)
-write.csv(rev_pop1, "shared_data/rev_pop.csv")
+# write.csv(rev_pop1, "shared_data/rev_pop.csv")
 
-# number of states over 10% from 2019 to 2020
-pop_over10pct <- rev_pop %>% filter(pct_19_20 < -.10)
-# number of states over 10% from 2018 to 2019
+# From 2019 to 2020, ? states saw more than a 35 percent decline 
+pop_over35pct <- rev_pop %>% filter(pct_19_20 < -.35)
+dim(pop_over35pct)
+
+# ? States saw more than a 10 percent decline before the pandemic
 pop_over10priorpct <- rev_pop %>% filter(pct_18_19 < -.10)
-pop_over5priorpct <- rev_pop %>% filter(pct_18_19 < -.05)
-pop_over2priorpct <- rev_pop %>% filter(pct_18_19 < -.02)
+dim(pop_over10priorpct)
 
 # top 5 states in 2019
 top_5_2019 <- rev_pop %>% arrange(pct_18_19) %>% head(5)
 top_5_2019 <- top_5_2019 %>% select(States, pct_18_19)
 
+# top 5 states in 2020
 top_5_2020 <- rev_pop %>% arrange(pct_19_20) %>% head(5)
 top_5_2020 <- top_5_2020 %>% select(States, pct_19_20)
 
 # combine data
 top_10_states <- cbind(top_5_2019, top_5_2020)
 
-write.csv(top_10_states, "shared_data/top_5_pop_drops.csv")
+# save data
+write.csv(top_10_states, "shared_data/Top 5 states population drops.csv")
 
 #######
 # Admissions
@@ -97,35 +103,35 @@ rev_adm <- rev_adm %>% mutate(# change_18_20 = violation_admissions_18-violation
   # pct_18_20 = ((violation_admissions_20-violation_admissions_18)/violation_admissions_18)*100
 )
 
+# pct change 2018-2019
 rev_adm <- rev_adm %>% arrange(pct_18_19)
 rev_adm <- rev_adm %>% mutate(pct_18_19_1 = pct_18_19*100)
 rev_adm$pct_18_19_1 <- round(rev_adm$pct_18_19_1,1)
 rev_adm <- rev_adm %>% arrange(pct_18_19_1)
 
+# pct change 2019-2020
 rev_adm <- rev_adm %>% mutate(pct_19_20_1 = pct_19_20*100)
 rev_adm$pct_19_20_1 <- round(rev_adm$pct_19_20_1,1)
 rev_adm <- rev_adm %>% arrange(pct_19_20_1)
 
-rev_adm1 <- rev_adm %>% select(States, `Violation Adm Change from 2018 to 2019`=pct_18_19_1, `Violation Adm Change from 2019 to 2020`=pct_19_20_1)
-write.csv(rev_adm1, "shared_data/rev_adm.csv")
+# save data
+rev_adm1 <- rev_adm %>% select(States, 
+                               `Violation Adm Change from 2018 to 2019`=pct_18_19_1, 
+                               `Violation Adm Change from 2019 to 2020`=pct_19_20_1)
+# write.csv(rev_adm1, "shared_data/rev_adm.csv")
 
-# decline
+# all states with a decline
 adm_decline_states <- rev_adm %>% filter(pct_19_20 < 0)
-View(adm_decline_states)
 
-# number of states over 10% from 2019 to 2020
-adm_over10pct <- rev_adm %>% filter(pct_19_20 < -.10)
-adm_over50pct <- rev_adm %>% filter(pct_19_20 < -.50)
-
-# number of states over 10% from 2018 to 2019
-adm_over10priorpct <- rev_adm %>% filter(pct_18_19 <= -.10)
-adm_over5priorpct <- rev_adm %>% filter(pct_18_19 <= -.05)
-adm_over2priorpct <- rev_adm %>% filter(pct_18_19 < -.02)
+# ? states saw more than a 25 percent decline in state prison populations
+adm_over25pct <- rev_adm %>% filter(pct_19_20 < -.25)
+dim(adm_over10pct)
 
 # top 5 states in 2019
 top_5_2019 <- rev_adm %>% arrange(pct_18_19) %>% head(5)
 top_5_2019 <- top_5_2019 %>% select(States, pct_18_19)
 
+# top 5 states in 2020
 top_5_2020 <- rev_adm %>% arrange(pct_19_20) %>% head(5)
 top_5_2020 <- top_5_2020 %>% select(States, pct_19_20)
 
@@ -140,7 +146,5 @@ rev_pop <- rev_pop %>% mutate(pop_pct_18_19 = pct_18_19,
 rev_changes <- merge(rev_adm, rev_pop, by = "States")
 
 # save csvs
-write.csv(top_10_states, "shared_data/top_5_adm_drops.csv")
-write.csv(rev_changes, "shared_data/state_rev_changes.csv")
-
-
+write.csv(top_10_states, "shared_data/Top 5 states admissions drops.csv")
+write.csv(rev_changes, "shared_data/State violation changes by year.csv")
