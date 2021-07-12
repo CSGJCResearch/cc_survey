@@ -154,6 +154,37 @@ adm_pop_analysis <- adm_pop_analysis %>% select(-New.commitments.admissions, -Ne
 
 ######################################################################################################################################################
 # IMPUTATION
+# MICE
+######################################################################################################################################################
+
+# missing data for a certain feature or sample is more than 5%
+pMiss <- function(x){sum(is.na(x))/length(x)*100}
+apply(adm_pop_analysis,2,pMiss)
+
+# md.pattern(adm_pop_analysis)
+# marginplot(adm_pop_analysis[c(1,2)])
+aggr_plot <- aggr(adm_pop_analysis, col=c('navyblue','red'), numbers=TRUE, sortVars=TRUE, labels=names(adm_pop_analysis), cex.axis=.7, gap=3, ylab=c("Histogram of missing data","Pattern"))
+
+# m=5 refers to the number of imputed datasets
+# meth='pmm' refers to the imputation method
+temp_data <- mice(adm_pop_analysis,m=5,maxit=50,meth='pmm',seed=500)
+summary(temp_data)
+
+# check imputed data
+# each observation (first column left) within each imputed dataset (first row at the top)
+temp_data$imp$Total.admissions
+
+# completed dataset
+mice_imputed_data <- complete(temp_data,1)
+
+# inspect the distribution of original and imputed data
+# want to see magenta points (imputed) match the shape of the blue ones (observed)
+# plausible values
+xyplot(temp_data,Total.admissions ~ Total.population,pch=18,cex=1)
+densityplot(temp_data)
+
+######################################################################################################################################################
+# IMPUTATION
 # MEAN
 ######################################################################################################################################################
 
