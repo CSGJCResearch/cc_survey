@@ -204,9 +204,6 @@ adm <- rbind(adm18, adm19, adm20)
 # make variables lowercase and replace periods with underscore
 admissions <- adm %>% janitor::clean_names()
 
-# make variables lowercase and replace periods with underscore
-admissions <- admissions %>% janitor::clean_names()
-
 ####
 # Check for zeros, NAs and data errors
 ####

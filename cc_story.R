@@ -282,22 +282,29 @@ write.xlsx(national_estimates, "shared_data/National estimates for web team 2021
 
 # get cost data for 2021
 costs <- read_xlsx("data/Cost and notes data 2021.xlsx", .name_repair = "universal")
+
+# make variables lowercase and replace periods with underscore
+costs <- costs %>% janitor::clean_names()
+
+# remove states that are NA
 costs <- costs %>% filter(states != "NA")
 
 # select general cost info
-costs <- costs %>% select(states, Cost)
+costs <- costs %>% select(states, cost)
 
 # remove dollar sign
-costs$cost_2020 = as.numeric(gsub("\\$", "", costs$Cost))
-costs <- costs %>% select(-Cost)
+costs$cost_2020 = as.numeric(gsub("\\$", "", costs$cost))
+costs <- costs %>% select(-cost)
 
 # get cost data from 2019 - using costs from 2019 if cost data is missing for 2020
 costs2019 <- read_excel("data/Cost Per Day For Calculation.xlsx")
-costs2019 <- costs2019 %>% select(states, cost_2019 = `State Reported CostPerDay`)
+
+# rename variables
+costs2019 <- costs2019 %>% select(states = States, cost_2019 = `State Reported CostPerDay`)
 
 # replace NAs in 2020 cost data with data from 2019
-setDt(costs); setDt(costs2019)
-costs[is.na(cost_2020), cost_2020 := costs2019[.sD, on=.(states), x_cost_2019]]
+setDT(costs); setDT(costs2019)
+costs[is.na(cost_2020), cost_2020 := costs2019[.SD, on=.(states), x.cost_2019]]
 costs <- merge(costs, costs2019, by = "states")
 
 # select variables and filter by year
@@ -312,7 +319,7 @@ costs_pop_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% select(states,
                                                                        technical_probation_violation_population_mean, 
                                                                        technical_parole_violation_population_mean)
 
-# add technical prob and parole together to get total technical 
+# add technical prob and parole together to get total technical for 2019 and 2020
 costs_pop_2019 <- costs_pop_2019 %>%  mutate(total_population_2019 = total_population_mean,
                                              total_viol_population_2019 = total_violation_population_mean,
                                              technical_population_2019 = technical_probation_violation_population_mean + technical_parole_violation_population_mean) %>%
@@ -356,6 +363,9 @@ costs_final <- costs_final %>% mutate(avg_cost_per_day = ifelse(variable == "tot
 
 # remove unwanted variables
 costs_final <- costs_final %>% select(-avg_cost_per_day_19,-avg_cost_per_day_20) 
+
+# calcuate average yearly cost
+costs_final <- costs_final %>% mutate(average_yearly_cost = total*avg_cost_per_day*365)
 
 # save as csv
 write.xlsx(costs_final, "shared_data/Costs for web team 2021.xlsx")
