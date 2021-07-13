@@ -6,20 +6,15 @@ In 2018, The Council of State Governments (CSG) Justice Center conducted a surve
 ## Repository Structure
 
     |-- code    
-      |-- analysis_plan.R                    # plots for JS and comms team
-      |-- automated_clean.R                  # imports/cleans survey data (last update 6/9/21)
-      |-- automated_costs.R                  # automated costs (old/archive)
-      |-- automated_plots.R                  # automated plots (old/archive)
-      |-- automated_tables.R                 # automated tables(old/archive)
-      |-- automated_report.Rmd               # automated state reports for states that have submitted
-      |-- cc_story.R                         # national estimates, cc story (last update 6/9/21)
-      |-- cc_analysis.R                      # uses UCR, census, and cc data to find correlations adm, pop, crime changes
+      |-- automated_clean.R                  # imports/cleans survey data
+      |-- cc_story.R                         # imputation, national estimates, costs
+    |--archived_files                        # archived code for misc data requests
     |-- data  
       |-- 50-State Revocation Survey_October 27, 2020_12.25.xlsx   # raw survey responses   
       |-- Cost Per Day For Calculation.xlsx                        # costs by state  
-      |-- Data for web team 2021 v1.xlsx                           # final data  
-    |-- shared_data  
+      |-- Data for web team 2021 v8.xlsx                           # final data  
+    |-- shared_data                                                # files shared with comms
     |-- survey_info  
       |-- 50 State Revocation Survey - FINAL.pdf                   # pdf of administered survey  
       |-- CSGJC_SurveyUpdate_Nov2020.pptx                          # summary statistics presented  
-    |-- technical_report 
+    |-- technical_report                                           # graphs for technical report
