@@ -5,11 +5,9 @@
 # 7/13/2021
 #######################################
 
-# read automated_clean to get data
-source("automated_clean.R")
-
 # load necessary packages
-requiredPackages = c('dplyr',
+requiredPackages = c('rstudioapi',
+                     'dplyr',
                      'openxlsx',
                      'readr',
                      'reshape',
@@ -22,7 +20,9 @@ requiredPackages = c('dplyr',
                      'scales',
                      'mice',
                      'VIM',
-                     'finalfit'
+                     'finalfit',
+                     'janitor',
+                     'Hmisc'
 )
 # only downloads packages if needed
 for(p in requiredPackages){
@@ -30,24 +30,12 @@ for(p in requiredPackages){
   library(p,character.only = TRUE)
 }
 
-# get working directory depending on login
-getwd <- function(){
-  thisLogin <- sys_info()['login']
-  # if(thisLogin=="amund") {
-  #   base <- '/home'
-  #   csgF <- 'directory'
-  # }
-  if(thisLogin=="mr4909"){
-    base <- '/Users'
-    csgF <- 'csgjc/cc_survey'
-  }
-  if(thisLogin=="mari") {
-    base <- '/Users'
-    csgF <- 'csgjc/cc_survey'
-  }
-  wd <- paste(base,thisLogin,csgF,sep="/")
-  return(wd)
-}
+#set wd based on your current program path (for collaboration)
+#requires rstudioapi package
+setwd(dirname(getActiveDocumentContext()$path))
+
+# read automated_clean to get data
+source("automated_clean.R")
 
 # dup for cleaning
 adm_analysis <- admissions
@@ -60,7 +48,8 @@ adm_pop_analysis <- merge(admissions, population, by = c("states","year"))
 adm_pop_analysis <- adm_pop_analysis %>% select(states, year, everything()) %>% arrange(desc(states))
 
 # remove 2017
-adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017)
+table(adm_pop_analysis$year)
+adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017) #there is no 2017 year in the data
 
 ######################################################################################################################################################
 # CHECK MISSINGNESS
