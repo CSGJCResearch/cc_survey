@@ -17,17 +17,18 @@ requiredPackages = c('dplyr',
                      'readxl',
                      'tidyverse',
                      'knitr',
-                     'data_table',
+                     'data.table',
                      'formattable',
                      'scales',
                      'mice',
                      'VIM',
-                     'finalfit'
+                     'finalfit',
+                     'MissMech'
 )
 # only downloads packages if needed
 for(p in requiredPackages){
-  if(!require(p,character_only = TRUE)) install.packages(p)
-  library(p,character_only = TRUE)
+  if(!require(p,character.only = TRUE)) install.packages(p)
+  library(p,character.only = TRUE)
 }
 
 # get working directory depending on login
@@ -63,60 +64,63 @@ adm_pop_analysis <- adm_pop_analysis %>% select(states, year, everything()) %>% 
 adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017)
 
 ######################################################################################################################################################
-# CHECK MIssINGNEss
+# CHECK MISSINGNESS
 ######################################################################################################################################################
 
-# miss_2018 <- adm_pop_analysis %>% filter(year == 2018) %>% select(state = states, admissions_18 = total_admissions, population_18 = total_population) 
-# miss_2019 <- adm_pop_analysis %>% filter(year == 2019) %>% select(state = states, admissions_19 = total_admissions, population_19 = total_population) 
-# miss_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% select(state = states, admissions_20 = total_admissions, population_20 = total_population) 
-# miss_data <- merge(miss_2018, miss_2019, by = c("state"))
-# miss_data <- merge(miss_data, miss_2020, by = c("state"))
-# miss_data$state <- factor(miss_data$state)
-# 
-# # examine missing data with ff_glimpse
-# explanatory = c("admissions_18","admissions_19", "admissions_20", 
-#                 "population_18", "population_19")
-# dependent =  "population_20"
-# miss_data %>% 
-#   ff_glimpse(dependent, explanatory)
-# 
-# # visualize missing data and relationships
-# miss_data %>%
-#   missing_plot()
-# 
-# # pattern of missingness between variables
-# miss_data %>% 
-#   missing_pattern(dependent, explanatory)
-# 
-# # 2019 population is missing the most (7)
-# aggr(miss_data, prop=FALsE, numbers=TRUE)
-# 
-# # pairs plots to show relationships between missing values and observed values in all variables
-# miss_data %>% 
-#   missing_pairs(dependent, explanatory)
-# 
-# # remove state variable
-# miss_data1 <- miss_data %>% select(-state)
-# 
-# # using correlations to explore missing values
-# # extracting variables that have missing values
-# # see which variables tend to be missing together
-# x <- as_data_frame(abs(is_na(miss_data)))
-# 
-# # elements of x are 1 if a value in the data is missing and 0 if non-missing
-# head(miss_data)
-# head(x)
-# 
-# # extracting variables that have some missing values
-# y <- x[which(sapply(x, sd) > 0)]
-# 
-# # correlations among indicator variables
-# cor(y)
-# 
-# # look at the relationship between the presence of missing values in each variable and the observed values in other variables
-# # rows are observed variables, and the columns are indicator variables representing missingness
-# # ignore the warning message and NA values in the correlation matrix
-# cor(miss_data1, y, use="pairwise_complete_obs")
+# rename variables to reflect the year and combine data
+miss_2018 <- adm_pop_analysis %>% filter(year == 2018) %>% select(state = states, admissions_18 = total_admissions, population_18 = total_population)
+miss_2019 <- adm_pop_analysis %>% filter(year == 2019) %>% select(state = states, admissions_19 = total_admissions, population_19 = total_population)
+miss_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% select(state = states, admissions_20 = total_admissions, population_20 = total_population)
+miss_data <- merge(miss_2018, miss_2019, by = c("state"))
+miss_data <- merge(miss_data, miss_2020, by = c("state"))
+
+# factor state
+miss_data$state <- factor(miss_data$state)
+
+# examine missing data with ff_glimpse
+explanatory = c("admissions_18","admissions_19", "admissions_20",
+                "population_18", "population_19")
+dependent =  "population_20"
+miss_data %>%
+  ff_glimpse(dependent, explanatory)
+
+# visualize missing data and relationships
+miss_data %>%
+  missing_plot()
+
+# pattern of missingness between variables
+miss_data %>%
+  missing_pattern(dependent, explanatory)
+
+# 2019 population is missing the most (7)
+aggr(miss_data, prop=FALSE, numbers=TRUE)
+
+# pairs plots to show relationships between missing values and observed values in all variables
+miss_data %>%
+  missing_pairs(dependent, explanatory)
+
+# remove state variable
+miss_data1 <- miss_data %>% select(-state)
+
+# using correlations to explore missing values
+# extracting variables that have missing values
+# see which variables tend to be missing together
+x <- as_data_frame(abs(is.na(miss_data)))
+
+# elements of x are 1 if a value in the data is missing and 0 if non-missing
+head(miss_data)
+head(x)
+
+# extracting variables that have some missing values
+y <- x[which(sapply(x, sd) > 0)]
+
+# correlations among indicator variables
+cor(y)
+
+# look at the relationship between the presence of missing values in each variable and the observed values in other variables
+# rows are observed variables, and the columns are indicator variables representing missingness
+# ignore the warning message and NA values in the correlation matrix
+cor(miss_data1, y, use="pairwise.complete.obs")
 
 #####
 # MCAR test
@@ -124,7 +128,7 @@ adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017)
 
 # MCAR test
 # not missing completely at random
-# testMCARNormality(data = miss_data1,del_lesscases = 1)
+# TestMCARNormality(data = miss_data1,del.lesscases = 1)
 
 ######################################################################################################################################################
 # IMPUTATION
@@ -132,7 +136,7 @@ adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017)
 ######################################################################################################################################################
 
 # missing data for a certain feature or sample is more than 5%
-pMiss <- function(x){sum(is_na(x))/length(x)*100}
+pMiss <- function(x){sum(is.na(x))/length(x)*100}
 apply(adm_pop_analysis,2,pMiss)
 
 # Plots
@@ -159,34 +163,34 @@ mice_imputed_data <- complete(temp_data,1)
 # densityplot(temp_data)
 
 ######################################################################################################################################################
-# IMPUtAtION
+# IMPUTATION
 # MEAN
 ######################################################################################################################################################
 
 # Create mean
 mean_imputed_data <-  adm_pop_analysis %>% 
   group_by(year) %>% 
-  mutate(total_admissions_mean = ifelse(is_na(total_admissions), mean(total_admissions, na.rm=T), total_admissions),
-         total_violation_admissions_mean = ifelse(is_na(total_violation_admissions), mean(total_violation_admissions, na.rm=T), total_violation_admissions),      
-         total_probation_violation_admissions_mean = ifelse(is_na(total_probation_violation_admissions), mean(total_probation_violation_admissions, na.rm=T), total_probation_violation_admissions),      
-         New_offense_probation_violation_admissions_mean = ifelse(is_na(New_offense_probation_violation_admissions), mean(New_offense_probation_violation_admissions, na.rm=T), New_offense_probation_violation_admissions),  
-         technical_probation_violation_admissions_mean = ifelse(is_na(technical_probation_violation_admissions), mean(technical_probation_violation_admissions, na.rm=T), technical_probation_violation_admissions),  
-         total_parole_violation_admissions_mean = ifelse(is_na(total_parole_violation_admissions), mean(total_parole_violation_admissions, na.rm=T), total_parole_violation_admissions),           
-         New_offense_parole_violation_admissions_mean = ifelse(is_na(New_offense_parole_violation_admissions), mean(New_offense_parole_violation_admissions, na.rm=T), New_offense_parole_violation_admissions),  
-         technical_parole_violation_admissions_mean = ifelse(is_na(technical_parole_violation_admissions), mean(technical_parole_violation_admissions, na.rm=T), technical_parole_violation_admissions),       
+  mutate(total_admissions_mean = ifelse(is.na(total_admissions), mean(total_admissions, na.rm=T), total_admissions),
+         total_violation_admissions_mean = ifelse(is.na(total_violation_admissions), mean(total_violation_admissions, na.rm=T), total_violation_admissions),      
+         total_probation_violation_admissions_mean = ifelse(is.na(total_probation_violation_admissions), mean(total_probation_violation_admissions, na.rm=T), total_probation_violation_admissions),      
+         New_offense_probation_violation_admissions_mean = ifelse(is.na(New_offense_probation_violation_admissions), mean(New_offense_probation_violation_admissions, na.rm=T), New_offense_probation_violation_admissions),  
+         technical_probation_violation_admissions_mean = ifelse(is.na(technical_probation_violation_admissions), mean(technical_probation_violation_admissions, na.rm=T), technical_probation_violation_admissions),  
+         total_parole_violation_admissions_mean = ifelse(is.na(total_parole_violation_admissions), mean(total_parole_violation_admissions, na.rm=T), total_parole_violation_admissions),           
+         New_offense_parole_violation_admissions_mean = ifelse(is.na(New_offense_parole_violation_admissions), mean(New_offense_parole_violation_admissions, na.rm=T), New_offense_parole_violation_admissions),  
+         technical_parole_violation_admissions_mean = ifelse(is.na(technical_parole_violation_admissions), mean(technical_parole_violation_admissions, na.rm=T), technical_parole_violation_admissions),       
          
-         total_population_mean = ifelse(is_na(total_population), mean(total_population, na.rm=T), total_population),  
-         total_violation_population_mean = ifelse(is_na(total_violation_population), mean(total_violation_population, na.rm=T), total_violation_population),                  
-         total_probation_violation_population_mean = ifelse(is_na(total_probation_violation_population), mean(total_probation_violation_population, na.rm=T), total_probation_violation_population),  
-         New_offense_probation_violation_population_mean = ifelse(is_na(New_offense_probation_violation_population), mean(New_offense_probation_violation_population, na.rm=T), New_offense_probation_violation_population),  
-         technical_probation_violation_population_mean = ifelse(is_na(technical_probation_violation_population), mean(technical_probation_violation_population, na.rm=T), technical_probation_violation_population),  
-         total_parole_violation_population_mean = ifelse(is_na(total_parole_violation_population), mean(total_parole_violation_population, na.rm=T), total_parole_violation_population),           
-         New_offense_parole_violation_population_mean = ifelse(is_na(New_offense_parole_violation_population), mean(New_offense_parole_violation_population, na.rm=T), New_offense_parole_violation_population),  
-         technical_parole_violation_population_mean = ifelse(is_na(technical_parole_violation_population), mean(technical_parole_violation_population, na.rm=T), technical_parole_violation_population))       
+         total_population_mean = ifelse(is.na(total_population), mean(total_population, na.rm=T), total_population),  
+         total_violation_population_mean = ifelse(is.na(total_violation_population), mean(total_violation_population, na.rm=T), total_violation_population),                  
+         total_probation_violation_population_mean = ifelse(is.na(total_probation_violation_population), mean(total_probation_violation_population, na.rm=T), total_probation_violation_population),  
+         New_offense_probation_violation_population_mean = ifelse(is.na(New_offense_probation_violation_population), mean(New_offense_probation_violation_population, na.rm=T), New_offense_probation_violation_population),  
+         technical_probation_violation_population_mean = ifelse(is.na(technical_probation_violation_population), mean(technical_probation_violation_population, na.rm=T), technical_probation_violation_population),  
+         total_parole_violation_population_mean = ifelse(is.na(total_parole_violation_population), mean(total_parole_violation_population, na.rm=T), total_parole_violation_population),           
+         New_offense_parole_violation_population_mean = ifelse(is.na(New_offense_parole_violation_population), mean(New_offense_parole_violation_population, na.rm=T), New_offense_parole_violation_population),  
+         technical_parole_violation_population_mean = ifelse(is.na(technical_parole_violation_population), mean(technical_parole_violation_population, na.rm=T), technical_parole_violation_population))       
       
 
 ######################################################################################################################################################
-# CALCULAtE CHANGEs / NAtUINAL EstIMAtEs
+# CALCULATE CHANGEs / NATIONAL ESTIMATES
 ######################################################################################################################################################
 
 # calculate percent change         
@@ -282,7 +286,7 @@ costs2019 <- costs2019 %>% select(states, cost_2019 = `State Reported CostPerDay
 
 # replace NAs in 2020 cost data with data from 2019
 setDt(costs); setDt(costs2019)
-costs[is_na(cost_2020), cost_2020 := costs2019[.sD, on=.(states), x_cost_2019]]
+costs[is.na(cost_2020), cost_2020 := costs2019[.sD, on=.(states), x_cost_2019]]
 costs <- merge(costs, costs2019, by = "states")
 
 # select variables and filter by year
