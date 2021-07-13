@@ -100,9 +100,10 @@ population <- population %>% select(states, total_violation_pop_correct, total_p
 # if total viol pop = total parole pop, then prob pop is zero
 
 # total probation
-population <- population %>% 
-  mutate(total_prob_pop_new = case_when(total_violation_population==total_parole_violation_population ~ 0,
-                                    total_violation_population!=total_parole_violation_population ~ total_probation_violation_population))
+population <- population %>%  
+  dplyr::mutate(total_probation_pop_new = ifelse(total_violation_population==total_parole_violation_population &
+                                                 !is.na(total_violation_population) &
+                                                 !is.na(total_parole_violation_population), 0, total_probation_violation_population))
 
 # new offense probation         
 population <- population %>% mutate(new_offense_prob_pop_new = 
@@ -113,13 +114,14 @@ population <- population %>% mutate(new_offense_prob_pop_new =
 
 # technical probation
 population <- population %>% mutate(tech_prob_pop_new = case_when(total_violation_population==total_parole_violation_population |
-                                                                total_probation_violation_population==new_offense_parole_violation_population ~ 0,
-                                                              total_violation_population!=total_parole_violation_population |
-                                                                total_probation_violation_population!=new_offense_parole_violation_population ~ technical_probation_violation_population))
+                                                                  total_probation_violation_population==new_offense_parole_violation_population ~ 0,
+                                                                  total_violation_population!=total_parole_violation_population |
+                                                                  total_probation_violation_population!=new_offense_parole_violation_population ~ technical_probation_violation_population))
 # total parole 
-population <- population %>% 
-  mutate(total_parole_pop_new = case_when(total_violation_population==total_probation_violation_population ~ 0,
-                                          total_violation_population!=total_probation_violation_population ~ total_parole_violation_population))
+population <- population %>%  
+  dplyr::mutate(total_parole_pop_new = ifelse(total_violation_population==total_probation_violation_population &
+                                              !is.na(total_violation_population) &
+                                              !is.na(total_probation_violation_population), 0, total_parole_violation_population))
 
 # new offense parole  
 population <- population %>% mutate(new_offense_parole_pop_new = case_when(total_violation_population==total_probation_violation_population | 
