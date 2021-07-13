@@ -26,8 +26,8 @@ requiredPackages = c('dplyr',
 )
 # only downloads packages if needed
 for(p in requiredPackages){
-  if(!require(p,character_only = tRUE)) install_packages(p)
-  library(p,character_only = tRUE)
+  if(!require(p,character_only = TRUE)) install.packages(p)
+  library(p,character_only = TRUE)
 }
 
 # get working directory depending on login
@@ -89,7 +89,7 @@ adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017)
 #   missing_pattern(dependent, explanatory)
 # 
 # # 2019 population is missing the most (7)
-# aggr(miss_data, prop=FALsE, numbers=tRUE)
+# aggr(miss_data, prop=FALsE, numbers=TRUE)
 # 
 # # pairs plots to show relationships between missing values and observed values in all variables
 # miss_data %>% 
@@ -138,7 +138,7 @@ apply(adm_pop_analysis,2,pMiss)
 # Plots
 # md_pattern(adm_pop_analysis)
 # marginplot(adm_pop_analysis[c(1,2)])
-# aggr_plot <- aggr(adm_pop_analysis, col=c('navyblue','red'), numbers=tRUE, sortVars=tRUE, labels=names(adm_pop_analysis), cex_axis=_7, gap=3, ylab=c("Histogram of missing data","Pattern"))
+# aggr_plot <- aggr(adm_pop_analysis, col=c('navyblue','red'), numbers=TRUE, sortVars=TRUE, labels=names(adm_pop_analysis), cex_axis=_7, gap=3, ylab=c("Histogram of missing data","Pattern"))
 
 # m=5 refers to the number of imputed datasets
 # meth='pmm' refers to the imputation method, predictive mean matching
@@ -235,7 +235,7 @@ adm_pop_national <- adm_pop_analysis %>% group_by(year) %>% dplyr::summarise(# a
 #             measure_vars = x, 
 #             variable_name = "type", 
 #             value_name = "value", 
-#             na.rm = tRUE)
+#             na.rm = TRUE)
 
 # transpose data
 national_estimates = t(adm_pop_national)
@@ -266,7 +266,7 @@ write_xlsx(national_estimates, "shared_data/National estimates for web team 2021
 ######################################################################################################################################################
 
 # get cost data for 2021
-costs <- read_xlsx("data/Cost and notes data 2021_xlsx", _name_repair = "universal")
+costs <- read_xlsx("data/Cost and notes data 2021_xlsx", .name_repair = "universal")
 costs <- costs %>% filter(states != "NA")
 
 # select general cost info
@@ -278,11 +278,11 @@ costs <- costs %>% select(-Cost)
 
 # get cost data from 2019 - using costs from 2019 if cost data is missing for 2020
 costs2019 <- read_excel("data/Cost Per Day For Calculation_xlsx")
-costs2019 <- costs2019 %>% select(states, cost_2019 = `state Reported CostPerDay`)
+costs2019 <- costs2019 %>% select(states, cost_2019 = `State Reported CostPerDay`)
 
 # replace NAs in 2020 cost data with data from 2019
 setDt(costs); setDt(costs2019)
-costs[is_na(cost_2020), cost_2020 := costs2019[_sD, on=_(states), x_cost_2019]]
+costs[is_na(cost_2020), cost_2020 := costs2019[.sD, on=.(states), x_cost_2019]]
 costs <- merge(costs, costs2019, by = "states")
 
 # select variables and filter by year
@@ -314,8 +314,8 @@ costs_pop_2020 <- costs_pop_2020 %>%  mutate(total_population_2020 = total_popul
          -total_population_mean)
 
 # merge costs and population numbers
-costs_pop_df <- merge(costs_pop_2019, costs, by = "states", all_x = tRUE, all_y = tRUE)
-costs_pop_df <- merge(costs_pop_df, costs_pop_2020, by = "states", all_x = tRUE, all_y = tRUE)
+costs_pop_df <- merge(costs_pop_2019, costs, by = "states", all.x = TRUE, all.y = TRUE)
+costs_pop_df <- merge(costs_pop_df, costs_pop_2020, by = "states", all.x = TRUE, all.y = TRUE)
 
 # prevent rounding
 options(digits=20)
