@@ -30,25 +30,6 @@ for(p in requiredPackages){
   library(p,character.only = TRUE)
 }
 
-# custom theme
-theme_csgjc <- theme(axis.ticks = element_blank(),
-                     axis.text.y = element_blank(),
-                     axis.text.x = element_text(vjust = 6.5, margin = margin(t = 10),size=10,face="bold"),
-                     #axis.text.y = element_text(size=10),
-                     axis.title.y = element_blank(),
-                     axis.title.x = element_blank(),
-                     panel.border = element_blank(),
-                     panel.grid.major.x = element_blank(),
-                     panel.grid.minor.x = element_blank(),
-                     panel.grid.major.y = element_blank(),
-                     panel.grid.minor.y = element_blank(),
-                     legend.title = element_blank(),
-                     legend.text = element_text(size=10,face="bold"),
-                     legend.position = "top",
-                     plot.title = element_text(hjust = 0.5,size = 12, face = "bold"),
-                     plot.subtitle = element_text(hjust = 0.5, size = 15),
-                     plot.margin = margin(0, 0, 0, 0, "cm"))
-
 # get working directory depending on login
 getwd <- function(){
   thisLogin <- Sys.info()['login']
@@ -323,7 +304,7 @@ costs_pop_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% select(States,
                                                                        Technical.probation.violation.population.mean, 
                                                                        Technical.parole.violation.population.mean)
 
-# add technical prob and parole together to get tech number
+# add technical prob and parole together to get total technical 
 costs_pop_2019 <- costs_pop_2019 %>%  mutate(total_population_2019 = Total.population.mean,
                                              total_viol_population_2019 = Total.violation.population.mean,
                                              technical_population_2019 = Technical.probation.violation.population.mean + Technical.parole.violation.population.mean) %>%
@@ -364,10 +345,9 @@ costs_final <- costs_final %>% mutate(avg_cost_per_day = ifelse(variable == "tot
                                                                 variable == "total_viol_population_2019"|
                                                                 variable == "technical_population_2019", 
                                                                 avg_cost_per_day_19, avg_cost_per_day_20))
-costs_final <- costs_final %>% select(-avg_cost_per_day_19,-avg_cost_per_day_20) # remove unwanted variables
 
-# # calculate total cost
-# costs_final <- costs_final %>% mutate(yearly_cost = avg_cost_per_day*total*365)
+# remove unwanted variables
+costs_final <- costs_final %>% select(-avg_cost_per_day_19,-avg_cost_per_day_20) 
 
 # save as csv
 write.xlsx(costs_final, "shared_data/Costs for web team 2021.xlsx")
