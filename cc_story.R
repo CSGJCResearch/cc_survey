@@ -260,6 +260,18 @@ national_estimates <- national_estimates %>% mutate(change_18_19 = year2019-year
                                                     pct_19_20 = ((year2020-year2019)/year2019),
                                                     pct_18_20 = ((year2020-year2018)/year2018)
                                                     )
+# add labels to data
+var.labels = c(type = "Metric", 
+               year2018 = "2018",
+               year2019 = "2019",
+               year2020 = "2020",
+               change_18_19 = "Change from 2018 to 2019",
+               change_19_20 = "Change from 2019 to 2020",
+               change_18_20 = "Change from 2018 to 2020",
+               pct_18_19 = "Percent Change from 2018 to 2019",    
+               pct_19_20 = "Percent Change from 2019 to 2020",
+               pct_18_20 = "Percent Change from 2018 to 2020")
+label(national_estimates) = as.list(var.labels[match(names(national_estimates), names(var.labels))])
 
 # save data to send to comms
 write.xlsx(national_estimates, "shared_data/National estimates for web team 2021.xlsx")
