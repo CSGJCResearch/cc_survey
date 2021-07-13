@@ -100,29 +100,50 @@ population <- population %>% select(states, total_violation_pop_correct, total_p
 # if total viol pop = total parole pop, then prob pop is zero
 
 # total probation
-population <- population %>%  
-  mutate(total_probation_pop_new = ifelse(total_violation_population==total_parole_violation_population &
-                                     !is.na(total_violation_population), 0, total_probation_violation_population))
+population <- population %>% mutate(total_probation_pop_new = case_when(
+  !is.na(total_violation_population) & total_violation_population==total_parole_violation_population ~ 0,
+  !is.na(total_violation_population) ~ total_probation_violation_population,
+  is.na(total_violation_population) ~ total_probation_violation_population
+))
 
-# new offense probation
-population <- population %>%  
-  mutate(new_offense_probation_pop_new = 
-           ifelse((total_probation_violation_population == technical_probation_violation_population & !is.na(total_violation_population))|
-                    (total_violation_population == total_parole_violation_population & !is.na(total_violation_population)), 
-                  0, new_offense_probation_violation_population))
+# new offense probation 
+population <- population %>% mutate(new_offense_probation_pop_new = case_when(
+  !is.na(total_violation_population) & total_violation_population==total_parole_violation_population ~ 0,
+  !is.na(total_probation_violation_population) & total_probation_violation_population==technical_probation_violation_population ~ 0,
+  !is.na(new_offense_probation_violation_population) ~ new_offense_probation_violation_population,
+  is.na(new_offense_probation_violation_population) ~ new_offense_probation_violation_population
+))
 
-# technical probation - NOT WORKING, generating NAs for some states
-population <- population %>%  
-  mutate(technical_probation_pop_new = 
-           ifelse((total_probation_violation_population == new_offense_probation_violation_population & !is.na(total_violation_population))|
-                    (total_violation_population == total_parole_violation_population & !is.na(total_violation_population)), 
-                  0, technical_probation_violation_population))
+# technical probation
+population <- population %>% mutate(technical_probation_pop_new = case_when(
+  !is.na(total_violation_population) & total_violation_population==total_parole_violation_population ~ 0,
+  !is.na(total_probation_violation_population) & total_probation_violation_population==new_offense_probation_violation_population ~ 0,
+  !is.na(technical_probation_violation_population) ~ technical_probation_violation_population,
+  is.na(technical_probation_violation_population) ~ technical_probation_violation_population
+))
 
+# total parole
+population <- population %>% mutate(total_parole_pop_new = case_when(
+  !is.na(total_violation_population) & total_violation_population==total_probation_violation_population ~ 0,
+  !is.na(total_violation_population) ~ total_parole_violation_population,
+  is.na(total_violation_population) ~ total_parole_violation_population
+))
 
+# new offense parole 
+population <- population %>% mutate(new_offense_parole_pop_new = case_when(
+  !is.na(total_violation_population) & total_violation_population==total_probation_violation_population ~ 0,
+  !is.na(total_parole_violation_population) & total_parole_violation_population==technical_parole_violation_population ~ 0,
+  !is.na(new_offense_parole_violation_population) ~ new_offense_parole_violation_population,
+  is.na(new_offense_parole_violation_population) ~ new_offense_parole_violation_population
+))
 
-
-
-
+# technical parole
+population <- population %>% mutate(technical_parole_pop_new = case_when(
+  !is.na(total_violation_population) & total_violation_population==total_probation_violation_population ~ 0,
+  !is.na(total_parole_violation_population) & total_parole_violation_population==new_offense_parole_violation_population ~ 0,
+  !is.na(technical_parole_violation_population) ~ technical_parole_violation_population,
+  is.na(technical_parole_violation_population) ~ technical_parole_violation_population
+))
 
 # reorder variables
 population <- population %>% select(states, 
@@ -173,3 +194,93 @@ admissions <- adm %>% janitor::clean_names()
 # make variables lowercase and replace periods with underscore
 admissions <- admissions %>% janitor::clean_names()
 
+####
+# Check for zeros, NAs and data errors
+####
+
+# create variable for total viol adm, total prob adm, and total parole adm
+admissions <- admissions %>% mutate(total_violation_admissions_calc = total_probation_violation_admissions+total_parole_violation_admissions,
+                                    total_probation_violation_admissions_calc = new_offense_probation_violation_admissions + technical_probation_violation_admissions,
+                                    total_parole_violation_admissions_calc = new_offense_parole_violation_admissions + technical_parole_violation_admissions)
+
+# create variables that tests if totals are incorrect
+admissions <- admissions %>% mutate(total_violation_adm_correct = ifelse(total_violation_admissions_calc==total_violation_admissions, TRUE, FALSE),
+                                    total_probation_adm_correct = ifelse(total_probation_violation_admissions_calc==total_probation_violation_admissions, TRUE, FALSE),
+                                    total_parole_adm_correct = ifelse(total_parole_violation_admissions_calc==total_parole_violation_admissions, TRUE, FALSE))
+
+# reorder variables
+admissions <- admissions %>% select(states, total_violation_adm_correct, total_probation_adm_correct, total_parole_adm_correct, everything())
+
+# replace NAs with zero
+# total viol adm = total parole adm + total prob adm
+# if total viol adm = total parole adm, then prob adm is zero
+
+# total probation
+admissions <- admissions %>% mutate(total_probation_adm_new = case_when(
+  !is.na(total_violation_admissions) & total_violation_admissions==total_parole_violation_admissions ~ 0,
+  !is.na(total_violation_admissions) ~ total_probation_violation_admissions,
+  is.na(total_violation_admissions) ~ total_probation_violation_admissions
+))
+
+# new offense probation 
+admissions <- admissions %>% mutate(new_offense_probation_adm_new = case_when(
+  !is.na(total_violation_admissions) & total_violation_admissions==total_parole_violation_admissions ~ 0,
+  !is.na(total_probation_violation_admissions) & total_probation_violation_admissions==technical_probation_violation_admissions ~ 0,
+  !is.na(new_offense_probation_violation_admissions) ~ new_offense_probation_violation_admissions,
+  is.na(new_offense_probation_violation_admissions) ~ new_offense_probation_violation_admissions
+))
+
+# technical probation
+admissions <- admissions %>% mutate(technical_probation_adm_new = case_when(
+  !is.na(total_violation_admissions) & total_violation_admissions==total_parole_violation_admissions ~ 0,
+  !is.na(total_probation_violation_admissions) & total_probation_violation_admissions==new_offense_probation_violation_admissions ~ 0,
+  !is.na(technical_probation_violation_admissions) ~ technical_probation_violation_admissions,
+  is.na(technical_probation_violation_admissions) ~ technical_probation_violation_admissions
+))
+
+# total parole
+admissions <- admissions %>% mutate(total_parole_adm_new = case_when(
+  !is.na(total_violation_admissions) & total_violation_admissions==total_probation_violation_admissions ~ 0,
+  !is.na(total_violation_admissions) ~ total_parole_violation_admissions,
+  is.na(total_violation_admissions) ~ total_parole_violation_admissions
+))
+
+# new offense parole 
+admissions <- admissions %>% mutate(new_offense_parole_adm_new = case_when(
+  !is.na(total_violation_admissions) & total_violation_admissions==total_probation_violation_admissions ~ 0,
+  !is.na(total_parole_violation_admissions) & total_parole_violation_admissions==technical_parole_violation_admissions ~ 0,
+  !is.na(new_offense_parole_violation_admissions) ~ new_offense_parole_violation_admissions,
+  is.na(new_offense_parole_violation_admissions) ~ new_offense_parole_violation_admissions
+))
+
+# technical parole
+admissions <- admissions %>% mutate(technical_parole_adm_new = case_when(
+  !is.na(total_violation_admissions) & total_violation_admissions==total_probation_violation_admissions ~ 0,
+  !is.na(total_parole_violation_admissions) & total_parole_violation_admissions==new_offense_parole_violation_admissions ~ 0,
+  !is.na(technical_parole_violation_admissions) ~ technical_parole_violation_admissions,
+  is.na(technical_parole_violation_admissions) ~ technical_parole_violation_admissions
+))
+
+# reorder variables
+admissions <- admissions %>% select(states, 
+                                    year, 
+                                    total_admissions, 
+                                    total_violation_admissions,
+                                    total_probation_adm_new,
+                                    new_offense_probation_adm_new,
+                                    technical_probation_adm_new,
+                                    total_parole_adm_new,
+                                    new_offense_parole_adm_new,
+                                    technical_parole_adm_new)
+
+# rename variables
+admissions <- admissions %>% select(states, 
+                                    year, 
+                                    total_admissions, 
+                                    total_violation_admissions,
+                                    total_probation_violation_admissions = total_probation_adm_new, 
+                                    new_offense_probation_violation_admissions = new_offense_probation_adm_new, 
+                                    technical_probation_violation_admissions = technical_probation_adm_new,
+                                    total_parole_violation_admissions = total_parole_adm_new, 
+                                    new_offense_parole_violation_admissions = new_offense_parole_adm_new, 
+                                    technical_parole_violation_admissions = technical_parole_adm_new)
