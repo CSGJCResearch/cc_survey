@@ -364,8 +364,15 @@ costs_final <- costs_final %>% mutate(avg_cost_per_day = ifelse(variable == "tot
 # remove unwanted variables
 costs_final <- costs_final %>% select(-avg_cost_per_day_19,-avg_cost_per_day_20) 
 
-# calcuate average yearly cost
+# calculate average yearly cost
 costs_final <- costs_final %>% mutate(average_yearly_cost = total*avg_cost_per_day*365)
+
+var.labels = c(variable = "Metric", 
+               total = "Total",
+               avg_cost_per_day = "Average cost per day",
+               average_yearly_cost = "Average cost per year (total x average cost per day x 365 days)"
+               )
+label(costs_final) = as.list(var.labels[match(names(costs_final), names(var.labels))])
 
 # save as csv
 write.xlsx(costs_final, "shared_data/Costs for web team 2021.xlsx")
