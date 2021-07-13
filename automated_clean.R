@@ -101,54 +101,52 @@ population <- population %>% select(states, total_violation_pop_correct, total_p
 
 # total probation
 population <- population %>%  
-  mutate(total_prob_pop_new = ifelse(total_violation_population==total_parole_violation_population &
+  mutate(total_probation_pop_new = ifelse(total_violation_population==total_parole_violation_population &
                                      !is.na(total_violation_population), 0, total_probation_violation_population))
 
-# new offense probation 
-population <- population %>% mutate(new_offense_prob_pop_new = ifelse(total_violation_population == total_parole_violation_population, 0, 
-                                                                      ifelse(total_probation_violation_population == technical_probation_violation_population, 0, new_offense_probation_violation_population),
-                                                                      new_offense_probation_violation_population))
-# technical probation
-
-                                                  
-# total parole       
+# new offense probation
 population <- population %>%  
-  mutate(total_parole_pop_new = ifelse(total_violation_population==total_probation_violation_population &
-                                       !is.na(total_violation_population), 0, total_parole_violation_population))
+  mutate(new_offense_probation_pop_new = 
+           ifelse((total_probation_violation_population == technical_probation_violation_population & !is.na(total_violation_population))|
+                    (total_violation_population == total_parole_violation_population & !is.na(total_violation_population)), 
+                  0, new_offense_probation_violation_population))
 
-# new offense parole 
+# technical probation - NOT WORKING, generating NAs for some states
+population <- population %>%  
+  mutate(technical_probation_pop_new = 
+           ifelse((total_probation_violation_population == new_offense_probation_violation_population & !is.na(total_violation_population))|
+                    (total_violation_population == total_parole_violation_population & !is.na(total_violation_population)), 
+                  0, technical_probation_violation_population))
 
-# technical parole 
-# population <- population %>%
-#   mutate(tech_parole_pop_new = 
-#            ifelse(!is.na(total_violation_population), 
-#                   ifelse(total_violation_population==total_probation_violation_population | 
-#                            total_probation_violation_population==new_offense_parole_violation_population, 0, technical_parole_violation_population), 
-#                   technical_parole_violation_population))
+
+
+
+
+
 
 # reorder variables
 population <- population %>% select(states, 
                                     year, 
                                     total_population, 
                                     total_violation_population,
-                                    total_prob_pop_new, 
-                                    new_offense_prob_pop_new, 
-                                    tech_prob_pop_new,
-                                    total_parole_pop_new, 
-                                    new_offense_parole_pop_new, 
-                                    tech_parole_pop_new)
+                                    total_probation_pop_new,
+                                    new_offense_probation_pop_new,
+                                    technical_probation_pop_new,
+                                    total_parole_pop_new,
+                                    new_offense_parole_pop_new,
+                                    technical_parole_pop_new)
 
 # rename variables
 population <- population %>% select(states, 
                                     year, 
                                     total_population, 
                                     total_violation_population,
-                                    total_probation_violation_population = total_prob_pop_new, 
-                                    new_offense_probation_violation_population = new_offense_prob_pop_new, 
-                                    technical_probation_violation_population = tech_prob_pop_new,
+                                    total_probation_violation_population = total_probation_pop_new, 
+                                    new_offense_probation_violation_population = new_offense_probation_pop_new, 
+                                    technical_probation_violation_population = technical_probation_pop_new,
                                     total_parole_violation_population = total_parole_pop_new, 
                                     new_offense_parole_violation_population = new_offense_parole_pop_new, 
-                                    technical_parole_violation_population = tech_parole_pop_new)
+                                    technical_parole_violation_population = technical_parole_pop_new)
 
 ##############
 # Admissions

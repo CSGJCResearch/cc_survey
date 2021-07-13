@@ -127,7 +127,7 @@ adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017)
 # testMCARNormality(data = miss_data1,del_lesscases = 1)
 
 ######################################################################################################################################################
-# IMPUtAtION
+# IMPUTATION
 # MICE
 ######################################################################################################################################################
 
@@ -198,7 +198,7 @@ adm_pop_analysis <- mean_imputed_data %>% group_by(states) %>% mutate(total_admi
 
 # rearrange data
 adm_pop_analysis <- adm_pop_analysis %>% 
-  select(sort(names(_)))
+  select(sort(names(.)))
 adm_pop_analysis <- adm_pop_analysis %>% select(states, year, everything())
 
 # change data types
@@ -259,14 +259,14 @@ national_estimates <- national_estimates %>% mutate(change_18_19 = year2019-year
                                                     )
 
 # save data to send to comms
-write_xlsx(national_estimates, "shared_data/National estimates for web team 2021_xlsx")
+write.xlsx(national_estimates, "shared_data/National estimates for web team 2021.xlsx")
 
 ######################################################################################################################################################
 # Costs
 ######################################################################################################################################################
 
 # get cost data for 2021
-costs <- read_xlsx("data/Cost and notes data 2021_xlsx", .name_repair = "universal")
+costs <- read_xlsx("data/Cost and notes data 2021.xlsx", .name_repair = "universal")
 costs <- costs %>% filter(states != "NA")
 
 # select general cost info
@@ -277,7 +277,7 @@ costs$cost_2020 = as_numeric(gsub("\\$", "", costs$Cost))
 costs <- costs %>% select(-Cost)
 
 # get cost data from 2019 - using costs from 2019 if cost data is missing for 2020
-costs2019 <- read_excel("data/Cost Per Day For Calculation_xlsx")
+costs2019 <- read_excel("data/Cost Per Day For Calculation.xlsx")
 costs2019 <- costs2019 %>% select(states, cost_2019 = `State Reported CostPerDay`)
 
 # replace NAs in 2020 cost data with data from 2019
@@ -327,7 +327,7 @@ costs_final <- costs_final %>%
 costs_final$total <- "total"
 
 # transpose
-costs_final <- recast(costs_final, variable~total, value_var='value')
+costs_final <- recast(costs_final, variable~total, value.var='value')
 
 # add avg costs per day
 costs_final$avg_cost_per_day_19 <- mean(costs_pop_df$cost_2019)
