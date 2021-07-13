@@ -307,3 +307,41 @@ var.labels = c(states="State name",
                new_offense_parole_violation_admissions = "New offense parole violation admissions",
                technical_parole_violation_admissions = "Technical parole violation admissions")
 label(admissions) = as.list(var.labels[match(names(admissions), names(var.labels))])
+
+# write data
+
+# save sheets by year and type
+admissions_2018 <- admissions %>% 
+  filter(year=="2018")
+admissions_2019 <- admissions %>% 
+  filter(year=="2019")
+admissions_2020 <- admissions %>% 
+  filter(year=="2020")
+population_2018 <- population %>% 
+  filter(year=="2018")
+population_2019 <- population %>% 
+  filter(year=="2019")
+population_2020 <- population %>% 
+  filter(year=="2020")
+
+# create workbook
+work_book <- createWorkbook()
+addWorksheet(work_book, sheetName="Admissions 2018")
+addWorksheet(work_book, sheetName="Admissions 2019")
+addWorksheet(work_book, sheetName="Admissions 2020")
+addWorksheet(work_book, sheetName="Population 2018")
+addWorksheet(work_book, sheetName="Population 2019")
+addWorksheet(work_book, sheetName="Population 2020")
+
+# write data
+writeData(work_book, "Admissions 2018", admissions_2018)
+writeData(work_book, "Admissions 2019", admissions_2019)
+writeData(work_book, "Admissions 2020", admissions_2020)
+writeData(work_book, "Population 2018", population_2018)
+writeData(work_book, "Population 2019", population_2019)
+writeData(work_book, "Population 2020", population_2020)
+
+# save file
+saveWorkbook(work_book,
+             file= "data/Data for web team 2021 v9.xlsx",
+             overwrite = TRUE)
