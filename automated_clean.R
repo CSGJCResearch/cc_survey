@@ -2,7 +2,7 @@
 # Confined and Costly Survey
 # Imports/cleans CC Survey for Automated Reports
 # by Mari Roberts
-# 2/21/2020
+# 7/13/2021
 #######################################
 
 # load necessary packages
@@ -14,11 +14,11 @@ requiredPackages = c('dplyr',
                      'readxl',
                      'tidyverse',
                      'knitr',
-                     'data_table',
+                     'data.table',
                      'formattable',
                      'scales',
-                     'extrafont',
-                     'janitor'
+                     'janitor',
+                     'Hmisc'
                      )
 # only downloads packages if needed
 for(p in requiredPackages){
@@ -169,6 +169,19 @@ population <- population %>% select(states,
                                     new_offense_parole_violation_population = new_offense_parole_pop_new, 
                                     technical_parole_violation_population = technical_parole_pop_new)
 
+# add labels
+var.labels = c(states="State name", 
+               year="Year",
+               total_population = "Total population",
+               total_violation_population = "Total probation and parole violation population",
+               total_probation_violation_population = "Total probation violation population (new offense + technical)",
+               new_offense_probation_violation_population = "New offense probation violation population",
+               technical_probation_violation_population = "Technical probation violation population",
+               total_parole_violation_population = "Total parole violation population (new offense + technical)",
+               new_offense_parole_violation_population = "New offense parole violation population",
+               technical_parole_violation_population = "Technical parole violation population")
+label(population) = as.list(var.labels[match(names(population), names(var.labels))])
+
 ##############
 # Admissions
 ##############
@@ -284,3 +297,16 @@ admissions <- admissions %>% select(states,
                                     total_parole_violation_admissions = total_parole_adm_new, 
                                     new_offense_parole_violation_admissions = new_offense_parole_adm_new, 
                                     technical_parole_violation_admissions = technical_parole_adm_new)
+
+# add labels
+var.labels = c(states="State name", 
+               year="Year",
+               total_admissions = "Total admissions",
+               total_violation_admissions = "Total probation and parole violation admissions",
+               total_probation_violation_admissions = "Total probation violation admissions (new offense + technical)",
+               new_offense_probation_violation_admissions = "New offense probation violation admissions",
+               technical_probation_violation_admissions = "Technical probation violation admissions",
+               total_parole_violation_admissions = "Total parole violation admissions (new offense + technical)",
+               new_offense_parole_violation_admissions = "New offense parole violation admissions",
+               technical_parole_violation_admissions = "Technical parole violation admissions")
+label(admissions) = as.list(var.labels[match(names(admissions), names(var.labels))])
