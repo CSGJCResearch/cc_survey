@@ -144,6 +144,22 @@ temp_data$imp$total_admissions
 # completed dataset
 mice_imputed_data <- complete(temp_data,1)
 
+######
+#produce confidence intervals
+#post multiple imputation t-test
+tablevals<- c("total_admissions","total_violation_admissions",
+              "","","","","","")
+for (i in tablevals) {
+  fit <- with(temp_data,lm(total_admissions~year))
+  CI1 <- summary(pool(fit),conf.int=TRUE) %>% mutate(
+    term = ifelse(term=="(Intercept)","year2018",
+                  ifelse(term=="year2019","year2019",
+                         ifelse(term=="year2020","year2020",NA)))
+    ) %>%
+    select(term,estimate,`2.5 %`,`97.5 %`)
+}
+
+
 # inspect the distribution of original and imputed data
 # want to see magenta points (imputed) match the shape of the blue ones (observed)
 # plausible values
@@ -153,29 +169,30 @@ mice_imputed_data <- complete(temp_data,1)
 ######################################################################################################################################################
 # IMPUTATION
 # MEAN
+# NOTE - NOT USING THIS - USING MULTIPLE IMPUTATION ABOVE INSTEAD
 ######################################################################################################################################################
 
 # Create mean if value is NA
-mean_imputed_data <-  adm_pop_analysis %>% 
-  group_by(year) %>% 
-  mutate(total_admissions_mean = ifelse(is.na(total_admissions), mean(total_admissions, na.rm=T), total_admissions),
-         total_violation_admissions_mean = ifelse(is.na(total_violation_admissions), mean(total_violation_admissions, na.rm=T), total_violation_admissions),      
-         total_probation_violation_admissions_mean = ifelse(is.na(total_probation_violation_admissions), mean(total_probation_violation_admissions, na.rm=T), total_probation_violation_admissions),      
-         new_offense_probation_violation_admissions_mean = ifelse(is.na(new_offense_probation_violation_admissions), mean(new_offense_probation_violation_admissions, na.rm=T), new_offense_probation_violation_admissions),  
-         technical_probation_violation_admissions_mean = ifelse(is.na(technical_probation_violation_admissions), mean(technical_probation_violation_admissions, na.rm=T), technical_probation_violation_admissions),  
-         total_parole_violation_admissions_mean = ifelse(is.na(total_parole_violation_admissions), mean(total_parole_violation_admissions, na.rm=T), total_parole_violation_admissions),           
-         new_offense_parole_violation_admissions_mean = ifelse(is.na(new_offense_parole_violation_admissions), mean(new_offense_parole_violation_admissions, na.rm=T), new_offense_parole_violation_admissions),  
-         technical_parole_violation_admissions_mean = ifelse(is.na(technical_parole_violation_admissions), mean(technical_parole_violation_admissions, na.rm=T), technical_parole_violation_admissions),       
-         
-         total_population_mean = ifelse(is.na(total_population), mean(total_population, na.rm=T), total_population),  
-         total_violation_population_mean = ifelse(is.na(total_violation_population), mean(total_violation_population, na.rm=T), total_violation_population),                  
-         total_probation_violation_population_mean = ifelse(is.na(total_probation_violation_population), mean(total_probation_violation_population, na.rm=T), total_probation_violation_population),  
-         new_offense_probation_violation_population_mean = ifelse(is.na(new_offense_probation_violation_population), mean(new_offense_probation_violation_population, na.rm=T), new_offense_probation_violation_population),  
-         technical_probation_violation_population_mean = ifelse(is.na(technical_probation_violation_population), mean(technical_probation_violation_population, na.rm=T), technical_probation_violation_population),  
-         total_parole_violation_population_mean = ifelse(is.na(total_parole_violation_population), mean(total_parole_violation_population, na.rm=T), total_parole_violation_population),           
-         new_offense_parole_violation_population_mean = ifelse(is.na(new_offense_parole_violation_population), mean(new_offense_parole_violation_population, na.rm=T), new_offense_parole_violation_population),  
-         technical_parole_violation_population_mean = ifelse(is.na(technical_parole_violation_population), mean(technical_parole_violation_population, na.rm=T), technical_parole_violation_population))       
-      
+# mean_imputed_data <-  adm_pop_analysis %>% 
+#   group_by(year) %>% 
+#   mutate(total_admissions_mean = ifelse(is.na(total_admissions), mean(total_admissions, na.rm=T), total_admissions),
+#          total_violation_admissions_mean = ifelse(is.na(total_violation_admissions), mean(total_violation_admissions, na.rm=T), total_violation_admissions),      
+#          total_probation_violation_admissions_mean = ifelse(is.na(total_probation_violation_admissions), mean(total_probation_violation_admissions, na.rm=T), total_probation_violation_admissions),      
+#          new_offense_probation_violation_admissions_mean = ifelse(is.na(new_offense_probation_violation_admissions), mean(new_offense_probation_violation_admissions, na.rm=T), new_offense_probation_violation_admissions),  
+#          technical_probation_violation_admissions_mean = ifelse(is.na(technical_probation_violation_admissions), mean(technical_probation_violation_admissions, na.rm=T), technical_probation_violation_admissions),  
+#          total_parole_violation_admissions_mean = ifelse(is.na(total_parole_violation_admissions), mean(total_parole_violation_admissions, na.rm=T), total_parole_violation_admissions),           
+#          new_offense_parole_violation_admissions_mean = ifelse(is.na(new_offense_parole_violation_admissions), mean(new_offense_parole_violation_admissions, na.rm=T), new_offense_parole_violation_admissions),  
+#          technical_parole_violation_admissions_mean = ifelse(is.na(technical_parole_violation_admissions), mean(technical_parole_violation_admissions, na.rm=T), technical_parole_violation_admissions),       
+#          
+#          total_population_mean = ifelse(is.na(total_population), mean(total_population, na.rm=T), total_population),  
+#          total_violation_population_mean = ifelse(is.na(total_violation_population), mean(total_violation_population, na.rm=T), total_violation_population),                  
+#          total_probation_violation_population_mean = ifelse(is.na(total_probation_violation_population), mean(total_probation_violation_population, na.rm=T), total_probation_violation_population),  
+#          new_offense_probation_violation_population_mean = ifelse(is.na(new_offense_probation_violation_population), mean(new_offense_probation_violation_population, na.rm=T), new_offense_probation_violation_population),  
+#          technical_probation_violation_population_mean = ifelse(is.na(technical_probation_violation_population), mean(technical_probation_violation_population, na.rm=T), technical_probation_violation_population),  
+#          total_parole_violation_population_mean = ifelse(is.na(total_parole_violation_population), mean(total_parole_violation_population, na.rm=T), total_parole_violation_population),           
+#          new_offense_parole_violation_population_mean = ifelse(is.na(new_offense_parole_violation_population), mean(new_offense_parole_violation_population, na.rm=T), new_offense_parole_violation_population),  
+#          technical_parole_violation_population_mean = ifelse(is.na(technical_parole_violation_population), mean(technical_parole_violation_population, na.rm=T), technical_parole_violation_population))       
+#       
 
 ######################################################################################################################################################
 # CALCULATE CHANGES / NATIONAL ESTIMATES
