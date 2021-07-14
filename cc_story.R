@@ -5,11 +5,9 @@
 # 7/13/2021
 #######################################
 
-# read automated_clean to get data
-source("automated_clean.R")
-
 # load necessary packages
-requiredPackages = c('dplyr',
+requiredPackages = c('rstudioapi',
+                     'dplyr',
                      'openxlsx',
                      'readr',
                      'reshape',
@@ -22,7 +20,9 @@ requiredPackages = c('dplyr',
                      'scales',
                      'mice',
                      'VIM',
-                     'finalfit'
+                     'finalfit',
+                     'janitor',
+                     'Hmisc'
 )
 # only downloads packages if needed
 for(p in requiredPackages){
@@ -30,24 +30,12 @@ for(p in requiredPackages){
   library(p,character.only = TRUE)
 }
 
-# get working directory depending on login
-getwd <- function(){
-  thisLogin <- sys_info()['login']
-  # if(thisLogin=="amund") {
-  #   base <- '/home'
-  #   csgF <- 'directory'
-  # }
-  if(thisLogin=="mr4909"){
-    base <- '/Users'
-    csgF <- 'csgjc/cc_survey'
-  }
-  if(thisLogin=="mari") {
-    base <- '/Users'
-    csgF <- 'csgjc/cc_survey'
-  }
-  wd <- paste(base,thisLogin,csgF,sep="/")
-  return(wd)
-}
+#set wd based on your current program path (for collaboration)
+#requires rstudioapi package
+setwd(dirname(getActiveDocumentContext()$path))
+
+# read automated_clean to get data
+source("automated_clean.R")
 
 # dup for cleaning
 adm_analysis <- admissions
@@ -60,7 +48,8 @@ adm_pop_analysis <- merge(admissions, population, by = c("states","year"))
 adm_pop_analysis <- adm_pop_analysis %>% select(states, year, everything()) %>% arrange(desc(states))
 
 # remove 2017
-adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017)
+table(adm_pop_analysis$year)
+adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017) #there is no 2017 year in the data
 
 ######################################################################################################################################################
 # CHECK MISSINGNESS
@@ -155,6 +144,22 @@ temp_data$imp$total_admissions
 # completed dataset
 mice_imputed_data <- complete(temp_data,1)
 
+######
+#produce confidence intervals
+#post multiple imputation t-test
+tablevals<- c("total_admissions","total_violation_admissions",
+              "","","","","","")
+for (i in tablevals) {
+  fit <- with(temp_data,lm(total_admissions~year))
+  CI1 <- summary(pool(fit),conf.int=TRUE) %>% mutate(
+    term = ifelse(term=="(Intercept)","year2018",
+                  ifelse(term=="year2019","year2019",
+                         ifelse(term=="year2020","year2020",NA)))
+  ) %>%
+    select(term,estimate,`2.5 %`,`97.5 %`)
+}
+
+
 # inspect the distribution of original and imputed data
 # want to see magenta points (imputed) match the shape of the blue ones (observed)
 # plausible values
@@ -164,40 +169,42 @@ mice_imputed_data <- complete(temp_data,1)
 ######################################################################################################################################################
 # IMPUTATION
 # MEAN
+# NOTE - NOT USING THIS - USING MULTIPLE IMPUTATION ABOVE INSTEAD
 ######################################################################################################################################################
 
 # Create mean if value is NA
-mean_imputed_data <-  adm_pop_analysis %>% 
-  group_by(year) %>% 
-  mutate(total_admissions_mean = ifelse(is.na(total_admissions), mean(total_admissions, na.rm=T), total_admissions),
-         total_violation_admissions_mean = ifelse(is.na(total_violation_admissions), mean(total_violation_admissions, na.rm=T), total_violation_admissions),      
-         total_probation_violation_admissions_mean = ifelse(is.na(total_probation_violation_admissions), mean(total_probation_violation_admissions, na.rm=T), total_probation_violation_admissions),      
-         new_offense_probation_violation_admissions_mean = ifelse(is.na(new_offense_probation_violation_admissions), mean(new_offense_probation_violation_admissions, na.rm=T), new_offense_probation_violation_admissions),  
-         technical_probation_violation_admissions_mean = ifelse(is.na(technical_probation_violation_admissions), mean(technical_probation_violation_admissions, na.rm=T), technical_probation_violation_admissions),  
-         total_parole_violation_admissions_mean = ifelse(is.na(total_parole_violation_admissions), mean(total_parole_violation_admissions, na.rm=T), total_parole_violation_admissions),           
-         new_offense_parole_violation_admissions_mean = ifelse(is.na(new_offense_parole_violation_admissions), mean(new_offense_parole_violation_admissions, na.rm=T), new_offense_parole_violation_admissions),  
-         technical_parole_violation_admissions_mean = ifelse(is.na(technical_parole_violation_admissions), mean(technical_parole_violation_admissions, na.rm=T), technical_parole_violation_admissions),       
-         
-         total_population_mean = ifelse(is.na(total_population), mean(total_population, na.rm=T), total_population),  
-         total_violation_population_mean = ifelse(is.na(total_violation_population), mean(total_violation_population, na.rm=T), total_violation_population),                  
-         total_probation_violation_population_mean = ifelse(is.na(total_probation_violation_population), mean(total_probation_violation_population, na.rm=T), total_probation_violation_population),  
-         new_offense_probation_violation_population_mean = ifelse(is.na(new_offense_probation_violation_population), mean(new_offense_probation_violation_population, na.rm=T), new_offense_probation_violation_population),  
-         technical_probation_violation_population_mean = ifelse(is.na(technical_probation_violation_population), mean(technical_probation_violation_population, na.rm=T), technical_probation_violation_population),  
-         total_parole_violation_population_mean = ifelse(is.na(total_parole_violation_population), mean(total_parole_violation_population, na.rm=T), total_parole_violation_population),           
-         new_offense_parole_violation_population_mean = ifelse(is.na(new_offense_parole_violation_population), mean(new_offense_parole_violation_population, na.rm=T), new_offense_parole_violation_population),  
-         technical_parole_violation_population_mean = ifelse(is.na(technical_parole_violation_population), mean(technical_parole_violation_population, na.rm=T), technical_parole_violation_population))       
-      
+# mean_imputed_data <-  adm_pop_analysis %>% 
+#   group_by(year) %>% 
+#   mutate(total_admissions_mean = ifelse(is.na(total_admissions), mean(total_admissions, na.rm=T), total_admissions),
+#          total_violation_admissions_mean = ifelse(is.na(total_violation_admissions), mean(total_violation_admissions, na.rm=T), total_violation_admissions),      
+#          total_probation_violation_admissions_mean = ifelse(is.na(total_probation_violation_admissions), mean(total_probation_violation_admissions, na.rm=T), total_probation_violation_admissions),      
+#          new_offense_probation_violation_admissions_mean = ifelse(is.na(new_offense_probation_violation_admissions), mean(new_offense_probation_violation_admissions, na.rm=T), new_offense_probation_violation_admissions),  
+#          technical_probation_violation_admissions_mean = ifelse(is.na(technical_probation_violation_admissions), mean(technical_probation_violation_admissions, na.rm=T), technical_probation_violation_admissions),  
+#          total_parole_violation_admissions_mean = ifelse(is.na(total_parole_violation_admissions), mean(total_parole_violation_admissions, na.rm=T), total_parole_violation_admissions),           
+#          new_offense_parole_violation_admissions_mean = ifelse(is.na(new_offense_parole_violation_admissions), mean(new_offense_parole_violation_admissions, na.rm=T), new_offense_parole_violation_admissions),  
+#          technical_parole_violation_admissions_mean = ifelse(is.na(technical_parole_violation_admissions), mean(technical_parole_violation_admissions, na.rm=T), technical_parole_violation_admissions),       
+#          
+#          total_population_mean = ifelse(is.na(total_population), mean(total_population, na.rm=T), total_population),  
+#          total_violation_population_mean = ifelse(is.na(total_violation_population), mean(total_violation_population, na.rm=T), total_violation_population),                  
+#          total_probation_violation_population_mean = ifelse(is.na(total_probation_violation_population), mean(total_probation_violation_population, na.rm=T), total_probation_violation_population),  
+#          new_offense_probation_violation_population_mean = ifelse(is.na(new_offense_probation_violation_population), mean(new_offense_probation_violation_population, na.rm=T), new_offense_probation_violation_population),  
+#          technical_probation_violation_population_mean = ifelse(is.na(technical_probation_violation_population), mean(technical_probation_violation_population, na.rm=T), technical_probation_violation_population),  
+#          total_parole_violation_population_mean = ifelse(is.na(total_parole_violation_population), mean(total_parole_violation_population, na.rm=T), total_parole_violation_population),           
+#          new_offense_parole_violation_population_mean = ifelse(is.na(new_offense_parole_violation_population), mean(new_offense_parole_violation_population, na.rm=T), new_offense_parole_violation_population),  
+#          technical_parole_violation_population_mean = ifelse(is.na(technical_parole_violation_population), mean(technical_parole_violation_population, na.rm=T), technical_parole_violation_population))       
+#       
 
 ######################################################################################################################################################
 # CALCULATE CHANGES / NATIONAL ESTIMATES
 ######################################################################################################################################################
 
 # calculate percent change         
-adm_pop_analysis <- mean_imputed_data %>% group_by(states) %>% mutate(total_admissions_pct = (total_admissions_mean / dplyr::lag(total_admissions_mean) -1)*100,
-                                                                      total_population_pct = (total_population_mean / dplyr::lag(total_population_mean) -1)*100,
-                                                                      total_violation_admissions_pct = (total_violation_admissions_mean / dplyr::lag(total_violation_admissions_mean) -1)*100,
-                                                                      total_violation_population_pct = (total_violation_population_mean / dplyr::lag(total_violation_population_mean) -1)*100
-                                                                      )
+adm_pop_analysis <- mice_imputed_data %>% group_by(states) %>% 
+  mutate(total_admissions_pct = (total_admissions / dplyr::lag(total_admissions) -1)*100,
+  total_population_pct = (total_population / dplyr::lag(total_population) -1)*100,
+  total_violation_admissions_pct = (total_violation_admissions / dplyr::lag(total_violation_admissions) -1)*100,
+  total_violation_population_pct = (total_violation_population / dplyr::lag(total_violation_population) -1)*100
+  )
 
 # rearrange data
 adm_pop_analysis <- adm_pop_analysis %>% 
@@ -206,39 +213,32 @@ adm_pop_analysis <- adm_pop_analysis %>% select(states, year, everything())
 
 # change data types
 adm_pop_analysis$year <- factor(adm_pop_analysis$year)
-adm_pop_analysis$total_admissions_mean <- as.numeric(adm_pop_analysis$total_admissions_mean )
-adm_pop_analysis$total_population_mean  <- as.numeric(adm_pop_analysis$total_population_mean )
-adm_pop_analysis$total_violation_admissions_mean  <- as.numeric(adm_pop_analysis$total_violation_admissions_mean )
-adm_pop_analysis$total_violation_population_mean  <- as.numeric(adm_pop_analysis$total_violation_population_mean )
+adm_pop_analysis$total_admissions <- as.numeric(adm_pop_analysis$total_admissions)
+adm_pop_analysis$total_population  <- as.numeric(adm_pop_analysis$total_population)
+adm_pop_analysis$total_violation_admissions  <- as.numeric(adm_pop_analysis$total_violation_admissions)
+adm_pop_analysis$total_violation_population  <- as.numeric(adm_pop_analysis$total_violation_population)
 
 # sum of variables
-adm_pop_national <- adm_pop_analysis %>% group_by(year) %>% dplyr::summarise(# admissions
-                                                                             total_admissions = sum(total_admissions_mean),
-                                                                             total_violation_admissions = sum(total_violation_admissions_mean),
-                                                                             prob_admissions = sum(total_probation_violation_admissions_mean),
-                                                                             new_prob_admissions = sum(new_offense_probation_violation_admissions_mean),
-                                                                             tech_prob_admissions = sum(technical_probation_violation_admissions_mean),
-                                                                             parole_admissions = sum(total_parole_violation_admissions_mean),
-                                                                             new_parole_admissions = sum(new_offense_parole_violation_admissions_mean),
-                                                                             tech_parole_admissions = sum(technical_parole_violation_admissions_mean),
-                                                                             # population
-                                                                             total_population = sum(total_population_mean),
-                                                                             total_violation_population = sum(total_violation_population_mean),
-                                                                             prob_population = sum(total_probation_violation_population_mean),
-                                                                             new_prob_population = sum(new_offense_probation_violation_population_mean),
-                                                                             tech_prob_population = sum(technical_probation_violation_population_mean),
-                                                                             parole_population = sum(total_parole_violation_population_mean),
-                                                                             new_parole_population = sum(new_offense_parole_violation_population_mean),
-                                                                             tech_parole_population = sum(technical_parole_violation_population_mean)
-                                                                             )
-
-# # transpose
-# x = colnames(adm_pop_national[,-1])
-# tmp <- melt(adm_pop_national, id_vars = "year", 
-#             measure_vars = x, 
-#             variable_name = "type", 
-#             value_name = "value", 
-#             na.rm = TRUE)
+adm_pop_national <- adm_pop_analysis %>% group_by(year) %>% dplyr::summarise(
+  # admissions
+  total_admissions = sum(total_admissions),
+  total_violation_admissions = sum(total_violation_admissions),
+  prob_admissions = sum(total_probation_violation_admissions),
+  new_prob_admissions = sum(new_offense_probation_violation_admissions),
+  tech_prob_admissions = sum(technical_probation_violation_admissions),
+  parole_admissions = sum(total_parole_violation_admissions),
+  new_parole_admissions = sum(new_offense_parole_violation_admissions),
+  tech_parole_admissions = sum(technical_parole_violation_admissions),
+  # population
+  total_population = sum(total_population),
+  total_violation_population = sum(total_violation_population),
+  prob_population = sum(total_probation_violation_population),
+  new_prob_population = sum(new_offense_probation_violation_population),
+  tech_prob_population = sum(technical_probation_violation_population),
+  parole_population = sum(total_parole_violation_population),
+  new_parole_population = sum(new_offense_parole_violation_population),
+  tech_parole_population = sum(technical_parole_violation_population)
+)
 
 # transpose data
 national_estimates = t(adm_pop_national)
@@ -259,7 +259,7 @@ national_estimates <- national_estimates %>% mutate(change_18_19 = year2019-year
                                                     pct_18_19 = ((year2019-year2018)/year2018),
                                                     pct_19_20 = ((year2020-year2019)/year2019),
                                                     pct_18_20 = ((year2020-year2018)/year2018)
-                                                    )
+)
 # add labels to data
 var.labels = c(type = "Metric", 
                year2018 = "2018",
@@ -357,8 +357,8 @@ costs_final$avg_cost_per_day_20 <- mean(costs_pop_df$cost_2020)
 
 # add cost per day depending on year
 costs_final <- costs_final %>% mutate(avg_cost_per_day = ifelse(variable == "total_population_2019"|
-                                                                variable == "total_viol_population_2019"|
-                                                                variable == "technical_population_2019", 
+                                                                  variable == "total_viol_population_2019"|
+                                                                  variable == "technical_population_2019", 
                                                                 avg_cost_per_day_19, avg_cost_per_day_20))
 
 # remove unwanted variables
@@ -371,7 +371,7 @@ var.labels = c(variable = "Metric",
                total = "Total",
                avg_cost_per_day = "Average cost per day",
                average_yearly_cost = "Average cost per year (total x average cost per day x 365 days)"
-               )
+)
 label(costs_final) = as.list(var.labels[match(names(costs_final), names(var.labels))])
 
 # save as csv
