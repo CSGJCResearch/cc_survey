@@ -6,12 +6,12 @@
 #######################################
 
 # load data
-# source("automated_clean.R")
+source("automated_clean.R")
 
 # read excel population data for 2018-2020
-population18 <- read_xlsx("data/Data for web team 2021 v9.xlsx", sheet = "Population 2018", .name_repair = "universal")
-population19 <- read_xlsx("data/Data for web team 2021 v9.xlsx", sheet = "Population 2019", .name_repair = "universal")
-population20 <- read_xlsx("data/Data for web team 2021 v9.xlsx", sheet = "Population 2020", .name_repair = "universal")
+population18 <- population %>% filter(year == "2018")
+population19 <- population %>% filter(year == "2019")
+population20 <- population %>% filter(year == "2020")
 
 # rename variables
 pop18_a <- population18 %>% select(states, violation_population_18 = total_violation_population)
@@ -37,51 +37,17 @@ rev_pop <- rev_pop %>% mutate(# change_18_20 = violation_population_18-violation
 # reorder variables
 rev_pop <- rev_pop %>% select(states, pct_18_19, pct_19_20, everything())
 
-# pct change 2018-2019
-rev_pop <- rev_pop %>% arrange(pct_18_19)
-rev_pop <- rev_pop %>% mutate(pct_18_19_1 = pct_18_19*100)
-rev_pop$pct_18_19_1 <- round(rev_pop$pct_18_19_1,1)
-rev_pop <- rev_pop %>% arrange(pct_18_19_1)
-
-# pct change 2019-2020
-rev_pop <- rev_pop %>% mutate(pct_19_20_1 = pct_19_20*100)
-rev_pop$pct_19_20_1 <- round(rev_pop$pct_19_20_1,1)
-rev_pop <- rev_pop %>% arrange(pct_19_20_1)
-
-# save data
-rev_pop1 <- rev_pop %>% select(states, `Violation Pop Change from 2018 to 2019`=pct_18_19_1, `Violation Pop Change from 2019 to 2020`=pct_19_20_1)
-# write.csv(rev_pop1, "shared_data/rev_pop.csv")
-
-# From 2019 to 2020, ? states saw more than a 35 percent decline 
-pop_over35pct <- rev_pop %>% filter(pct_19_20 < -.35)
-dim(pop_over35pct)
-
-# ? states saw more than a 10 percent decline before the pandemic
-pop_over10priorpct <- rev_pop %>% filter(pct_18_19 < -.10)
-dim(pop_over10priorpct)
-
-# top 5 states in 2019
-top_5_2019 <- rev_pop %>% arrange(pct_18_19) %>% head(5)
-top_5_2019 <- top_5_2019 %>% select(states, pct_18_19)
-
-# top 5 states in 2020
-top_5_2020 <- rev_pop %>% arrange(pct_19_20) %>% head(5)
-top_5_2020 <- top_5_2020 %>% select(states, pct_19_20)
-
-# combine data
-top_10_states <- cbind(top_5_2019, top_5_2020)
-
-# save data
-write.csv(top_10_states, "shared_data/Top 5 states population drops.csv")
+# From 2019 to 2020, ____ states saw more than a 30 percent decline 
+pop_over30pct <- rev_pop %>% filter(pct_19_20 < -.30)
 
 #######
 # Admissions
 #######
 
 # read excel admissions data for 2018-2020
-admissions18 <- read_xlsx("data/Data for web team 2021 v9.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
-admissions19 <- read_xlsx("data/Data for web team 2021 v9.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
-admissions20 <- read_xlsx("data/Data for web team 2021 v9.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
+admissions18 <- admissions %>% filter(year == "2018")
+admissions19 <- admissions %>% filter(year == "2019")
+admissions20 <- admissions %>% filter(year == "2020")
 
 # rename variables
 adm18_a <- admissions18 %>% select(states, violation_admissions_18 = total_violation_admissions)
@@ -104,48 +70,46 @@ rev_adm <- rev_adm %>% mutate(# change_18_20 = violation_admissions_18-violation
   # pct_18_20 = ((violation_admissions_20-violation_admissions_18)/violation_admissions_18)*100
 )
 
-# pct change 2018-2019
-rev_adm <- rev_adm %>% arrange(pct_18_19)
-rev_adm <- rev_adm %>% mutate(pct_18_19_1 = pct_18_19*100)
-rev_adm$pct_18_19_1 <- round(rev_adm$pct_18_19_1,1)
-rev_adm <- rev_adm %>% arrange(pct_18_19_1)
+# From 2019 to 2020, ____ states saw more than a 30 percent decline 
+adm_over30pct <- rev_adm %>% filter(pct_19_20 < -.30)
 
-# pct change 2019-2020
-rev_adm <- rev_adm %>% mutate(pct_19_20_1 = pct_19_20*100)
-rev_adm$pct_19_20_1 <- round(rev_adm$pct_19_20_1,1)
-rev_adm <- rev_adm %>% arrange(pct_19_20_1)
+# From 2018 to 2019, ____ states saw more than a 10 percent decline 
+adm_over10pct_18_19 <- rev_adm %>% filter(pct_18_19 < -.10)
+
+#########
+# save data for comms
+#########
+
+# rename variables for merging
+rev_adm <- rev_adm %>% select(states,
+                              violation_admissions_18, 
+                              violation_admissions_19, 
+                              violation_admissions_20,
+                              adm_pct_18_19 = pct_18_19,
+                              adm_pct_19_20 = pct_19_20)
+rev_pop <- rev_pop %>% select(states,
+                              violation_population_18, 
+                              violation_population_19, 
+                              violation_population_20,
+                              pop_pct_18_19 = pct_18_19,
+                              pop_pct_19_20 = pct_19_20)
+
+# merge adm and pop data
+adm_pop_changes <- merge(rev_adm, rev_pop, by = "states")
+
+# add labels
+var.labels = c(states = "States",
+               violation_admissions_18 = "Admissions due to supervision violations in 2018",
+               violation_admissions_19 = "Admissions due to supervision violations in 2019",
+               violation_admissions_20 = "Admissions due to supervision violations in 2020",
+               adm_pct_18_19 = "Change in admissions due to supervision violations from 2018 to 2019",
+               adm_pct_19_20 = "Change in admissions due to supervision violations from 2019 to 2020",
+               violation_population_18 = "Population of supervision violators in 2018",
+               violation_population_19 = "Population of supervision violators in 2019",
+               violation_population_20 = "Population of supervision violators in 2020",
+               pop_pct_18_19 = "Change in population due to supervision violators from 2018 to 2019",
+               pop_pct_19_20 = "Change in population due to supervision violators from 2019 to 2020")
+label(adm_pop_changes) = as.list(var.labels[match(names(adm_pop_changes), names(var.labels))])
 
 # save data
-rev_adm1 <- rev_adm %>% select(states, 
-                               `Violation Adm Change from 2018 to 2019`=pct_18_19_1, 
-                               `Violation Adm Change from 2019 to 2020`=pct_19_20_1)
-# write.csv(rev_adm1, "shared_data/rev_adm.csv")
-
-# all states with a decline
-adm_decline_states <- rev_adm %>% filter(pct_19_20 < 0)
-
-# ? states saw more than a 25 percent decline in state prison populations
-adm_over25pct <- rev_adm %>% filter(pct_19_20 < -.25)
-dim(adm_over10pct)
-
-# top 5 states in 2019
-top_5_2019 <- rev_adm %>% arrange(pct_18_19) %>% head(5)
-top_5_2019 <- top_5_2019 %>% select(states, pct_18_19)
-
-# top 5 states in 2020
-top_5_2020 <- rev_adm %>% arrange(pct_19_20) %>% head(5)
-top_5_2020 <- top_5_2020 %>% select(states, pct_19_20)
-
-# combine data
-top_10_states <- cbind(top_5_2019, top_5_2020)
-
-# combine state drops numbers
-rev_adm <- rev_adm %>% mutate(adm_pct_18_19 = pct_18_19,
-                              adm_pct_19_20 = pct_19_20) %>% select(-pct_18_19,-pct_19_20) 
-rev_pop <- rev_pop %>% mutate(pop_pct_18_19 = pct_18_19,
-                              pop_pct_19_20 = pct_19_20) %>% select(-pct_18_19,-pct_19_20)
-rev_changes <- merge(rev_adm, rev_pop, by = "states")
-
-# save csvs
-write.csv(top_10_states, "shared_data/Top 5 states admissions drops.csv")
-write.csv(rev_changes, "shared_data/State violation changes by year.csv")
+write.xlsx(adm_pop_changes, "shared_data/State violation changes by year 2021.xlsx")
