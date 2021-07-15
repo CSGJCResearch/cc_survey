@@ -1,7 +1,7 @@
 #######################################
-# Confined and Costly survey
-# Impute values, costs, national estimates data for comms
-# by Mari Roberts, JM
+# Confined and Costly
+# Impute values, national estimates for comms team
+# by Mari Roberts, Joshua Mallett
 # 7/13/2021
 # updated: 7/14/2021 - finalize MI counts w/CI's
 #######################################
@@ -52,64 +52,64 @@ adm_pop_analysis <- adm_pop_analysis %>% select(states, year, everything()) %>% 
 table(adm_pop_analysis$year)
 adm_pop_analysis <- adm_pop_analysis %>% filter(year != 2017) #there is no 2017 year in the data
 
-######################################################################################################################################################
+################################################################################
 # CHECK MISSINGNESS
-######################################################################################################################################################
+################################################################################
 
-# rename variables to reflect the year and combine data
-miss_2018 <- adm_pop_analysis %>% filter(year == 2018) %>% select(state = states, admissions_18 = total_admissions, population_18 = total_population)
-miss_2019 <- adm_pop_analysis %>% filter(year == 2019) %>% select(state = states, admissions_19 = total_admissions, population_19 = total_population)
-miss_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% select(state = states, admissions_20 = total_admissions, population_20 = total_population)
-miss_data <- merge(miss_2018, miss_2019, by = c("state"))
-miss_data <- merge(miss_data, miss_2020, by = c("state"))
-
-# factor state
-miss_data$state <- factor(miss_data$state)
-
-# examine missing data with ff_glimpse
-explanatory = c("admissions_18","admissions_19", "admissions_20",
-                "population_18", "population_19")
-dependent =  "population_20"
-miss_data %>%
-  ff_glimpse(dependent, explanatory)
-
-# visualize missing data and relationships
-miss_data %>%
-  missing_plot()
-
-# pattern of missingness between variables
-miss_data %>%
-  missing_pattern(dependent, explanatory)
-
-# 2019 population is missing the most (7)
-aggr(miss_data, prop=FALSE, numbers=TRUE)
-
-# pairs plots to show relationships between missing values and observed values in all variables
-miss_data %>%
-  missing_pairs(dependent, explanatory)
-
-# remove state variable
-miss_data1 <- miss_data %>% select(-state)
-
-# using correlations to explore missing values
-# extracting variables that have missing values
-# see which variables tend to be missing together
-x <- as_data_frame(abs(is.na(miss_data)))
-
-# elements of x are 1 if a value in the data is missing and 0 if non-missing
-head(miss_data)
-head(x)
-
-# extracting variables that have some missing values
-y <- x[which(sapply(x, sd) > 0)]
-
-# correlations among indicator variables
-cor(y)
-
-# look at the relationship between the presence of missing values in each variable and the observed values in other variables
-# rows are observed variables, and the columns are indicator variables representing missingness
-# ignore the warning message and NA values in the correlation matrix
-cor(miss_data1, y, use="pairwise.complete.obs")
+# # rename variables to reflect the year and combine data
+# miss_2018 <- adm_pop_analysis %>% filter(year == 2018) %>% select(state = states, admissions_18 = total_admissions, population_18 = total_population)
+# miss_2019 <- adm_pop_analysis %>% filter(year == 2019) %>% select(state = states, admissions_19 = total_admissions, population_19 = total_population)
+# miss_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% select(state = states, admissions_20 = total_admissions, population_20 = total_population)
+# miss_data <- merge(miss_2018, miss_2019, by = c("state"))
+# miss_data <- merge(miss_data, miss_2020, by = c("state"))
+# 
+# # factor state
+# miss_data$state <- factor(miss_data$state)
+# 
+# # examine missing data with ff_glimpse
+# explanatory = c("admissions_18","admissions_19", "admissions_20",
+#                 "population_18", "population_19")
+# dependent =  "population_20"
+# miss_data %>%
+#   ff_glimpse(dependent, explanatory)
+# 
+# # visualize missing data and relationships
+# miss_data %>%
+#   missing_plot()
+# 
+# # pattern of missingness between variables
+# miss_data %>%
+#   missing_pattern(dependent, explanatory)
+# 
+# # 2019 population is missing the most (7)
+# aggr(miss_data, prop=FALSE, numbers=TRUE)
+# 
+# # pairs plots to show relationships between missing values and observed values in all variables
+# miss_data %>%
+#   missing_pairs(dependent, explanatory)
+# 
+# # remove state variable
+# miss_data1 <- miss_data %>% select(-state)
+# 
+# # using correlations to explore missing values
+# # extracting variables that have missing values
+# # see which variables tend to be missing together
+# x <- as_data_frame(abs(is.na(miss_data)))
+# 
+# # elements of x are 1 if a value in the data is missing and 0 if non-missing
+# head(miss_data)
+# head(x)
+# 
+# # extracting variables that have some missing values
+# y <- x[which(sapply(x, sd) > 0)]
+# 
+# # correlations among indicator variables
+# cor(y)
+# 
+# # look at the relationship between the presence of missing values in each variable and the observed values in other variables
+# # rows are observed variables, and the columns are indicator variables representing missingness
+# # ignore the warning message and NA values in the correlation matrix
+# cor(miss_data1, y, use="pairwise.complete.obs")
 
 #####
 # MCAR test
@@ -119,11 +119,33 @@ cor(miss_data1, y, use="pairwise.complete.obs")
 # not missing completely at random
 # TestMCARNormality(data = miss_data1,del.lesscases = 1)
 
-######################################################################################################################################################
+################################################################################
 # IMPUTATION
 # MICE
-#National Estimate Variables
-######################################################################################################################################################
+
+# National Estimate Variables
+################################################################################
+
+#New National Variables/columns
+m.imp <- adm_pop_analysis %>% mutate(
+  overall_admissions                  = total_admissions,
+  admissions_for_violations           = total_violation_admissions,
+  admissions_for_technical_violations = technical_probation_violation_admissions + technical_parole_violation_admissions,
+  admissions_for_new_crime_violations = new_offense_probation_violation_admissions + new_offense_parole_violation_admissions,
+  overall_population                  = total_population,
+  violator_population                 = total_violation_population,
+  technical_violator_population       = technical_probation_violation_population + technical_parole_violation_population,
+  new_crime_violator_population       = new_offense_probation_violation_population + new_offense_parole_violation_population
+) %>%
+  select(states, year,
+         overall_admissions,
+         admissions_for_violations,
+         admissions_for_technical_violations,
+         admissions_for_new_crime_violations,
+         overall_population,
+         violator_population,
+         technical_violator_population,
+         new_crime_violator_population)
 
 #New National Variables/columns
 m.imp <- adm_pop_analysis %>% mutate(
@@ -155,6 +177,7 @@ apply(m.imp,2,pMiss)
 temp_data <- mice(m.imp,m=5,maxit=50,meth='pmm',seed=500)
 summary(temp_data)
 
+
 # check imputed data
 # each observation (first column left) within each imputed data set (first row at the top)
 temp_data$imp$overall_admissions
@@ -176,8 +199,8 @@ for (i in tablevals) {
 mice_imputed_data.nat <- do.call(cbind,mget(tablevals)) %>%
   mutate(across(where(is.numeric),formattable::comma,1))
 mice_imputed_data.nat$year <- ifelse(row.names(mice_imputed_data.nat)=="1",2018,
-                                               ifelse(row.names(mice_imputed_data.nat)=="2",2019,
-                                                                ifelse(row.names(mice_imputed_data.nat)=="3",2020,NA)))
+                                     ifelse(row.names(mice_imputed_data.nat)=="2",2019,
+                                            ifelse(row.names(mice_imputed_data.nat)=="3",2020,NA)))
 
 # add labels
 var.labels = c(year                                = "Year",
@@ -238,7 +261,6 @@ c(mice_imputed_data.nat[3,7],mice_imputed_data.natCI[1,23],mice_imputed_data.nat
 c(mice_imputed_data.nat[3,8],mice_imputed_data.natCI[1,24],mice_imputed_data.natCI[2,24])
 
 ########ABOVE code is for calculating national *TOTALS*
-
 
 ##########################################
 ############### BELOW CODE IS FOR CALCULATING NATIONAL *AVERAGES*
@@ -373,11 +395,11 @@ c(mice_imputed_data.nat[3,8],mice_imputed_data.natCI[1,24],mice_imputed_data.nat
 # xyplot(temp_data,total_admissions ~ total_population,pch=18,cex=1)
 # densityplot(temp_data)
 
-######################################################################################################################################################
+################################################################################
 # IMPUTATION
 # MEAN
 # NOTE - NOT USING THIS - USING MULTIPLE IMPUTATION ABOVE INSTEAD
-######################################################################################################################################################
+################################################################################
 
 # Create mean if value is NA
 # mean_imputed_data <-  adm_pop_analysis %>% 
@@ -401,50 +423,46 @@ c(mice_imputed_data.nat[3,8],mice_imputed_data.natCI[1,24],mice_imputed_data.nat
 #          technical_parole_violation_population_mean = ifelse(is.na(technical_parole_violation_population), mean(technical_parole_violation_population, na.rm=T), technical_parole_violation_population))       
 #       
 
-######################################################################################################################################################
+################################################################################
 # CALCULATE CHANGES / NATIONAL ESTIMATES
-######################################################################################################################################################
+################################################################################
 
 # calculate percent change         
-adm_pop_analysis <- mice_imputed_data %>% group_by(states) %>% 
-  mutate(total_admissions_pct = (total_admissions / dplyr::lag(total_admissions) -1)*100,
-  total_population_pct = (total_population / dplyr::lag(total_population) -1)*100,
-  total_violation_admissions_pct = (total_violation_admissions / dplyr::lag(total_violation_admissions) -1)*100,
-  total_violation_population_pct = (total_violation_population / dplyr::lag(total_violation_population) -1)*100
+adm_pop_analysis <- mice_imputed_data.nat %>% group_by(states) %>% 
+  mutate(overall_admissions_pct = (overall_admissions / dplyr::lag(overall_admissions) -1)*100,
+         overall_population_pct = (overall_population / dplyr::lag(overall_population) -1)*100,
+         admissions_for_violations_pct = (admissions_for_violations / dplyr::lag(admissions_for_violations) -1)*100,
+         violator_population_pct = (violator_population / dplyr::lag(violator_population) -1)*100
   )
 
 # rearrange data
-adm_pop_analysis <- adm_pop_analysis %>% 
-  select(sort(names(.)))
-adm_pop_analysis <- adm_pop_analysis %>% select(states, year, everything())
+# adm_pop_analysis <- adm_pop_analysis %>% 
+#   select(sort(names(.)))
+# adm_pop_analysis <- adm_pop_analysis %>% select(states, year, everything())
 
 # change data types
 adm_pop_analysis$year <- factor(adm_pop_analysis$year)
-adm_pop_analysis$total_admissions <- as.numeric(adm_pop_analysis$total_admissions)
-adm_pop_analysis$total_population  <- as.numeric(adm_pop_analysis$total_population)
-adm_pop_analysis$total_violation_admissions  <- as.numeric(adm_pop_analysis$total_violation_admissions)
-adm_pop_analysis$total_violation_population  <- as.numeric(adm_pop_analysis$total_violation_population)
+adm_pop_analysis$overall_admissions <- as.numeric(adm_pop_analysis$overall_admissions)
+adm_pop_analysis$admissions_for_violations  <- as.numeric(adm_pop_analysis$admissions_for_violations)
+adm_pop_analysis$admissions_for_technical_violations  <- as.numeric(adm_pop_analysis$admissions_for_technical_violations)
+adm_pop_analysis$admissions_for_new_crime_violations  <- as.numeric(adm_pop_analysis$admissions_for_new_crime_violations)
+adm_pop_analysis$overall_population  <- as.numeric(adm_pop_analysis$overall_population)
+adm_pop_analysis$violator_population  <- as.numeric(adm_pop_analysis$violator_population)
+adm_pop_analysis$technical_violator_population  <- as.numeric(adm_pop_analysis$technical_violator_population)
+adm_pop_analysis$new_crime_violator_population  <- as.numeric(adm_pop_analysis$new_crime_violator_population)
 
 # sum of variables
 adm_pop_national <- adm_pop_analysis %>% group_by(year) %>% dplyr::summarise(
   # admissions
-  total_admissions = sum(total_admissions),
-  total_violation_admissions = sum(total_violation_admissions),
-  prob_admissions = sum(total_probation_violation_admissions),
-  new_prob_admissions = sum(new_offense_probation_violation_admissions),
-  tech_prob_admissions = sum(technical_probation_violation_admissions),
-  parole_admissions = sum(total_parole_violation_admissions),
-  new_parole_admissions = sum(new_offense_parole_violation_admissions),
-  tech_parole_admissions = sum(technical_parole_violation_admissions),
+  overall_admissions = sum(overall_admissions),
+  admissions_for_violations = sum(admissions_for_violations),
+  admissions_for_technical_violations = sum(admissions_for_technical_violations),
+  admissions_for_new_crime_violations = sum(admissions_for_new_crime_violations),
   # population
-  total_population = sum(total_population),
-  total_violation_population = sum(total_violation_population),
-  prob_population = sum(total_probation_violation_population),
-  new_prob_population = sum(new_offense_probation_violation_population),
-  tech_prob_population = sum(technical_probation_violation_population),
-  parole_population = sum(total_parole_violation_population),
-  new_parole_population = sum(new_offense_parole_violation_population),
-  tech_parole_population = sum(technical_parole_violation_population)
+  overall_population = sum(overall_population),
+  violator_population = sum(violator_population),
+  technical_violator_population = sum(technical_violator_population),
+  new_crime_violator_population = sum(new_crime_violator_population)
 )
 
 # transpose data
@@ -483,9 +501,9 @@ label(national_estimates) = as.list(var.labels[match(names(national_estimates), 
 # save data to send to comms
 write.xlsx(national_estimates, "shared_data/National estimates for web team 2021.xlsx")
 
-######################################################################################################################################################
+################################################################################
 # Costs
-######################################################################################################################################################
+################################################################################
 
 # get cost data for 2021
 costs <- read_xlsx("data/Cost and notes data 2021.xlsx", .name_repair = "universal")
@@ -514,81 +532,77 @@ setDT(costs); setDT(costs2019)
 costs[is.na(cost_2020), cost_2020 := costs2019[.SD, on=.(states), x.cost_2019]]
 costs <- merge(costs, costs2019, by = "states")
 
-# select variables and filter by year
-costs_pop_2019 <- adm_pop_analysis %>% filter(year == 2019) %>% select(states, 
-                                                                       total_population, 
-                                                                       total_violation_population, 
-                                                                       technical_probation_violation_population, 
-                                                                       technical_parole_violation_population)
-costs_pop_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% select(states, 
-                                                                       total_population, 
-                                                                       total_violation_population, 
-                                                                       technical_probation_violation_population, 
-                                                                       technical_parole_violation_population)
+# rename variables and filter by 2019
+costs_pop_2019 <- adm_pop_analysis %>% filter(year == 2019) %>% 
+  select(states,
+         overall_admissions_2019 = overall_admissions,
+         admissions_for_violations_2019 = admissions_for_violations,
+         admissions_for_technical_violations_2019 = admissions_for_technical_violations,
+         admissions_for_new_crime_violations_2019 = admissions_for_new_crime_violations,
+         overall_population_2019 = overall_population,                  
+         violator_population_2019 = violator_population,                 
+         technical_violator_population_2019 = technical_violator_population,      
+         new_crime_violator_population_2019 = new_crime_violator_population)
 
-# add technical prob and parole together to get total technical for 2019 and 2020
-costs_pop_2019 <- costs_pop_2019 %>%  mutate(total_population_2019 = total_population,
-                                             total_viol_population_2019 = total_violation_population,
-                                             technical_population_2019 = technical_probation_violation_population + technical_parole_violation_population) %>%
-  select(-technical_probation_violation_population,
-         -technical_parole_violation_population,
-         -total_violation_population,
-         -total_population)
-costs_pop_2020 <- costs_pop_2020 %>%  mutate(total_population_2020 = total_population,
-                                             total_viol_population_2020 = total_violation_population,
-                                             technical_population_2020 = technical_probation_violation_population + technical_parole_violation_population) %>%
-  select(-technical_probation_violation_population,
-         -technical_parole_violation_population,
-         -total_violation_population,
-         -total_population)
+# rename variables and filter by 2020
+costs_pop_2020 <- adm_pop_analysis %>% filter(year == 2020) %>% 
+  select(states,
+         overall_admissions_2020 = overall_admissions,
+         admissions_for_violations_2020 = admissions_for_violations,
+         admissions_for_technical_violations_2020 = admissions_for_technical_violations,
+         admissions_for_new_crime_violations_2020 = admissions_for_new_crime_violations,
+         overall_population_2020 = overall_population,                  
+         violator_population_2020 = violator_population,                 
+         technical_violator_population_2020 = technical_violator_population,      
+         new_crime_violator_population_2020 = new_crime_violator_population)
 
 # merge costs and population numbers
-costs_pop_df <- merge(costs_pop_2020, costs, by = "states", all.x = TRUE, all.y = TRUE)
-costs_pop_df <- merge(costs_pop_df, costs_pop_2019, by = "states", all.x = TRUE, all.y = TRUE)
+costs_pop_df <- merge(costs_pop_2020, costs, by = c("states"), all.x = TRUE, all.y = TRUE)
+costs_pop_df <- merge(costs_pop_df, costs_pop_2019, by = c("states"), all.x = TRUE, all.y = TRUE)
 
 # prevent rounding
 options(digits=20)
 
 # calculate changes by year
 costs_final <- costs_pop_df %>% 
-  mutate(total_population_change_19_20 = total_population_2020 - total_population_2019,
-         total_viol_population_change_19_20 = total_viol_population_2020 - total_viol_population_2019,
-         technical_population_change_19_20 = technical_population_2020 - technical_population_2019)
+  mutate(overall_population_change_19_20 = overall_population_2020 - overall_population_2019,
+         violator_population_change_19_20 = violator_population_2020 - violator_population_2019,
+         technical_violator_population_change_19_20 = technical_violator_population_2020 - technical_violator_population_2019)
 
 # calculate yearly cost by type
 costs_final <- costs_final %>%
-  mutate(amount_saved_total_population_change_19_20 = total_population_change_19_20*cost_2020*365,
-         amount_saved_total_viol_population_change_19_20 = total_viol_population_change_19_20*cost_2020*365, 
-         amount_saved_technical_population_change_19_20 = technical_population_change_19_20*cost_2020*365,)
+  mutate(amount_saved_overall_population_change_19_20 = overall_population_change_19_20*cost_2019*365,
+         amount_saved_total_violator_population_change_19_20 = violator_population_change_19_20*cost_2019*365, 
+         amount_saved_technical_violator_change_19_20 = technical_violator_population_change_19_20*cost_2019*365)
 
 # reorder variables
 costs_final <- costs_final %>% select(states,
-                                      total_population_2019,
-                                      total_viol_population_2019,
-                                      technical_population_2019,
+                                      overall_population_2019,
+                                      violator_population_2019,
+                                      technical_violator_population_2019,
                                       cost_2019,
-                                      total_population_2020,
-                                      total_viol_population_2020,
-                                      technical_population_2020,
+                                      overall_population_2020,
+                                      violator_population_2020,
+                                      technical_violator_population_2020,
                                       cost_2020,
                                       everything())
 
 var.labels = c(states = "State name",
-               total_population_2019 = "Total population in 2019",
-               total_viol_population_2019 = "Total violation population in 2019",
-               technical_population_2019 = "Technical violation population in 2019",
+               overall_population_2019 = "Total population in 2019",
+               violator_population_2019 = "Total violation population in 2019",
+               technical_violator_population_2019 = "Technical violation population in 2019",
                cost_2019 = "State reported cost per day in 2019" ,
-               total_population_2020 = "Total population in 2020",
-               total_viol_population_2020 = "Total violation population in 2020",
-               technical_population_2020 = "Technical violation population in 2020",
+               overall_population_2020 = "Total population in 2020",
+               violator_population_2020 = "Total violation population in 2020",
+               technical_violator_population_2020 = "Technical violation population in 2020",
                cost_2020 = "State reported cost per day in 2020",
-               total_population_change_19_20 = "Change in total population between 2019 and 2020",
-               total_viol_population_change_19_20 = "Change in total violation population between 2019 and 2020",
-               technical_population_change_19_20 = "Change in technical violation population between 2019 and 2020",         
-               amount_saved_total_population_change_19_20 = "Amount saved due to change in total population between 2019 and 2020",    
-               amount_saved_total_viol_population_change_19_20 = "Amount saved due to change in total violation population between 2019 and 2020",
-               amount_saved_technical_population_change_19_20 = "Amount saved due to change in technical violation population between 2019 and 2020")
-              
+               overall_population_change_19_20 = "Change in total population between 2019 and 2020",
+               violator_population_change_19_20 = "Change in total violation population between 2019 and 2020",
+               technical_violator_population_change_19_20 = "Change in technical violation population between 2019 and 2020",         
+               amount_saved_overall_population_change_19_20 = "Amount saved due to change in total population between 2019 and 2020",    
+               amount_saved_total_violator_population_change_19_20 = "Amount saved due to change in total violation population between 2019 and 2020",
+               amount_saved_technical_violator_change_19_20 = "Amount saved due to change in technical violation population between 2019 and 2020")
+
 label(costs_final) = as.list(var.labels[match(names(costs_final), names(var.labels))])
 
 # save as xlsx
