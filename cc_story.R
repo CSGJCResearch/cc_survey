@@ -146,21 +146,6 @@ m.imp <- adm_pop_analysis %>% mutate(
          technical_violator_population,
          new_crime_violator_population)
 
-
-# add labels
-var.labels = c(states                              = "State name", 
-               year                                = "Year",
-               overall_admissions                  = "Overall admissions",
-               admissions_for_violations           = "Admissions for violations",
-               admissions_for_technical_violations = "Admissions for technical violations",
-               admissions_for_new_crime_violations = "Admissions for new crime violations",
-               overall_population                  = "Overall population",
-               violator_population                 = "Violator population",
-               technical_violator_population       = "Technical violator population",
-               new_crime_violator_population       = "New crim violator population"
-               )
-label(m.imp) = as.list(var.labels[match(names(m.imp), names(var.labels))])
-
 # missing data for a certain feature or sample is more than 5%
 pMiss <- function(x){sum(is.na(x))/length(x)*100}
 apply(m.imp,2,pMiss)
@@ -171,7 +156,7 @@ temp_data <- mice(m.imp,m=5,maxit=50,meth='pmm',seed=500)
 summary(temp_data)
 
 # check imputed data
-# each observation (first column left) within each imputed dataset (first row at the top)
+# each observation (first column left) within each imputed data set (first row at the top)
 temp_data$imp$overall_admissions
 
 # completed dataset
@@ -183,130 +168,204 @@ mice_imputed_data <- complete(temp_data,1)
 #grab response columns for creating estimated counts/CIs
 tablevals<- colnames(mice_imputed_data[3:10])
 
-#SET REFERENCE: 2018
-temp_data$data$year <- relevel(as.factor(temp_data$data$year), ref = 1) #2018
-
-#loop through response columns, run model to produce estimates/CIs
+#aggregated data: national level
 for (i in tablevals) {
-  fit <- with(temp_data,lm(mice_imputed_data[[i]]~year))
-  CI  <- summary(pool(fit),conf.int=TRUE) %>% mutate(
-    term = ifelse(term=="(Intercept)","year2018",
-                  ifelse(term=="year2019","year2019",
-                         ifelse(term=="year2020","year2020",NA)))
-    ) %>%
-    select(term,estimate,`2.5 %`,`97.5 %`)
-    CIt <- as.data.frame(t(as.matrix(CI)))
-    rownames(CIt) <- colnames(CI)
-    colnames(CIt) <- CI[,1] 
-    CIt <- subset (CIt, select = -c(year2020,year2019))
-  assign(i,CIt,envir = .GlobalEnv)
+  natmice <- setNames(aggregate(mice_imputed_data[[i]], by=list(Category=mice_imputed_data$year), FUN=sum)[2],i)
+  assign(i,natmice,envir = .GlobalEnv)
 }
+mice_imputed_data.nat <- do.call(cbind,mget(tablevals)) %>%
+  mutate(across(where(is.numeric),formattable::comma,1))
+mice_imputed_data.nat$year <- ifelse(row.names(mice_imputed_data.nat)=="1",2018,
+                                               ifelse(row.names(mice_imputed_data.nat)=="2",2019,
+                                                                ifelse(row.names(mice_imputed_data.nat)=="3",2020,NA)))
 
-#rbind and finalize formatting
-national.est.CI2018 <- do.call(rbind,mget(tablevals)) %>% #append all data frames for table
-  filter(year2018!="year2018") %>% mutate(
-    across(where(is.character), as.numeric)
-  ) %>%
-  mutate(
-    across(where(is.numeric),round,1)
-  ) %>%
-  mutate(
-    across(where(is.numeric),formattable::comma,1)
-  )
+# add labels
+var.labels = c(year                                = "Year",
+               overall_admissions                  = "Overall admissions",
+               admissions_for_violations           = "Admissions for violations",
+               admissions_for_technical_violations = "Admissions for technical violations",
+               admissions_for_new_crime_violations = "Admissions for new crime violations",
+               overall_population                  = "Overall population",
+               violator_population                 = "Violator population",
+               technical_violator_population       = "Technical violator population",
+               new_crime_violator_population       = "New crime violator population"
+)
+label(mice_imputed_data.nat) = as.list(var.labels[match(names(mice_imputed_data.nat), names(var.labels))])
 
-#CHANGE REFERENCE: 2019
-temp_data$data$year <- relevel(as.factor(temp_data$data$year), ref = 2) #2019
-
-#loop through response columns, run model to produce estimates/CIs
+#calculate 95% CI for all counts across all years
+#assume Poisson Distribution using count data
 for (i in tablevals) {
-  fit <- with(temp_data,lm(mice_imputed_data[[i]]~year))
-  CI  <- summary(pool(fit),conf.int=TRUE) %>% mutate(
-    term = ifelse(term=="(Intercept)","year2019",
-                  ifelse(term=="year2018","year2018",
-                         ifelse(term=="year2020","year2020",NA)))
-  ) %>%
-    select(term,estimate,`2.5 %`,`97.5 %`)
-  CIt <- as.data.frame(t(as.matrix(CI)))
-  rownames(CIt) <- colnames(CI)
-  colnames(CIt) <- CI[,1] 
-  CIt <- subset (CIt, select = -c(year2018,year2020))
-  assign(i,CIt,envir = .GlobalEnv)
+  #j = 1,2,3 - 1=2018, 2=2019, 3=2020
+  for (j in 1:3) { 
+    test<-data.frame(CI95=poisson.test(mice_imputed_data.nat[j,i], conf.level = 0.95)$conf.int[1:2])
+    colnames(test)[colnames(test)=="CI95"] <- paste0(i,j)
+    assign(paste0(i,j),test,envir = .GlobalEnv)
+  }
 }
+mice_imputed_data.natCI <- do.call(cbind,mget(c(paste0(tablevals,"1"),paste0(tablevals,"2"),paste0(tablevals,"3")))) %>%
+  mutate(across(where(is.numeric),formattable::comma,1))
 
-#rbind and finalize formatting
-national.est.CI2019 <- do.call(rbind,mget(tablevals)) %>% #append all data frames for table
-  filter(year2019!="year2019") %>% mutate(
-    across(where(is.character), as.numeric)
-  ) %>%
-  mutate(
-    across(where(is.numeric),round,1)
-  ) %>%
-  mutate(
-    across(where(is.numeric),formattable::comma,1)
-  )
-
-#CHANGE REFERENCE: 2020
-temp_data$data$year <- relevel(as.factor(temp_data$data$year), ref = 3) #2020
-
-#loop through response columns, run model to produce estimates/CIs
-for (i in tablevals) {
-  fit <- with(temp_data,lm(mice_imputed_data[[i]]~year))
-  CI  <- summary(pool(fit),conf.int=TRUE) %>% mutate(
-    term = ifelse(term=="(Intercept)","year2020",
-                  ifelse(term=="year2018","year2018",
-                         ifelse(term=="year2019","year2019",NA)))
-  ) %>%
-    select(term,estimate,`2.5 %`,`97.5 %`)
-  CIt <- as.data.frame(t(as.matrix(CI)))
-  rownames(CIt) <- colnames(CI)
-  colnames(CIt) <- CI[,1] 
-  CIt <- subset (CIt, select = -c(year2018,year2019))
-  assign(i,CIt,envir = .GlobalEnv)
-}
-
-#rbind and finalize formatting
-national.est.CI2020 <- do.call(rbind,mget(tablevals)) %>% #append all data frames for table
-  filter(year2020!="year2020") %>% mutate(
-    across(where(is.character), as.numeric)
-    ) %>%
-  mutate(
-    across(where(is.numeric),round,1)
-  ) %>%
-  mutate(
-    across(where(is.numeric),formattable::comma,1)
-  )
-
-#rbind each data frame: 2018, 2019, 2020
-national.est.CI <- cbind(national.est.CI2018,national.est.CI2019,national.est.CI2020)
-
-#print for pasting in table
+#USE mice_imputed_data.nat for National Totals
+#USE mice_imputed_data.natCI for National 95% CIs
 #2018
-national.est.CI$year2018[1:3]
-national.est.CI$year2018[4:6]
-national.est.CI$year2018[7:9]
-national.est.CI$year2018[10:12]
-national.est.CI$year2018[13:15]
-national.est.CI$year2018[16:18]
-national.est.CI$year2018[19:21]
-national.est.CI$year2018[22:24]
+c(mice_imputed_data.nat[1,1],mice_imputed_data.natCI[1,1],mice_imputed_data.natCI[2,1])
+c(mice_imputed_data.nat[1,2],mice_imputed_data.natCI[1,2],mice_imputed_data.natCI[2,2])
+c(mice_imputed_data.nat[1,3],mice_imputed_data.natCI[1,3],mice_imputed_data.natCI[2,3])
+c(mice_imputed_data.nat[1,4],mice_imputed_data.natCI[1,4],mice_imputed_data.natCI[2,4])
+c(mice_imputed_data.nat[1,5],mice_imputed_data.natCI[1,5],mice_imputed_data.natCI[2,5])
+c(mice_imputed_data.nat[1,6],mice_imputed_data.natCI[1,6],mice_imputed_data.natCI[2,6])
+c(mice_imputed_data.nat[1,7],mice_imputed_data.natCI[1,7],mice_imputed_data.natCI[2,7])
+c(mice_imputed_data.nat[1,8],mice_imputed_data.natCI[1,8],mice_imputed_data.natCI[2,8])
+
 #2019
-national.est.CI$year2019[1:3]
-national.est.CI$year2019[4:6]
-national.est.CI$year2019[7:9]
-national.est.CI$year2019[10:12]
-national.est.CI$year2019[13:15]
-national.est.CI$year2019[16:18]
-national.est.CI$year2019[19:21]
-national.est.CI$year2019[22:24]
+c(mice_imputed_data.nat[2,1],mice_imputed_data.natCI[1,9], mice_imputed_data.natCI[2,9])
+c(mice_imputed_data.nat[2,2],mice_imputed_data.natCI[1,10],mice_imputed_data.natCI[2,10])
+c(mice_imputed_data.nat[2,3],mice_imputed_data.natCI[1,11],mice_imputed_data.natCI[2,11])
+c(mice_imputed_data.nat[2,4],mice_imputed_data.natCI[1,12],mice_imputed_data.natCI[2,12])
+c(mice_imputed_data.nat[2,5],mice_imputed_data.natCI[1,13],mice_imputed_data.natCI[2,13])
+c(mice_imputed_data.nat[2,6],mice_imputed_data.natCI[1,14],mice_imputed_data.natCI[2,14])
+c(mice_imputed_data.nat[2,7],mice_imputed_data.natCI[1,15],mice_imputed_data.natCI[2,15])
+c(mice_imputed_data.nat[2,8],mice_imputed_data.natCI[1,16],mice_imputed_data.natCI[2,16])
+
 #2020
-national.est.CI$year2020[1:3]
-national.est.CI$year2020[4:6]
-national.est.CI$year2020[7:9]
-national.est.CI$year2020[10:12]
-national.est.CI$year2020[13:15]
-national.est.CI$year2020[16:18]
-national.est.CI$year2020[19:21]
-national.est.CI$year2020[22:24]
+c(mice_imputed_data.nat[3,1],mice_imputed_data.natCI[1,17],mice_imputed_data.natCI[2,17])
+c(mice_imputed_data.nat[3,2],mice_imputed_data.natCI[1,18],mice_imputed_data.natCI[2,18])
+c(mice_imputed_data.nat[3,3],mice_imputed_data.natCI[1,19],mice_imputed_data.natCI[2,19])
+c(mice_imputed_data.nat[3,4],mice_imputed_data.natCI[1,20],mice_imputed_data.natCI[2,20])
+c(mice_imputed_data.nat[3,5],mice_imputed_data.natCI[1,21],mice_imputed_data.natCI[2,21])
+c(mice_imputed_data.nat[3,6],mice_imputed_data.natCI[1,22],mice_imputed_data.natCI[2,22])
+c(mice_imputed_data.nat[3,7],mice_imputed_data.natCI[1,23],mice_imputed_data.natCI[2,23])
+c(mice_imputed_data.nat[3,8],mice_imputed_data.natCI[1,24],mice_imputed_data.natCI[2,24])
+
+########ABOVE code is for calculating national *TOTALS*
+
+
+##########################################
+############### BELOW CODE IS FOR CALCULATING NATIONAL *AVERAGES*
+#SET REFERENCE: 2018
+# mice_imputed_data.nat$year <- relevel(as.factor(mice_imputed_data.nat$year), ref = 1) #2018
+# 
+# #loop through response columns, run model to produce estimates/CIs
+# for (i in tablevals) {
+#   fit <- with(temp_data,lm(mice_imputed_data[[i]]~year))
+#   CI  <- summary(pool(fit),conf.int=TRUE) %>% mutate(
+#     term = ifelse(term=="(Intercept)","year2018",
+#                   ifelse(term=="year2019","year2019",
+#                          ifelse(term=="year2020","year2020",NA)))
+#     ) %>%
+#     select(term,estimate,`2.5 %`,`97.5 %`)
+#     CIt <- as.data.frame(t(as.matrix(CI)))
+#     rownames(CIt) <- colnames(CI)
+#     colnames(CIt) <- CI[,1] 
+#     CIt <- subset (CIt, select = -c(year2020,year2019))
+#   assign(i,CIt,envir = .GlobalEnv)
+# }
+# 
+# #rbind and finalize formatting
+# national.est.CI2018 <- do.call(rbind,mget(tablevals)) %>% #append all data frames for table
+#   filter(year2018!="year2018") %>% mutate(
+#     across(where(is.character), as.numeric)
+#   ) %>%
+#   mutate(
+#     across(where(is.numeric),round,1)
+#   ) %>%
+#   mutate(
+#     across(where(is.numeric),formattable::comma,1)
+#   )
+# 
+# #CHANGE REFERENCE: 2019
+# temp_data$data$year <- relevel(as.factor(temp_data$data$year), ref = 2) #2019
+# 
+# #loop through response columns, run model to produce estimates/CIs
+# for (i in tablevals) {
+#   fit <- with(temp_data,lm(mice_imputed_data[[i]]~year))
+#   CI  <- summary(pool(fit),conf.int=TRUE) %>% mutate(
+#     term = ifelse(term=="(Intercept)","year2019",
+#                   ifelse(term=="year2018","year2018",
+#                          ifelse(term=="year2020","year2020",NA)))
+#   ) %>%
+#     select(term,estimate,`2.5 %`,`97.5 %`)
+#   CIt <- as.data.frame(t(as.matrix(CI)))
+#   rownames(CIt) <- colnames(CI)
+#   colnames(CIt) <- CI[,1] 
+#   CIt <- subset (CIt, select = -c(year2018,year2020))
+#   assign(i,CIt,envir = .GlobalEnv)
+# }
+# 
+# #rbind and finalize formatting
+# national.est.CI2019 <- do.call(rbind,mget(tablevals)) %>% #append all data frames for table
+#   filter(year2019!="year2019") %>% mutate(
+#     across(where(is.character), as.numeric)
+#   ) %>%
+#   mutate(
+#     across(where(is.numeric),round,1)
+#   ) %>%
+#   mutate(
+#     across(where(is.numeric),formattable::comma,1)
+#   )
+# 
+# #CHANGE REFERENCE: 2020
+# temp_data$data$year <- relevel(as.factor(temp_data$data$year), ref = 3) #2020
+# 
+# #loop through response columns, run model to produce estimates/CIs
+# for (i in tablevals) {
+#   fit <- with(temp_data,lm(mice_imputed_data[[i]]~year))
+#   CI  <- summary(pool(fit),conf.int=TRUE) %>% mutate(
+#     term = ifelse(term=="(Intercept)","year2020",
+#                   ifelse(term=="year2018","year2018",
+#                          ifelse(term=="year2019","year2019",NA)))
+#   ) %>%
+#     select(term,estimate,`2.5 %`,`97.5 %`)
+#   CIt <- as.data.frame(t(as.matrix(CI)))
+#   rownames(CIt) <- colnames(CI)
+#   colnames(CIt) <- CI[,1] 
+#   CIt <- subset (CIt, select = -c(year2018,year2019))
+#   assign(i,CIt,envir = .GlobalEnv)
+# }
+# 
+# #rbind and finalize formatting
+# national.est.CI2020 <- do.call(rbind,mget(tablevals)) %>% #append all data frames for table
+#   filter(year2020!="year2020") %>% mutate(
+#     across(where(is.character), as.numeric)
+#     ) %>%
+#   mutate(
+#     across(where(is.numeric),round,1)
+#   ) %>%
+#   mutate(
+#     across(where(is.numeric),formattable::comma,1)
+#   )
+# 
+# #rbind each data frame: 2018, 2019, 2020
+# national.est.CI <- cbind(national.est.CI2018,national.est.CI2019,national.est.CI2020)
+# 
+# #print for pasting in table
+# #2018
+# national.est.CI$year2018[1:3]
+# national.est.CI$year2018[4:6]
+# national.est.CI$year2018[7:9]
+# national.est.CI$year2018[10:12]
+# national.est.CI$year2018[13:15]
+# national.est.CI$year2018[16:18]
+# national.est.CI$year2018[19:21]
+# national.est.CI$year2018[22:24]
+# #2019
+# national.est.CI$year2019[1:3]
+# national.est.CI$year2019[4:6]
+# national.est.CI$year2019[7:9]
+# national.est.CI$year2019[10:12]
+# national.est.CI$year2019[13:15]
+# national.est.CI$year2019[16:18]
+# national.est.CI$year2019[19:21]
+# national.est.CI$year2019[22:24]
+# #2020
+# national.est.CI$year2020[1:3]
+# national.est.CI$year2020[4:6]
+# national.est.CI$year2020[7:9]
+# national.est.CI$year2020[10:12]
+# national.est.CI$year2020[13:15]
+# national.est.CI$year2020[16:18]
+# national.est.CI$year2020[19:21]
+# national.est.CI$year2020[22:24]
 
 # inspect the distribution of original and imputed data
 # want to see magenta points (imputed) match the shape of the blue ones (observed)
