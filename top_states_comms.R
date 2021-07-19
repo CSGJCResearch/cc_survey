@@ -6,7 +6,7 @@
 #######################################
 
 # load data
-source("automated_clean.R")
+# source("automated_clean.R")
 
 # read excel population data for 2018-2020
 population18 <- read_xlsx("data/Data for web team 2021 v9.xlsx", sheet = "Population 2018", .name_repair = "universal")
