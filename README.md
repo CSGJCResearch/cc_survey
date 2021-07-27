@@ -5,5 +5,5 @@ In 2018, The Council of State Governments (CSG) Justice Center conducted a surve
 ## Repository Structure
 
     |-- code    
-      |-- clean.R       # imports and cleans survey data
-      |-- cc_story.R    # imputes missing values, calculates national estimates
+      |-- clean.R             # imports and cleans survey data
+      |-- national_story.R    # imputes missing values, calculates national estimates
