@@ -15,7 +15,8 @@ requiredPackages = c('dplyr',
                      'formattable',
                      'scales',
                      'janitor',
-                     'Hmisc'
+                     'Hmisc',
+                     'xlsx',
                      )
 # only downloads packages if needed
 for(p in requiredPackages){
@@ -24,17 +25,17 @@ for(p in requiredPackages){
 }
 
 # read excel population data for 2018-2020
-population18 <- read_xlsx("data/Data for web team 2021 v10.xlsx", sheet = "Population 2018", .name_repair = "universal")
-population19 <- read_xlsx("data/Data for web team 2021 v10.xlsx", sheet = "Population 2019", .name_repair = "universal")
-population20 <- read_xlsx("data/Data for web team 2021 v10.xlsx", sheet = "Population 2020", .name_repair = "universal")
+population18 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Population 2018", .name_repair = "universal")
+population19 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Population 2019", .name_repair = "universal")
+population20 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Population 2020", .name_repair = "universal")
 
 # read excel admissions data for 2018-2020
-admissions18 <- read_xlsx("data/Data for web team 2021 v10.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
-admissions19 <- read_xlsx("data/Data for web team 2021 v10.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
-admissions20 <- read_xlsx("data/Data for web team 2021 v10.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
+admissions18 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
+admissions19 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+admissions20 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
 
 # read cost data for 2019-2020
-costs <- read_xlsx("data/Data for web team 2021 v10.xlsx", sheet = "Costs", .name_repair = "universal")
+costs <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Costs", .name_repair = "universal")
 
 ##############
 # Population
@@ -47,6 +48,12 @@ population20$year <- "2020"
 
 # combine pop data
 population <- rbind(population18, population19, population20)
+
+# clean variable names (make lowercase and replace periods with underscores)
+population <- clean_names(population)
+
+# remove state abb
+population <- population %>% select(-state_abbrev)
 
 population <- population %>% mutate_at(vars(-c("states", "year")), as.numeric)
 population$year <- factor(population$year)
@@ -75,6 +82,12 @@ admissions20$year <- "2020"
 
 # combine data and remove unwanted data (NAs, etc)
 admissions <- rbind(admissions18, admissions19, admissions20)
+
+# clean variable names (make lowercase and replace periods with underscores)
+admissions <- clean_names(admissions)
+
+# remove state abb
+admissions <- admissions %>% select(-state_abbrev)
 
 # change data type to numeric
 admissions <- admissions %>% mutate_at(vars(-c("states", "year")), as.numeric)
