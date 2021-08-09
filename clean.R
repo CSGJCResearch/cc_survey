@@ -1,3 +1,10 @@
+#######################################
+# Confined and Costly Survey
+# Imports/cleans CC Survey for Automated Reports
+# by Mari Roberts
+# 7/13/2021
+#######################################
+
 # load necessary packages
 requiredPackages = c('dplyr',
                      'reshape',
@@ -8,8 +15,10 @@ requiredPackages = c('dplyr',
                      'formattable',
                      'scales',
                      'janitor',
-                     'Hmisc'
-)
+                     'Hmisc',
+                     'xlsx',
+                     )
+
 # only downloads packages if needed
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) install.packages(p)
@@ -28,6 +37,7 @@ admissions20 <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Admis
 
 # read cost data for 2019-2020
 costs <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Costs", .name_repair = "universal")
+
 
 ##############
 # Population
@@ -55,6 +65,7 @@ var.labels = c(States="State name",
                Total.parole.violation.population = "Total parole violation population (new offense + technical)",
                New.offense.parole.violation.population = "New offense parole violation population",
                Technical.parole.violation.population = "Technical parole violation population")
+
 label(population) = as.list(var.labels[match(names(population), names(var.labels))])
 
 ##############
