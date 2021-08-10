@@ -25,17 +25,17 @@ for(p in requiredPackages){
 }
 
 # read excel population data for 2018-2020
-population18 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Population 2018", .name_repair = "universal")
-population19 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Population 2019", .name_repair = "universal")
-population20 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Population 2020", .name_repair = "universal")
+population18 <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Population 2018", .name_repair = "universal")
+population19 <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Population 2019", .name_repair = "universal")
+population20 <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Population 2020", .name_repair = "universal")
 
 # read excel admissions data for 2018-2020
-admissions18 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
-admissions19 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
-admissions20 <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
+admissions18 <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Admissions 2018", .name_repair = "universal")
+admissions19 <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Admissions 2019", .name_repair = "universal")
+admissions20 <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Admissions 2020", .name_repair = "universal")
 
 # read cost data for 2019-2020
-costs <- read_xlsx("data/Data for web team 2021 v12.xlsx", sheet = "Costs", .name_repair = "universal")
+costs <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Costs", .name_repair = "universal")
 
 ##############
 # Population

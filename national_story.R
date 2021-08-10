@@ -5,7 +5,7 @@
 # Date: 7/14/2021 - finalize MI counts w/CI's
 #######################################
 
-# load necessary packages
+# create vector of necessary packages
 requiredPackages = c('rstudioapi',
                      'dplyr',
                      'openxlsx',
