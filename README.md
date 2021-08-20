@@ -1,6 +1,7 @@
 # More Community, Less Confinement
 
-In 2018, The Council of State Governments (CSG) Justice Center conducted a survey to corrections departments in all 50 states to collect data on the impact of supervision revocations of supervision on prison populations. The More Community, Less Confinement study found that probation and parole revocations made up as much as 45 percent of state prison admissions nationwide, with wide variation across states. With continued support from the Correctional Leaders Association and Arnold Ventures, we will be collecting these numbers annually through 2022.  
+In 2018, The Council of State Governments (CSG) Justice Center sent out an annual survey to corrections departments in all 50 states to collect data on the impact of supervision revocations of supervision on prison populations. The More Community, Less Confinement study found that incarceration due to probation and parole violations make up between one third and one half of of state prison admissions nationwide, with wide variation across states. With continued partnership with the Correctional Leaders Association and support from Arnold Ventures, we will be collecting and reporting these numbers annually through 2022.  
+The full report and state-by-state data visualizations can be found on our website.
 
 ## Repository Structure
 
