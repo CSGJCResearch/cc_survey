@@ -15,9 +15,7 @@ requiredPackages = c('dplyr',
                      'formattable',
                      'scales',
                      'janitor',
-                     'Hmisc',
-                     'xlsx',
-                     )
+                     'Hmisc')
 
 # only downloads packages if needed
 for(p in requiredPackages){

@@ -47,3 +47,5 @@
 *.lst
 *.xml
 .Rproj.user
+!Data\ for\ web\ team\ 2021\ v13.xlsx
+!*/
