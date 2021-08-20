@@ -35,10 +35,6 @@ admissions20 <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Admis
 
 # read cost data for 2019-2020
 costs <- read_xlsx("data/Data for web team 2021 v13.xlsx", sheet = "Costs", .name_repair = "universal")
-<<<<<<< HEAD
-=======
-
->>>>>>> a50c5d18002b1d5e5ddc407f8b2ff7745c1b6871
 
 ##############
 # Population
