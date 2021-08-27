@@ -19,10 +19,12 @@ Multiple imputation uses random draws from the conditional distribution of the t
 
 Harrell, Jr., Frank E. Regression modeling strategies: with applications to linear models, logistic regression, and survival analysis. 2010.
 
-##Collaborations
+## Collaborations
 [Supervision Success: Recidiviz Cost Calculator](https://github.com/Recidiviz/supervision-success-component)
+
 [Justice Counts: Recidiviz Components](https://github.com/Recidiviz/justice-counts-components)
+
 [The Council of State Governments GitHub](https://github.com/csg-org)
 
-##License
+## License
 [CSG Justice Center](https://csgjusticecenter.org/)
