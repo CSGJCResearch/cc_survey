@@ -4,10 +4,12 @@ In 2018, The Council of State Governments (CSG) Justice Center sent out an annua
 The full report and state-by-state data visualizations can be found on our website.
 
 ## Repository Structure
+    
+    |-- clean.R               # imports and cleans survey data
+    |-- multiple_imputation.R # imputes missing values, calculates national estimates and cost calculations
 
-    |-- code    
-      |-- clean.R               # imports and cleans survey data
-      |-- multiple_imputation.R # imputes missing values, calculates national estimates and cost calculations
+    |-- data
+      |-- Data for web team 2021 v13.xlsx # state-level admissions, population, and cost data - 2018, 2019, 2020
 
 ## Multiple Imputation Methodology
 
